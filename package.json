@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/guyellis/http-status-check/issues"
   },
-  "homepage": "https://github.com/guyellis/http-status-check"
+  "homepage": "https://github.com/guyellis/http-status-check",
+  "dependencies": {
+    "request": "^2.36.0"
+  }
 }
