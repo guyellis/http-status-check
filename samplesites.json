@@ -1,0 +1,17 @@
+{
+	"sites": [
+		{
+			"name": "LinkSilk",
+			"expectedStatus": 200,
+			"requestUrl": "http://linksilk.com"
+		},
+		{
+			"name": "LinkSilk WWW",
+			"expectedStatus": 301,
+			"requestUrl": "http://www.linksilk.com",
+			"responseHeaders": {
+				"Location": "http://linksilk.com"
+			}
+		}
+	]
+}
