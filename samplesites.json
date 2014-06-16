@@ -12,6 +12,15 @@
 			"responseHeaders": {
 				"location": "http://linksilk.com/"
 			}
+		},
+		{
+			"name": "Google",
+			"expectedStatus": 301,
+			"requestUrl": "http://google.com",
+			"responseHeaders": {
+				"location": "http://www.google.com/"
+			},
+			"disabled": true
 		}
 	]
 }

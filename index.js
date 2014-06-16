@@ -4,6 +4,10 @@ var fs = require('fs');
 var request = require('request');
 
 function siteCheck(site) {
+	if(site.disabled){
+		console.log('_ ' + site.name + ' skipped because disabled');
+		return;
+	}
 	var options = {
 		followRedirect: false,
 		uri: site.requestUrl
