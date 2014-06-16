@@ -10,7 +10,7 @@
 			"expectedStatus": 301,
 			"requestUrl": "http://www.linksilk.com",
 			"responseHeaders": {
-				"Location": "http://linksilk.com"
+				"location": "http://linksilk.com/"
 			}
 		}
 	]
