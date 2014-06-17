@@ -78,7 +78,7 @@ var checkUri = function(site, callback) {
 			}
 		}
 	});
-}
+};
 
 var done = function() {
 	outAdapter.done();

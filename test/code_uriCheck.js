@@ -37,7 +37,7 @@ describe('code/uriCheck/', function() {
 	});
 
 	describe('checkUri()', function () {
-		it('terminates early if the site is disabled', function (done) {
+		it('should terminate early if the site is disabled', function (done) {
 			var site = {
 				disabled: true
 			};
@@ -260,6 +260,22 @@ describe('code/uriCheck/', function() {
 			writeResultCallCount.should.equal(1);
 			should.not.exist(errValue);
 			writeResultResult.should.equal('success');
+
+			done();
+		});
+	});
+
+	describe('done()', function () {
+		it('should call the outAdapters done method', function (done) {
+			var doneCallCount = 0;
+			uriCheck.__set__('outAdapter', {
+				done: function () {
+					doneCallCount++;
+				}
+			});
+			uriCheck.done();
+
+			doneCallCount.should.equal(1);
 
 			done();
 		});
