@@ -96,7 +96,171 @@ describe('code/uriCheck/', function() {
 			writeResultCallCount.should.equal(1);
 			should.not.exist(errValue);
 			writeResultResult.should.equal('fail');
-			
+
+			done();
+		});
+
+		it('should call writeResult with fail if the status code is not what is expected', function (done) {
+			var site = {
+				"name": "Unit Test",
+				"expectedStatus": 200,
+				// missing http in front of requestedUrl will be added by call to checkUri
+				"requestUrl": "www.unittest.com",
+				"requestHeaders": {
+					"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0"
+				}
+			};
+
+			var requestGetCallCount = 0;
+			uriCheck.__set__('request', {
+				get: function(options, callback) {
+					requestGetCallCount++;
+					var response = {
+						statusCode: 301
+					};
+					return callback(null,response);
+				}
+			});
+			var writeResultCallCount = 0;
+			var writeResultResult = '';
+			uriCheck.__set__('outAdapter',{
+				writeResult: function(result, uri) {
+					writeResultResult = result;
+					writeResultCallCount++;
+				}
+			});
+			var errValue = {};
+			uriCheck.checkUri(site, function(err) {
+				errValue = err;
+			});
+			requestGetCallCount.should.equal(1);
+			writeResultCallCount.should.equal(1);
+			should.not.exist(errValue);
+			writeResultResult.should.equal('fail');
+
+			done();
+		});
+
+		it('should call writeResult with fail if the response headers do not match', function (done) {
+			var site = {
+				"name": "Unit Test",
+				"expectedStatus": 301,
+				"requestUrl": "www.unittest.com",
+				"responseHeaders": {
+					"location": "http://unittest.com/"
+				}
+			};
+
+			var requestGetCallCount = 0;
+			uriCheck.__set__('request', {
+				get: function(options, callback) {
+					requestGetCallCount++;
+					var response = {
+						statusCode: 301,
+						headers: {
+							'location': 'it is not a match'
+						}
+					};
+					return callback(null,response);
+				}
+			});
+			var writeResultCallCount = 0;
+			var writeResultResult = '';
+			uriCheck.__set__('outAdapter',{
+				writeResult: function(result, uri) {
+					writeResultResult = result;
+					writeResultCallCount++;
+				}
+			});
+			var errValue = {};
+			uriCheck.checkUri(site, function(err) {
+				errValue = err;
+			});
+			requestGetCallCount.should.equal(1);
+			writeResultCallCount.should.equal(1);
+			should.not.exist(errValue);
+			writeResultResult.should.equal('fail');
+
+			done();
+		});
+
+		it('should call writeResult with success if the response headers and statuses match', function (done) {
+			var site = {
+				"name": "Unit Test",
+				"expectedStatus": 301,
+				"requestUrl": "www.unittest.com",
+				"responseHeaders": {
+					"location": "http://unittest.com/"
+				}
+			};
+
+			var requestGetCallCount = 0;
+			uriCheck.__set__('request', {
+				get: function(options, callback) {
+					requestGetCallCount++;
+					var response = {
+						statusCode: 301,
+						headers: {
+							'location': 'http://unittest.com/'
+						}
+					};
+					return callback(null,response);
+				}
+			});
+			var writeResultCallCount = 0;
+			var writeResultResult = '';
+			uriCheck.__set__('outAdapter',{
+				writeResult: function(result, uri) {
+					writeResultResult = result;
+					writeResultCallCount++;
+				}
+			});
+			var errValue = {};
+			uriCheck.checkUri(site, function(err) {
+				errValue = err;
+			});
+			requestGetCallCount.should.equal(1);
+			writeResultCallCount.should.equal(1);
+			should.not.exist(errValue);
+			writeResultResult.should.equal('success');
+
+			done();
+		});
+
+		it('should call writeResult with success if the statuses match', function (done) {
+			var site = {
+				"name": "Unit Test",
+				"expectedStatus": 301,
+				"requestUrl": "www.unittest.com"
+			};
+
+			var requestGetCallCount = 0;
+			uriCheck.__set__('request', {
+				get: function(options, callback) {
+					requestGetCallCount++;
+					var response = {
+						statusCode: 301
+					};
+					return callback(null,response);
+				}
+			});
+			var writeResultCallCount = 0;
+			var writeResultResult = '';
+			uriCheck.__set__('outAdapter',{
+				writeResult: function(result, uri) {
+					writeResultResult = result;
+					writeResultCallCount++;
+				}
+			});
+			var errValue = {};
+			uriCheck.checkUri(site, function(err) {
+				errValue = err;
+			});
+			requestGetCallCount.should.equal(1);
+			writeResultCallCount.should.equal(1);
+			should.not.exist(errValue);
+			writeResultResult.should.equal('success');
+
 			done();
 		});
 	});
