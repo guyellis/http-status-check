@@ -13,8 +13,13 @@ var siteCheck = function(site) {
 	return eachSite(site);
 };
 
-function lowerStartsWith(first, second) {
-	return first.toLowerCase().indexOf(0,second.length) === second.toLowerCase();
+function startsWith(testString, startsWith) {
+	for(var i= 0,n=startsWith.length; i<n; i++) {
+		if(testString.toLowerCase().indexOf(startsWith[i].toLowerCase()) === 0) {
+			return true;
+		}
+	}
+	return false;
 }
 
 function eachSite(site) {
@@ -23,7 +28,7 @@ function eachSite(site) {
 		uri: site.requestUrl
 	};
 	// Check that uri has a protocol
-	if(!lowerStartsWith(options.uri,'http://') || !lowerStartsWith(options.uri,'https://'))
+	if(!startsWith(options.uri,['http://','https://']))
 	{
 		options.uri = 'http://' + options.uri;
 	}
@@ -31,6 +36,8 @@ function eachSite(site) {
 	if(site.requestHeaders) {
 		options.headers = site.requestHeaders;
 	}
+	console.log('site: ', site);
+	console.log('options: ', options);
 	request.get(options, function(error, response, body) {
 		if(error) {
 			site.errors = error;

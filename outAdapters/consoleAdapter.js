@@ -70,5 +70,6 @@ module.exports = {
 	done: done,
 	// Expose for testing
 	successCount: successCount,
-	failCount: failCount
+	failCount: failCount,
+	organizeErrors: organizeErrors
 };
