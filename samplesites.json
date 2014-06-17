@@ -24,12 +24,14 @@
 			"disabled": true
 		},
 		{
-			"name": "Guy's Blog",
+			"name": "HTTP Status Check on Guy's Blog",
 			"expectedStatus": 200,
-			"requestUrl": "http://www.guyellisrocks.com",
-			"requestHeaders": {
-				"User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0"
-			}
+			"requestUrl": "http://www.guyellisrocks.com/2014/06/http-status-check.html"
+		},
+		{
+			"name": "Missing URL example",
+			"expectedStatus": 404,
+			"requestUrl": "http://www.guyellisrocks.com/2014/06/will-this-get-written.html"
 		}
 	]
 }
