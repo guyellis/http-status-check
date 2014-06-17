@@ -17,6 +17,25 @@ describe('code/uriCheck/', function() {
 		});
 	});
 
+	describe('startsWith()', function () {
+		var testString = 'this is a string';
+		var startsWith = uriCheck.__get__('startsWith');
+		
+		it('should return true if the string starts with one of the array items', function (done) {
+			var protocols = ['this', 'is'];
+			var result = startsWith(testString,protocols);
+			result.should.equal(true);
+			done();
+		});
+
+		it('should return false if the string starts with one of the array items', function (done) {
+			var protocols = ['that', 'is'];
+			var result = startsWith(testString,protocols);
+			result.should.equal(false);
+			done();
+		});
+	});
+
 	describe('checkUri()', function () {
 		it('terminates early if the site is disabled', function (done) {
 			var site = {

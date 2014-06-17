@@ -86,8 +86,6 @@ var done = function() {
 
 module.exports = {
 	done: done,
-	// For testing
-	startsWith: startsWith,
 	checkUri: checkUri,
 	init: init
 };
