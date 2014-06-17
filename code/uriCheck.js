@@ -8,14 +8,6 @@ var init = function(output){
 	outAdapter = output;
 };
 
-var siteCheck = function(site, callback) {
-	if (site.disabled) {
-		outAdapter.writeResult('disabled', site);
-		return callback(null);
-	}
-	return checkUri(site, callback);
-};
-
 function startsWith(testString, protocols) {
 	for(var i= 0,n=startsWith.length; i<n; i++) {
 		if(testString.toLowerCase().startsWith(protocols[i].toLowerCase())) {
@@ -24,6 +16,14 @@ function startsWith(testString, protocols) {
 	}
 	return false;
 }
+
+var siteCheck = function(site, callback) {
+	if (site.disabled) {
+		outAdapter.writeResult('disabled', site);
+		return callback(null);
+	}
+	return checkUri(site, callback);
+};
 
 function checkUri(site, callback) {
 	var options = {
