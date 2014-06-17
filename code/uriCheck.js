@@ -3,10 +3,11 @@
 var fs = require('fs');
 var request = require('request');
 var _ = require('lodash');
+var outAdapter = require('../outAdapters/consoleAdapter');
 
 var siteCheck = function(site) {
 	if (site.disabled) {
-		console.log('_ ' + site.name + ' (' + site.requestUrl + ') skipped because disabled.');
+		outAdapter.writeResult('disabled', site);
 		return true;
 	}
 	return eachSite(site);
@@ -32,12 +33,14 @@ function eachSite(site) {
 	}
 	request.get(options, function(error, response, body) {
 		if(error) {
-			console.log('X ' + site.name + ' (' + site.requestUrl + ') error: ', error);
+			site.error = [error];
+			outAdapter.writeResult('fail', site);
 			return false;
 		} else {
 			if(response.statusCode !== site.expectedStatus) {
-				console.log('X ' + site.name + ' (' + site.requestUrl + ') failed. Expected HTTP status of ' +
-						site.expectedStatus + ' and got ' + response.statusCode + '.');
+				var err = 'Expected HTTP status of ' + site.expectedStatus + ' and got ' + response.statusCode + '.';
+				site.error = [err];
+				outAdapter.writeResult('fail', site);
 				return false;
 			} else {
 				if(site.responseHeaders) {
@@ -56,15 +59,15 @@ function eachSite(site) {
 						}
 					}
 					if(accumulatedHeaderFails.length === 0) {
-						console.log('_ ' + site.name + ' (' + site.requestUrl + ') working as expected.');
+						outAdapter.writeResult('success', site);
 						return true;
 					} else {
-						console.log('X ' + site.name + ' (' + site.requestUrl + ') returned the expected status but some of the headers did not match:');
-						console.log(accumulatedHeaderFails);
+						site.error = accumulatedHeaderFails;
+						outAdapter.writeResult('fail', site);
 						return false;
 					}
 				} else {
-					console.log('_ ' + site.name + ' (' + site.requestUrl + ') working as expected.');
+					outAdapter.writeResult('success', site);
 					return true;
 				}
 			}
