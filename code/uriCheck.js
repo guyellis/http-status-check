@@ -1,10 +1,8 @@
 "use strict";
 
-var fs = require('fs');
 var request = require('request');
-var _ = require('lodash');
-var outAdapter;
 require('sugar');
+var outAdapter;
 
 var init = function(output){
 	outAdapter = output;
