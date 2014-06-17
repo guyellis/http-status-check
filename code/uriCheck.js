@@ -4,6 +4,7 @@ var fs = require('fs');
 var request = require('request');
 var _ = require('lodash');
 var outAdapter = require('../outAdapters/consoleAdapter');
+require('sugar');
 
 var siteCheck = function(site) {
 	if (site.disabled) {
@@ -13,9 +14,9 @@ var siteCheck = function(site) {
 	return eachSite(site);
 };
 
-function startsWith(testString, startsWith) {
+function startsWith(testString, protocols) {
 	for(var i= 0,n=startsWith.length; i<n; i++) {
-		if(testString.toLowerCase().indexOf(startsWith[i].toLowerCase()) === 0) {
+		if(testString.toLowerCase().startsWith(protocols[i].toLowerCase())) {
 			return true;
 		}
 	}
