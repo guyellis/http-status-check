@@ -17,15 +17,12 @@ function startsWith(testString, protocols) {
 	return false;
 }
 
-var siteCheck = function(site, callback) {
+var checkUri = function(site, callback) {
 	if (site.disabled) {
 		outAdapter.writeResult('disabled', site);
 		return callback(null);
 	}
-	return checkUri(site, callback);
-};
 
-function checkUri(site, callback) {
 	var options = {
 		followRedirect: false,
 		uri: site.requestUrl
@@ -88,10 +85,9 @@ var done = function() {
 };
 
 module.exports = {
-	siteCheck: siteCheck,
 	done: done,
 	// For testing
 	startsWith: startsWith,
-	eachSite: checkUri,
+	checkUri: checkUri,
 	init: init
 };

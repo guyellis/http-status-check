@@ -17,7 +17,7 @@ describe('code/uriCheck/', function() {
 		});
 	});
 
-	describe('siteCheck()', function () {
+	describe('checkUri()', function () {
 		it('terminates early if the site is disabled', function (done) {
 			var site = {
 				disabled: true
@@ -33,7 +33,7 @@ describe('code/uriCheck/', function() {
 				}
 			});
 			var errValue = {};
-			uriCheck.siteCheck(site, function(err) {
+			uriCheck.checkUri(site, function(err) {
 				errValue = err;
 			});
 			eachSiteCallCount.should.equal(0);

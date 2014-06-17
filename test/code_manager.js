@@ -90,11 +90,11 @@ describe('code/manager/', function() {
 					"expectedStatus": 200,
 					"requestUrl": "test1.com"
 				}];
-			var siteCheckCallCount = 0;
+			var checkUriCallCount = 0;
 			var doneCallCount = 0;
 			manager.__set__('uriCheck',{
-				siteCheck: function(site,callback){
-					siteCheckCallCount++;
+				checkUri: function(site,callback){
+					checkUriCallCount++;
 					callback();
 				},
 				done: function() {
@@ -102,22 +102,22 @@ describe('code/manager/', function() {
 				}
 			});
 			manager.iterateURLs(3, sites);
-			siteCheckCallCount.should.equal(1);
+			checkUriCallCount.should.equal(1);
 			doneCallCount.should.equal(1);
 			done();
 		});
-		it('throws an error if siteCheck calls back with error', function (done) {
+		it('throws an error if checkUri calls back with error', function (done) {
 			var sites = [
 				{
 					"name": "TestSite",
 					"expectedStatus": 200,
 					"requestUrl": "test1.com"
 				}];
-			var siteCheckCallCount = 0;
+			var checkUriCallCount = 0;
 			var doneCallCount = 0;
 			manager.__set__('uriCheck',{
-				siteCheck: function(site,callback){
-					siteCheckCallCount++;
+				checkUri: function(site,callback){
+					checkUriCallCount++;
 					callback(new Error('Unit Test Error'));
 				},
 				done: function() {
@@ -131,7 +131,7 @@ describe('code/manager/', function() {
 				exceptionText = e.toString();
 			}
 			exceptionText.should.equal('Error: Unit Test Error');
-			siteCheckCallCount.should.equal(1);
+			checkUriCallCount.should.equal(1);
 			doneCallCount.should.equal(0);
 			done();
 		});
