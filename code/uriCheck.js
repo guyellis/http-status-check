@@ -6,12 +6,12 @@ var _ = require('lodash');
 var outAdapter = require('../outAdapters/consoleAdapter');
 require('sugar');
 
-var siteCheck = function(site) {
+var siteCheck = function(site, callback) {
 	if (site.disabled) {
 		outAdapter.writeResult('disabled', site);
-		return true;
+		return callback(null);
 	}
-	return eachSite(site);
+	return eachSite(site, callback);
 };
 
 function startsWith(testString, protocols) {
@@ -23,7 +23,7 @@ function startsWith(testString, protocols) {
 	return false;
 }
 
-function eachSite(site) {
+function eachSite(site, callback) {
 	var options = {
 		followRedirect: false,
 		uri: site.requestUrl
@@ -37,19 +37,17 @@ function eachSite(site) {
 	if(site.requestHeaders) {
 		options.headers = site.requestHeaders;
 	}
-	console.log('site: ', site);
-	console.log('options: ', options);
 	request.get(options, function(error, response, body) {
 		if(error) {
 			site.errors = error;
 			outAdapter.writeResult('fail', site);
-			return false;
+			return callback(null);
 		} else {
 			if(response.statusCode !== site.expectedStatus) {
 				var err = 'Expected HTTP status of ' + site.expectedStatus + ' and got ' + response.statusCode + '.';
 				site.errors = [err];
 				outAdapter.writeResult('fail', site);
-				return false;
+				return callback(null);
 			} else {
 				if(site.responseHeaders) {
 					var accumulatedHeaderFails = [];
@@ -68,15 +66,15 @@ function eachSite(site) {
 					}
 					if(accumulatedHeaderFails.length === 0) {
 						outAdapter.writeResult('success', site);
-						return true;
+						return callback(null);
 					} else {
 						site.errors = accumulatedHeaderFails;
 						outAdapter.writeResult('fail', site);
-						return false;
+						return callback(null);
 					}
 				} else {
 					outAdapter.writeResult('success', site);
-					return true;
+					return callback(null);
 				}
 			}
 		}
