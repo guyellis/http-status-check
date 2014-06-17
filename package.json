@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/guyellis/http-status-check",
   "dependencies": {
+    "lodash": "^2.4.1",
     "request": "^2.36.0"
   },
   "devDependencies": {
