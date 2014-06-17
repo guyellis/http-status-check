@@ -1,19 +1,19 @@
 
 "use strict";
 
-var successCount = 0;
-var failCount = 0;
+var successHits = 0;
+var failHits = 0;
 
 var writeResult = function(resultObject) {
 	if(resultObject.success) {
 		console.log('_ ' + resultObject.name + ' (' + resultObject.uri + ') working as expected.');
-		successCount++;
+		successHits++;
 	} else {
 		console.log('X ' + resultObject.name + ' (' + resultObject.uri + ') failed. Here are the problems:');
 		for(var i= 0, n=resultObject.errors; i<n; i++) {
 			console.log('    ' + resultObject.errors[i]);
 		}
-		failCount++;
+		failHits++;
 	}
 };
 
@@ -23,7 +23,18 @@ var done = function() {
 	console.log('Successes: ', successCount);
 };
 
+var successCount = function() {
+	return successHits;
+};
+
+var failCount = function() {
+	return failHits;
+};
+
 module.exports = {
 	writeResult: writeResult,
-	done: done
+	done: done,
+	// Expose for testing
+	successCount: successCount,
+	failCount: failCount
 };
