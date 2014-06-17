@@ -13,7 +13,7 @@ var siteCheck = function(site, callback) {
 		outAdapter.writeResult('disabled', site);
 		return callback(null);
 	}
-	return eachSite(site, callback);
+	return checkUri(site, callback);
 };
 
 function startsWith(testString, protocols) {
@@ -25,7 +25,7 @@ function startsWith(testString, protocols) {
 	return false;
 }
 
-function eachSite(site, callback) {
+function checkUri(site, callback) {
 	var options = {
 		followRedirect: false,
 		uri: site.requestUrl
@@ -92,6 +92,6 @@ module.exports = {
 	done: done,
 	// For testing
 	startsWith: startsWith,
-	eachSite: eachSite,
+	eachSite: checkUri,
 	init: init
 };

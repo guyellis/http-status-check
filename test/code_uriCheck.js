@@ -23,7 +23,7 @@ describe('code/uriCheck/', function() {
 				disabled: true
 			};
 			var eachSiteCallCount = 0;
-			uriCheck.__set__('eachSite', function(site,callback){
+			uriCheck.__set__('checkUri', function(site,callback){
 				eachSiteCallCount++;
 			});
 			var writeResultCallCount = 0;
