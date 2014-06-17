@@ -1,25 +1,47 @@
 
 "use strict";
+var _ = require('lodash');
 
 var successHits = 0;
 var failHits = 0;
 var disableHits = 0;
 
-var writeResult = function(result, resultObject) {
+var organizeErrors = function(errors) {
+	if(!Array.isArray(errors)){
+		if(_.isObject(errors)){
+			var accumulator = [];
+			for(var property in errors) {
+				if(errors.hasOwnProperty(property)){
+					accumulator.push(property + ': ' + errors[property]);
+				}
+			}
+			errors = accumulator;
+		} else {
+			errors = [errors];
+		}
+	}
+	return _.flatten(errors);
+};
+
+var writeResult = function(result, uri) {
 	switch(result) {
 		case 'success':
-			console.log('_ ' + resultObject.name + ' (' + resultObject.requestUrl + ') working as expected.');
+			console.log('_ ' + uri.name + ' (' + uri.requestUrl + ') working as expected.');
 			successHits++;
 			break;
 		case 'fail':
-			console.log('X ' + resultObject.name + ' (' + resultObject.requestUrl + ') failed. Here are the problems:');
-			for(var i= 0, n=resultObject.errors; i<n; i++) {
-				console.log('    ' + resultObject.errors[i]);
+			console.log('X ' + uri.name + ' (' + uri.requestUrl + ') failed. Here are the problems:');
+			// console.log('uri.errors: ', uri.errors);
+			if(uri.errors) {
+				uri.errors = organizeErrors(uri.errors);
+				for (var i = 0, n = uri.errors.length; i < n; i++) {
+					console.log('    ' + uri.errors[i]);
+				}
 			}
 			failHits++;
 			break;
 		case 'disabled':
-			console.log('_ ' + resultObject.name + ' (' + resultObject.requestUrl + ') testing disabled.');
+			console.log('_ ' + uri.name + ' (' + uri.requestUrl + ') testing disabled.');
 			disableHits++;
 			break;
 		default:

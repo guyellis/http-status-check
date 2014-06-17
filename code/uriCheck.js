@@ -33,13 +33,13 @@ function eachSite(site) {
 	}
 	request.get(options, function(error, response, body) {
 		if(error) {
-			site.error = [error];
+			site.errors = error;
 			outAdapter.writeResult('fail', site);
 			return false;
 		} else {
 			if(response.statusCode !== site.expectedStatus) {
 				var err = 'Expected HTTP status of ' + site.expectedStatus + ' and got ' + response.statusCode + '.';
-				site.error = [err];
+				site.errors = [err];
 				outAdapter.writeResult('fail', site);
 				return false;
 			} else {
@@ -62,7 +62,7 @@ function eachSite(site) {
 						outAdapter.writeResult('success', site);
 						return true;
 					} else {
-						site.error = accumulatedHeaderFails;
+						site.errors = accumulatedHeaderFails;
 						outAdapter.writeResult('fail', site);
 						return false;
 					}
