@@ -54,4 +54,87 @@ describe('code/manager/', function() {
 			done();
 		});
 	});
+
+	describe('expandInput()', function () {
+		it('expands arrays of requestUrls if they are an array', function (done) {
+			var sites = [
+				{
+					"name": "TestSite",
+					"expectedStatus": 200,
+					"requestUrl": ["test1.com", "test2.com"]
+				}];
+			var results = manager.expandInput(sites);
+			results.length.should.equal(2);
+			Array.isArray(results).should.equal(true);
+			done();
+		});
+		it('does nothing if requestUrls is not an array', function (done) {
+			var sites = [
+				{
+					"name": "TestSite",
+					"expectedStatus": 200,
+					"requestUrl": "test1.com"
+				}];
+			var results = manager.expandInput(sites);
+			results.length.should.equal(1);
+			Array.isArray(results).should.equal(true);
+			done();
+		});
+	});
+
+	describe('iterateURLs()', function () {
+		it('calls uriCheck.done() when finished', function (done) {
+			var sites = [
+				{
+					"name": "TestSite",
+					"expectedStatus": 200,
+					"requestUrl": "test1.com"
+				}];
+			var siteCheckCallCount = 0;
+			var doneCallCount = 0;
+			manager.__set__('uriCheck',{
+				siteCheck: function(site,callback){
+					siteCheckCallCount++;
+					callback();
+				},
+				done: function() {
+					doneCallCount++;
+				}
+			});
+			manager.iterateURLs(3, sites);
+			siteCheckCallCount.should.equal(1);
+			doneCallCount.should.equal(1);
+			done();
+		});
+		it('throws an error if siteCheck calls back with error', function (done) {
+			var sites = [
+				{
+					"name": "TestSite",
+					"expectedStatus": 200,
+					"requestUrl": "test1.com"
+				}];
+			var siteCheckCallCount = 0;
+			var doneCallCount = 0;
+			manager.__set__('uriCheck',{
+				siteCheck: function(site,callback){
+					siteCheckCallCount++;
+					callback(new Error('Unit Test Error'));
+				},
+				done: function() {
+					doneCallCount++;
+				}
+			});
+			var exceptionText = '';
+			try {
+				manager.iterateURLs(3, sites);
+			} catch(e) {
+				exceptionText = e.toString();
+			}
+			exceptionText.should.equal('Error: Unit Test Error');
+			siteCheckCallCount.should.equal(1);
+			doneCallCount.should.equal(0);
+			done();
+		});
+	});
+
 });

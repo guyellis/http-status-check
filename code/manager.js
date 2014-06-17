@@ -7,7 +7,7 @@ var async = require('async');
 var iterateURLs = function(concurrentRequests, sites) {
 	async.eachLimit(sites, concurrentRequests, uriCheck.siteCheck, function(err) {
 		if(err) {
-			console.log('Error: ', err);
+			throw err;
 		}
 		uriCheck.done();
 	});
