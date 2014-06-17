@@ -1,4 +1,5 @@
 {
+	"concurrentRequests": 3,
 	"sites": [
 		{
 			"name": "LinkSilk",

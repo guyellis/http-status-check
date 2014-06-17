@@ -29,9 +29,9 @@ function expandInput(sites) {
 
 function run(filename) {
 	var file = require(filename);
-	// console.log(file);
 	var sites = expandInput(file.sites);
-	manager.iterateURLs(sites);
+	var concurrentRequests = file.concurrentRequests || 3;
+	manager.iterateURLs(concurrentRequests, sites);
 }
 
 function main() {

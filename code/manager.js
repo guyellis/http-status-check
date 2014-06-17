@@ -5,8 +5,8 @@ var uriCheck = require('./uriCheck');
 var _ = require('lodash');
 var async = require('async');
 
-var iterateURLs = function(sites) {
-	async.eachLimit(sites,3,iterator, function(err) {
+var iterateURLs = function(concurrentRequests, sites) {
+	async.eachLimit(sites, concurrentRequests, iterator, function(err) {
 		if(err) {
 			console.log('Error: ', err);
 		}

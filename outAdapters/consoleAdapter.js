@@ -35,7 +35,7 @@ var writeResult = function(result, uri) {
 			if(uri.errors) {
 				uri.errors = organizeErrors(uri.errors);
 				for (var i = 0, n = uri.errors.length; i < n; i++) {
-					console.log('    ' + uri.errors[i]);
+					console.log('  - ' + uri.errors[i]);
 				}
 			}
 			failHits++;
