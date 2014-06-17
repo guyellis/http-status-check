@@ -1,8 +1,8 @@
 # HTTP Status Check
 
-Checks your sites' HTTP statuses
-
 [![Build Status](https://travis-ci.org/guyellis/http-status-check.svg?branch=master)](https://travis-ci.org/guyellis/http-status-check)
+
+Checks your sites' HTTP statuses
 
 ## Install
 
