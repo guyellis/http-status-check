@@ -2,25 +2,15 @@
 
 var fs = require('fs');
 var request = require('request');
+var _ = require('lodash');
 
 function siteCheck(site) {
 	if (site.disabled) {
 		console.log('_ ' + site.name + ' (' + site.requestUrl + ') skipped because disabled.');
-		return {success: 1, failure: 0};
+		return true;
 	}
 	var results = {success: 0, failure: 0};
-	var urls = site.requestUrl;
-	console.log('urls: ', urls);
-	for(var i= 0, n=urls.length; i<n; i++) {
-		site.requestUrl = urls[i];
-		console.log('site.requestUrl: ', site.requestUrl);
-//		if(eachSite(site)) {
-//			results.success++;
-//		} else {
-//			results.failure++;
-//		}
-	}
-	return results;
+	return eachSite(site);
 }
 
 function lowerStartsWith(first, second) {
@@ -83,19 +73,41 @@ function eachSite(site) {
 	});
 }
 
+// This function accepts an array of sites and if
+// the requestUrl on any of its elements is an array
+// it will duplicate that element and split out the
+// elements of the requestUrl array
+function expandInput(sites) {
+	var result = _.map(sites,function(site){
+		if(Array.isArray(site.requestUrl)){
+			var urls = site.requestUrl;
+			delete site.requestUrl;
+			return _.map(urls, function(url){
+				var newItem = _.cloneDeep(site);
+				newItem.requestUrl = url;
+				return newItem;
+			});
+		} else {
+			return site;
+		}
+	});
+
+	return _.flatten(result);
+}
+
 function run(filename) {
 	var file = require(filename);
 	// console.log(file);
 	var successCount = 0;
 	var failureCount = 0;
-	for(var i=0, n=file.sites.length; i<n; i++) {
-		var site = file.sites[i];
-		if(!Array.isArray(site.requestUrl)) {
-			site.requestUrl = [site.requestUrl];
+	var sites = expandInput(file.sites);
+	for(var i=0, n=sites.length; i<n; i++) {
+		var site = sites[i];
+		if(siteCheck(site)) {
+			successCount++;
+		} else {
+			failureCount++;
 		}
-		var result = siteCheck(site);
-		successCount += result.success;
-		failureCount += result.failure;
 	}
 	console.log('Checked ' + (successCount + failureCount) + ' sites.');
 	console.log('Failed: ' + failureCount);
