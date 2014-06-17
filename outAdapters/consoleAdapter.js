@@ -46,7 +46,6 @@ var writeResult = function(result, uri) {
 			break;
 		default:
 			throw new Error('unknown case statement: ' + result);
-			break;
 	}
 };
 
