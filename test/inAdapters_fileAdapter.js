@@ -9,7 +9,11 @@ var inAdapter = rewire('../inAdapters/fileAdapter');
 
 describe('inAdapters/fileAdapter/', function() {
 	inAdapter.__set__('require', function(filename) {
-		return {unit: 'test'};
+		if(filename.indexOf('checksites') > 0) {
+			return {unit: 'checksites'};
+		} else {
+			return {unit: 'samplesites'};
+		}
 	});
 
 	describe('getRunData()', function () {
@@ -25,7 +29,32 @@ describe('inAdapters/fileAdapter/', function() {
 			existsSyncCallCount.should.equal(1);
 			console.log(runData);
 			should.exist(runData.unit);
-			runData.unit.should.equal('test');
+			runData.unit.should.equal('checksites');
+			done();
+		});
+	});
+
+	describe('getRunData()', function () {
+		it('should return samplesites.json data if exists and if checksites.json is missing', function (done) {
+			var existsSyncCallCount = 0;
+			inAdapter.__set__('fs', {
+				existsSync: function(filename) {
+					existsSyncCallCount++;
+					if(existsSyncCallCount < 2) {
+						// In the first call to existsSync we're checking
+						// for the existance of checksites.json.
+						// In this test we want to simulate that it doesn't
+						// exist so going to return false the first time.
+						return false;
+					}
+					return true;
+				}
+			});
+			var runData = inAdapter.getRunData();
+			existsSyncCallCount.should.equal(2);
+			console.log(runData);
+			should.exist(runData.unit);
+			runData.unit.should.equal('samplesites');
 			done();
 		});
 	});
