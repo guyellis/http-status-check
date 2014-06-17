@@ -83,6 +83,14 @@ function eachSite(site) {
 	});
 }
 
+var done = function() {
+	outAdapter.done();
+};
+
 module.exports = {
-	siteCheck: siteCheck
+	siteCheck: siteCheck,
+	done: done,
+	// For testing
+	startsWith: startsWith,
+	eachSite: eachSite
 };

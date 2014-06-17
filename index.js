@@ -3,7 +3,7 @@
 var fs = require('fs');
 var request = require('request');
 var _ = require('lodash');
-var uriCheck = require('./code/uriCheck');
+var manager = require('./code/manager');
 
 // This function accepts an array of sites and if
 // the requestUrl on any of its elements is an array
@@ -30,20 +30,8 @@ function expandInput(sites) {
 function run(filename) {
 	var file = require(filename);
 	// console.log(file);
-	var successCount = 0;
-	var failureCount = 0;
 	var sites = expandInput(file.sites);
-	for(var i=0, n=sites.length; i<n; i++) {
-		var site = sites[i];
-		if(uriCheck.siteCheck(site)) {
-			successCount++;
-		} else {
-			failureCount++;
-		}
-	}
-	console.log('Checked ' + (successCount + failureCount) + ' sites.');
-	console.log('Failed: ' + failureCount);
-	console.log('Succeeded: ' + successCount);
+	manager.iterateURLs(sites);
 }
 
 function main() {
