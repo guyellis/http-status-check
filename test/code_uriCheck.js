@@ -5,9 +5,9 @@
 
 var should = require('chai').should();
 var rewire = require('rewire');
-var index = require('../index');
+var manager = require('../code/uriCheck');
 
-describe('index/', function() {
+describe('code/uriCheck/', function() {
 	describe('()', function () {
 		it('', function (done) {
 			done();

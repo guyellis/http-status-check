@@ -5,9 +5,9 @@
 
 var should = require('chai').should();
 var rewire = require('rewire');
-var index = require('../index');
+var inAdapter = require('../inAdapters/fileAdapter');
 
-describe('index/', function() {
+describe('inAdapters/fileAdapter/', function() {
 	describe('()', function () {
 		it('', function (done) {
 			done();
