@@ -1,6 +1,5 @@
 "use strict";
 
-var request = require('request');
 var uriCheck = require('./uriCheck');
 var _ = require('lodash');
 var async = require('async');
