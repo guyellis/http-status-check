@@ -5,20 +5,20 @@ var request = require('request');
 
 function siteCheck(site) {
 	if (site.disabled) {
-		console.log('_ ' + site.name + ' skipped because disabled.');
+		console.log('_ ' + site.name + ' (' + site.requestUrl + ') skipped because disabled.');
 		return {success: 1, failure: 0};
 	}
 	var results = {success: 0, failure: 0};
 	var urls = site.requestUrl;
-//	console.log('urls: ', urls);
-//	console.log('site.requestUrl: ', site.requestUrl);
+	console.log('urls: ', urls);
 	for(var i= 0, n=urls.length; i<n; i++) {
 		site.requestUrl = urls[i];
-		if(eachSite(site)) {
-			results.success++;
-		} else {
-			results.failure++;
-		}
+		console.log('site.requestUrl: ', site.requestUrl);
+//		if(eachSite(site)) {
+//			results.success++;
+//		} else {
+//			results.failure++;
+//		}
 	}
 	return results;
 }
@@ -43,11 +43,11 @@ function eachSite(site) {
 	}
 	request.get(options, function(error, response, body) {
 		if(error) {
-			console.log('X ' + site.name + ' error: ', error);
+			console.log('X ' + site.name + ' (' + site.requestUrl + ') error: ', error);
 			return false;
 		} else {
 		if(response.statusCode !== site.expectedStatus) {
-			console.log('X ' + site.name + ' failed. Expected HTTP status of ' +
+			console.log('X ' + site.name + ' (' + site.requestUrl + ') failed. Expected HTTP status of ' +
 					site.expectedStatus + ' and got ' + response.statusCode + '.');
 			return false;
 		} else {
@@ -67,15 +67,15 @@ function eachSite(site) {
 					}
 				}
 				if(accumulatedHeaderFails.length === 0) {
-					console.log('_ ' + site.name + ' working as expected.');
+					console.log('_ ' + site.name + ' (' + site.requestUrl + ') working as expected.');
 					return true;
 				} else {
-					console.log('X ' + site.name + ' returned the expected status but some of the headers did not match:');
+					console.log('X ' + site.name + ' (' + site.requestUrl + ') returned the expected status but some of the headers did not match:');
 					console.log(accumulatedHeaderFails);
 					return false;
 				}
 			} else {
-				console.log('_ ' + site.name + ' working as expected.');
+				console.log('_ ' + site.name + ' (' + site.requestUrl + ') working as expected.');
 				return true;
 			}
 		}
