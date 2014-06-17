@@ -7,7 +7,7 @@ var outAdapter = require('./outAdapters/consoleAdapter');
 var main = function() {
 	var runData = inAdapter.getRunData();
 	manager.run(runData, outAdapter);
-}
+};
 
 main();
 
