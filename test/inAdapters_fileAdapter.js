@@ -27,7 +27,6 @@ describe('inAdapters/fileAdapter/', function() {
 			});
 			var runData = inAdapter.getRunData();
 			existsSyncCallCount.should.equal(1);
-			console.log(runData);
 			should.exist(runData.unit);
 			runData.unit.should.equal('checksites');
 			done();
@@ -52,9 +51,29 @@ describe('inAdapters/fileAdapter/', function() {
 			});
 			var runData = inAdapter.getRunData();
 			existsSyncCallCount.should.equal(2);
-			console.log(runData);
 			should.exist(runData.unit);
 			runData.unit.should.equal('samplesites');
+			done();
+		});
+	});
+
+	describe('getRunData()', function () {
+		it('should throw an exception if neither samplesites.json or checksites.json exist', function (done) {
+			var existsSyncCallCount = 0;
+			inAdapter.__set__('fs', {
+				existsSync: function(filename) {
+					existsSyncCallCount++;
+					return false;
+				}
+			});
+			var exceptionThrown = false;
+			try {
+				inAdapter.getRunData();
+			} catch(e) {
+				exceptionThrown = true
+			}
+			existsSyncCallCount.should.equal(2);
+			exceptionThrown.should.equal(true);
 			done();
 		});
 	});
