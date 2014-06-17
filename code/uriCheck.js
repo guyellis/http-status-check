@@ -3,8 +3,12 @@
 var fs = require('fs');
 var request = require('request');
 var _ = require('lodash');
-var outAdapter = require('../outAdapters/consoleAdapter');
+var outAdapter;
 require('sugar');
+
+var init = function(output){
+	outAdapter = output;
+};
 
 var siteCheck = function(site, callback) {
 	if (site.disabled) {
@@ -90,5 +94,6 @@ module.exports = {
 	done: done,
 	// For testing
 	startsWith: startsWith,
-	eachSite: eachSite
+	eachSite: eachSite,
+	init: init
 };
