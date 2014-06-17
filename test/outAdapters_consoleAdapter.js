@@ -5,15 +5,16 @@
 
 var should = require('chai').should();
 var rewire = require('rewire');
-var outAdapter = require('../outAdapters/consoleAdapter');
+var outAdapter = rewire('../outAdapters/consoleAdapter');
 
 describe('outAdapters/consoleAdapter/', function() {
 	describe('writeResult()', function () {
 		it('should increment success counter when successful', function (done) {
-			var successCount = outAdapter.successCount();
+			var failHits = outAdapter.__get__('failHits');
 			outAdapter.writeResult('success', {});
-			outAdapter.failCount().should.be.equal(0);
-			outAdapter.successCount().should.be.above(successCount);
+			failHits.should.equal(0);
+			var successHits = outAdapter.__get__('successHits');
+			successHits.should.equal(1);
 			done();
 		});
 	});

@@ -57,19 +57,7 @@ var done = function() {
 	console.log('Disable count: ', disableHits);
 };
 
-var successCount = function() {
-	return successHits;
-};
-
-var failCount = function() {
-	return failHits;
-};
-
 module.exports = {
 	writeResult: writeResult,
-	done: done,
-	// Expose for testing
-	successCount: successCount,
-	failCount: failCount,
-	organizeErrors: organizeErrors
+	done: done
 };
