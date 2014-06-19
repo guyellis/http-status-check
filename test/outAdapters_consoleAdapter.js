@@ -58,6 +58,15 @@ describe('outAdapters/consoleAdapter/', function() {
 	});
 
 	describe('writeResult()', function () {
+		it('should increment disabled counter when url is disabled', function (done) {
+			outAdapter.writeResult('disabled', {errors: 'some error'});
+			var disableHits = outAdapter.__get__('disableHits');
+			disableHits.should.be.above(0);
+			done();
+		});
+	});
+
+	describe('writeResult()', function () {
 		it('should throw an exception if an unrecognized result type is passed', function (done) {
 			var exceptionThrown = false;
 			try {
