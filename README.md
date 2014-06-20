@@ -39,4 +39,11 @@ that you want to run checks on.
   * `disabled` - defaults to false. Set to true if you don't want this site to be checked. Useful if you don't want to delete the details from the .json config file but also don't want it run. Will appear in reports as "not run." 
 * `concurrentRequests` - The number of sites to check at the same time. Defaults to 3 if this is missing
   
-  
+## Future Features
+
+Ideas for features that someone might find useful. These ideas can be implemented at workshops and used as training.
+
+* Control Sites - Allow a config item on each site that is called 'control' or something similar. Defaults to false if missing and tells the script that we expect this site to be always available and use it to test our internet connection. e.g. google.com, yahoo.com, microsoft.com should always return 200 or 301. If they timeout then there's something wrong with our connectivity and we shouldn't assume a problem with the other sites. Run the control sites at the beginning and at the end.
+* email out adapter - An out adapter that emails the results to an email recipient.
+* twilio out adapter - An out adapter that sends the results via twilio.
+* mongo in adapter - An in adapter that reads the input from a MongoDB.
