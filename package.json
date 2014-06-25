@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "win_istanbul": "istanbul.cmd cover node_modules\\mocha\\bin\\_mocha"
+    "win_istanbul": "istanbul.cmd cover node_modules\\mocha\\bin\\_mocha",
     "istanbul": "istanbul cover node_modules/.bin/_mocha"
   },
   "repository": {
