@@ -16,6 +16,10 @@ npm install http-status-check
 node index.js
 ```
 
+##Questions?
+
+Feel free to contact me on twitter if you have any questions: [@wildfiction](https://twitter.com/wildfiction)
+
 ##Getting Started
 
 Running `node index.js` should give you an indication
