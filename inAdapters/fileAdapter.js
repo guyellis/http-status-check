@@ -1,15 +1,15 @@
 
 var fs = require('fs');
+var standard = require('../checksites.js');
+var sample = require('../samplesites.js');
 
 var getRunData = function() {
-	var standard = __dirname + '/../checksites.json';
-	var sample = __dirname + '/../samplesites.json';
-	if(fs.existsSync(standard)) {
-		return require(standard);
-	} else if(fs.existsSync(sample)) {
-		return require(sample);
+	if(standard) {
+		return standard;
+	} else if(sample) {
+		return sample;
 	} else {
-		throw new Error('Expecting checksites.json or samplesites.json to exist.');
+		throw new Error('Expecting checksites.js or samplesites.js to exist.');
 	}
 };
 

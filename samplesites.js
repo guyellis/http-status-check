@@ -1,4 +1,4 @@
-{
+module.exports = {
 	"concurrentRequests": 3,
 	"sites": [
 		{
@@ -34,4 +34,4 @@
 			"requestUrl": "http://www.guyellisrocks.com/2014/06/will-this-get-written.html"
 		}
 	]
-}
+};

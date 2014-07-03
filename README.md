@@ -52,3 +52,4 @@ Ideas for features that someone might find useful. These ideas can be implemente
 * twilio out adapter - An out adapter that sends the results via twilio.
 * mongo in adapter - An in adapter that reads the input from a MongoDB.
 * onPageText - An optional array of strings in the config json file against each site. Check the returned HTML from each request against the collection of strings and fail if not found. (Questions: Should be case insensitive? Should be able to specify case sensitivity?)
+* excludedResponseHeaders - Allow for an array of headers that should not be present in the response header collection. For example, the server identifying information that you might have stripped out.
