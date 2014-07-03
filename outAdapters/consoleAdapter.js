@@ -34,9 +34,7 @@ var writeResult = function(result, uri) {
 			// console.log('uri.errors: ', uri.errors);
 			if(uri.errors) {
 				uri.errors = organizeErrors(uri.errors);
-				for (var i = 0, n = uri.errors.length; i < n; i++) {
-					console.log('  - ' + uri.errors[i]);
-				}
+                _.forEach(uri.errors, function(error) { console.log('  - ' + error); } );
 			}
 			failHits++;
 			break;
