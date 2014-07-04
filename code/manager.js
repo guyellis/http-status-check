@@ -37,7 +37,10 @@ var expandInput = function(sites) {
 
 var run = function(runData, outAdapter) {
 	var sites = expandInput(runData.sites);
-	var concurrentRequests = runData.concurrentRequests || 3;
+	var concurrentRequests = runData.concurrentRequests;
+  if(!concurrentRequests || isNaN(concurrentRequests) || concurrentRequests < 1) {
+    concurrentRequests = 3;
+  }
 	uriCheck.init(outAdapter);
 	iterateURLs(concurrentRequests, sites);
 };

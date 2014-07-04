@@ -53,6 +53,28 @@ describe('code/manager/', function() {
 			expandInputCalled.should.equal(true);
 			done();
 		});
+		it('should use 3 as the number of concurrentRequests if a number less than 1 is supplied', function (done) {
+			var initCalled = false;
+			manager.__set__('uriCheck', {
+				init: function(outAdapter) {
+					initCalled = true;
+				}
+			});
+			var expandInputCalled = false;
+			manager.__set__('expandInput', function() {
+				expandInputCalled = true;
+			});
+			var concurrentRequests = 0;
+			manager.__set__('iterateURLs', function(concurrentRequestsParam, sites){
+				concurrentRequests = concurrentRequestsParam;
+			});
+
+			manager.run({concurrentRequests: -1});
+			concurrentRequests.should.equal(3);
+			initCalled.should.equal(true);
+			expandInputCalled.should.equal(true);
+			done();
+		});
 	});
 
 	describe('expandInput()', function () {
