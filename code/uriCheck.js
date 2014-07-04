@@ -1,5 +1,6 @@
 "use strict";
 
+var _ = require('lodash');
 var request = require('request');
 require('sugar');
 var outAdapter;
@@ -48,8 +49,10 @@ var checkUri = function(site, callback) {
 				outAdapter.writeResult('fail', site);
 				return callback(null);
 			} else {
+
+        var accumulatedHeaderFails = [];
+
 				if(site.responseHeaders) {
-					var accumulatedHeaderFails = [];
 					for (var header in site.responseHeaders) {
 						if (site.responseHeaders.hasOwnProperty(header)) {
 							var actualHeaderValue = response.headers[header];
@@ -63,18 +66,30 @@ var checkUri = function(site, callback) {
 							}
 						}
 					}
-					if(accumulatedHeaderFails.length === 0) {
-						outAdapter.writeResult('success', site);
-						return callback(null);
-					} else {
-						site.errors = accumulatedHeaderFails;
-						outAdapter.writeResult('fail', site);
-						return callback(null);
-					}
-				} else {
-					outAdapter.writeResult('success', site);
-					return callback(null);
 				}
+
+        if(site.excludedHeaders) {
+          _.each(site.excludedHeaders, function(header) {
+            header = header.toLowerCase();
+            if (response.headers[header]) {
+              var headerValue = response.headers[header];
+              accumulatedHeaderFails.push(
+                'Expected header \'' + header +
+                '\' to NOT be present but it was an was set to: ' +
+                headerValue
+              );
+            }
+          });
+        }
+
+        if(accumulatedHeaderFails.length === 0) {
+          outAdapter.writeResult('success', site);
+          return callback(null);
+        } else {
+          site.errors = accumulatedHeaderFails;
+          outAdapter.writeResult('fail', site);
+          return callback(null);
+        }
 			}
 		}
 	});

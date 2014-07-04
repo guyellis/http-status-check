@@ -184,6 +184,47 @@ describe('code/uriCheck/', function() {
 			done();
 		});
 
+		it('should call writeResult with fail if an excludedHeaders header is present', function (done) {
+			var site = {
+				name: "Unit Test",
+				expectedStatus: 200,
+				requestUrl: "www.unittest.com",
+        excludedHeaders: ['X-Powered-By']
+			};
+
+			var requestGetCallCount = 0;
+			uriCheck.__set__('request', {
+				get: function(options, callback) {
+					requestGetCallCount++;
+					var response = {
+						statusCode: 200,
+						headers: {
+							'x-powered-by': 'ASP.NET'
+						}
+					};
+					return callback(null,response);
+				}
+			});
+			var writeResultCallCount = 0;
+			var writeResultResult = '';
+			uriCheck.__set__('outAdapter',{
+				writeResult: function(result, uri) {
+					writeResultResult = result;
+					writeResultCallCount++;
+				}
+			});
+			var errValue = {};
+			uriCheck.checkUri(site, function(err) {
+				errValue = err;
+			});
+			requestGetCallCount.should.equal(1);
+			writeResultCallCount.should.equal(1);
+			should.not.exist(errValue);
+			writeResultResult.should.equal('fail');
+
+			done();
+		});
+
 		it('should call writeResult with success if the response headers and statuses match', function (done) {
 			var site = {
 				"name": "Unit Test",
