@@ -6,6 +6,7 @@
 var should = require('chai').should();
 var rewire = require('rewire');
 var manager = rewire('../code/manager');
+var _ = require('lodash');
 
 describe('code/manager/', function() {
 	describe('run()', function () {
@@ -158,5 +159,129 @@ describe('code/manager/', function() {
 			done();
 		});
 	});
+
+  describe('expandExpectedTextInput()', function () {
+    it('should do nothing if there is no expectedText property', function (done) {
+      var sites = [
+        {
+          name: "TestSite",
+          expectedStatus: 200,
+          requestUrl: "test1.com"
+        }];
+
+      var results = manager.expandExpectedTextInput(sites);
+
+      should.exist(results);
+      _.isArray(results).should.equal(true);
+      results.length.should.equal(1);
+      should.not.exist(results[0].expectedText);
+      results[0].name.should.equal('TestSite');
+      done();
+    });
+
+    it('should expand expectedText property if it is a single string', function (done) {
+      // Setup for the test
+      var sites = [
+        {
+          name: "TestSite",
+          expectedStatus: 200,
+          requestUrl: "test1.com",
+          expectedText: 'some search string'
+        }];
+
+      // Execute function we want to test
+      var results = manager.expandExpectedTextInput(sites);
+
+      // Assertions
+      should.exist(results);
+      _.isArray(results).should.equal(true);
+      results.length.should.equal(1);
+      results[0].name.should.equal('TestSite');
+      _.isArray(results[0].expectedText).should.equal(true);
+      results[0].expectedText.length.should.equal(1);
+      results[0].expectedText[0].text.should.equal('some search string');
+
+      done();
+    });
+
+    it('should expand expectedText property if it is an array of strings and/or objects', function (done) {
+      // Setup for the test
+      var sites = [
+        {
+          name: "TestSite",
+          expectedStatus: 200,
+          requestUrl: "test1.com",
+          expectedText: ['some search string', { text: '2nd string'}, {text: '3rd string', caseSensitive: true}]
+        }];
+
+      // Execute function we want to test
+      var results = manager.expandExpectedTextInput(sites);
+
+      // Assertions
+      should.exist(results);
+      _.isArray(results).should.equal(true);
+      results.length.should.equal(1);
+      results[0].name.should.equal('TestSite');
+      _.isArray(results[0].expectedText).should.equal(true);
+      results[0].expectedText.length.should.equal(3);
+      results[0].expectedText[0].text.should.equal('some search string');
+      should.not.exist(results[0].expectedText[0].caseSensitive);
+      results[0].expectedText[1].text.should.equal('2nd string');
+      should.not.exist(results[0].expectedText[1].caseSensitive);
+      results[0].expectedText[2].text.should.equal('3rd string');
+      should.exist(results[0].expectedText[2].caseSensitive);
+      results[0].expectedText[2].caseSensitive.should.equal(true);
+
+      done();
+    });
+
+    it('should throw an Error if the expectedText object does not have a text property', function (done) {
+      // Setup for the test
+      var sites = [{
+        name: "TestSite",
+        expectedStatus: 200,
+        requestUrl: "test1.com",
+        expectedText: { random: '2nd string'}
+      }];
+
+      var error;
+      try {
+        // Execute function we want to test
+        manager.expandExpectedTextInput(sites);
+      } catch(e) {
+        error = e;
+      }
+
+      // Assertions
+      should.exist(error);
+      error.message.should.equal('text property is missing from expectedText object.');
+
+      done();
+    });
+
+    it('should throw an Error if the expectedText object has an unrecognized type', function (done) {
+      // Setup for the test
+      var sites = [{
+        name: "TestSite",
+        expectedStatus: 200,
+        requestUrl: "test1.com",
+        expectedText: true
+      }];
+
+      var error;
+      try {
+        // Execute function we want to test
+        manager.expandExpectedTextInput(sites);
+      } catch(e) {
+        error = e;
+      }
+
+      // Assertions
+      should.exist(error);
+      error.message.should.equal('Unknown/Unexpected type for text property.');
+
+      done();
+    });
+  });
 
 });
