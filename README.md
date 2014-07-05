@@ -40,7 +40,7 @@ that you want to run checks on.
   * `requestUrl` - URL or array of URLs to of the site(s) to check
   * `responseHeaders` - an object with a collection of response headers expected back from the site. Each of these is compared to the actual response headers received. 
   * `requestHeaders` - an object with a collection of request headers to send with the request. 
-  * `disabled` - defaults to false. Set to true if you don't want this site to be checked. Useful if you don't want to delete the details from the .json config file but also don't want it run. Will appear in reports as "not run." 
+  * `disabled` - defaults to false. Set to true if you don't want this site to be checked. Useful if you don't want to delete the details from the .js config file but also don't want it run. Will appear in reports as "not run." 
   * `excludedHeaders` - An array of headers that you expect not to be returned by the server. (For example, for security you may not want to X-Powered-By header to be returned.) If any of these headers are present then the check will be considered a failure and reported as such.
   * `expectedText` - A string or an array of strings or an array of objects. If an array of objects then each object should have a string 'text' property and an optional boolean caseSensitive property 
     * `text` - The text to find on the page
@@ -55,4 +55,3 @@ Ideas for features that someone might find useful. These ideas can be implemente
 * email out adapter - An out adapter that emails the results to an email recipient.
 * twilio out adapter - An out adapter that sends the results via twilio.
 * mongo in adapter - An in adapter that reads the input from a MongoDB.
-* onPageText - An optional array of strings in the config json file against each site. Check the returned HTML from each request against the collection of strings and fail if not found. (Questions: Should be case insensitive? Should be able to specify case sensitivity?)
