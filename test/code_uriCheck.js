@@ -225,6 +225,117 @@ describe('code/uriCheck/', function() {
 			done();
 		});
 
+		it('should call writeResult with fail if expected case insensitive text is missing', function (done) {
+			var site = {
+				name: "Unit Test",
+				expectedStatus: 200,
+				requestUrl: "www.unittest.com",
+        expectedText: [{text: 'some random text'}]
+			};
+
+			var requestGetCallCount = 0;
+			uriCheck.__set__('request', {
+				get: function(options, callback) {
+					requestGetCallCount++;
+					var response = { statusCode: 200 };
+          var body = 'this body does not have the random text we are looking for';
+          return callback(null,response, body);
+				}
+			});
+			var writeResultCallCount = 0;
+			var writeResultResult = '';
+			uriCheck.__set__('outAdapter',{
+				writeResult: function(result, uri) {
+					writeResultResult = result;
+					writeResultCallCount++;
+				}
+			});
+			var errValue = {};
+			uriCheck.checkUri(site, function(err) {
+				errValue = err;
+			});
+			requestGetCallCount.should.equal(1);
+			writeResultCallCount.should.equal(1);
+			should.not.exist(errValue);
+			writeResultResult.should.equal('fail');
+
+			done();
+		});
+
+		it('should call writeResult with fail if expected case-sensitive text is missing', function (done) {
+			var site = {
+				name: "Unit Test",
+				expectedStatus: 200,
+				requestUrl: "www.unittest.com",
+        expectedText: [{text: 'Random Text', caseSensitive: true}]
+			};
+
+			var requestGetCallCount = 0;
+			uriCheck.__set__('request', {
+				get: function(options, callback) {
+					requestGetCallCount++;
+					var response = { statusCode: 200 };
+          var body = 'this body does not have the random text we are looking for';
+          return callback(null,response, body);
+				}
+			});
+			var writeResultCallCount = 0;
+			var writeResultResult = '';
+			uriCheck.__set__('outAdapter',{
+				writeResult: function(result, uri) {
+					writeResultResult = result;
+					writeResultCallCount++;
+				}
+			});
+			var errValue = {};
+			uriCheck.checkUri(site, function(err) {
+				errValue = err;
+			});
+			requestGetCallCount.should.equal(1);
+			writeResultCallCount.should.equal(1);
+			should.not.exist(errValue);
+			writeResultResult.should.equal('fail');
+
+			done();
+		});
+
+
+		it('should call writeResult with fail if there is expected text and the response body is missing', function (done) {
+			var site = {
+				name: "Unit Test",
+				expectedStatus: 200,
+				requestUrl: "www.unittest.com",
+        expectedText: [{text: 'Random Text', caseSensitive: true}]
+			};
+
+			var requestGetCallCount = 0;
+			uriCheck.__set__('request', {
+				get: function(options, callback) {
+					requestGetCallCount++;
+					var response = { statusCode: 200 };
+          return callback(null,response);
+				}
+			});
+			var writeResultCallCount = 0;
+			var writeResultResult = '';
+			uriCheck.__set__('outAdapter',{
+				writeResult: function(result, uri) {
+					writeResultResult = result;
+					writeResultCallCount++;
+				}
+			});
+			var errValue = {};
+			uriCheck.checkUri(site, function(err) {
+				errValue = err;
+			});
+			requestGetCallCount.should.equal(1);
+			writeResultCallCount.should.equal(1);
+			should.not.exist(errValue);
+			writeResultResult.should.equal('fail');
+
+			done();
+		});
+
 		it('should call writeResult with success if the response headers and statuses match', function (done) {
 			var site = {
 				"name": "Unit Test",

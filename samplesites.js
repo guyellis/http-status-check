@@ -57,7 +57,16 @@ module.exports = {
 		{
 			name: "HTTP Status Check on Guy's Blog",
 			expectedStatus: 200,
-			requestUrl: "http://www.guyellisrocks.com/2014/06/http-status-check.html"
+			requestUrl: "http://www.guyellisrocks.com/2014/06/http-status-check.html",
+      // The expectedText property can be a string, an object or an array.
+      // If it's a string then it denotes the case-insensitive text that is expected
+      //   in the body of the response.
+      // If it's an object then a string 'text' property with the expected text should
+      //   be present. The object has an optional caseSensitive property that defaults
+      //   to false.
+      // If it's an array then it should be a collection of the strings and/or objects
+      //   described above.
+      expectedText: 'a list of URLs'
 		},
 		{
 			name: "Missing URL example",

@@ -82,7 +82,7 @@ var expandExpectedTextInput = function(sites) {
 };
 
 var run = function(runData, outAdapter) {
-	var sites = expandRequestUrlInput(runData.sites);
+	var sites = expandExpectedTextInput(expandRequestUrlInput(runData.sites));
 	var concurrentRequests = runData.concurrentRequests;
   if(!concurrentRequests || isNaN(concurrentRequests) || concurrentRequests < 1) {
     concurrentRequests = 3;

@@ -37,6 +37,7 @@ var checkUri = function(site, callback) {
 	if(site.requestHeaders) {
 		options.headers = site.requestHeaders;
 	}
+
 	request.get(options, function(error, response, body) {
 		if(error) {
 			site.errors = error;
@@ -50,15 +51,17 @@ var checkUri = function(site, callback) {
 				return callback(null);
 			} else {
 
-        var accumulatedHeaderFails = [];
+        var accumulatedFails = [];
 
+        // If responseHeaders is not empty then evaluate that they all have the
+        // expected values.
 				if(site.responseHeaders) {
 					for (var header in site.responseHeaders) {
 						if (site.responseHeaders.hasOwnProperty(header)) {
 							var actualHeaderValue = response.headers[header];
 							var expectedHeaderValue = site.responseHeaders[header];
 							if(actualHeaderValue !== expectedHeaderValue) {
-								accumulatedHeaderFails.push(
+								accumulatedFails.push(
 												'Expected header \'' + header + '\' to be ' +
 												expectedHeaderValue + ' but instead it was ' +
 												actualHeaderValue
@@ -68,12 +71,14 @@ var checkUri = function(site, callback) {
 					}
 				}
 
+        // If excludedHeaders is not empty then ensure that none of them have been
+        // returned by the server.
         if(site.excludedHeaders) {
           _.each(site.excludedHeaders, function(header) {
             header = header.toLowerCase();
             if (response.headers[header]) {
               var headerValue = response.headers[header];
-              accumulatedHeaderFails.push(
+              accumulatedFails.push(
                 'Expected header \'' + header +
                 '\' to NOT be present but it was an was set to: ' +
                 headerValue
@@ -82,11 +87,41 @@ var checkUri = function(site, callback) {
           });
         }
 
-        if(accumulatedHeaderFails.length === 0) {
+        // expectedText is not empty then check that the expected text is in
+        // the response body received back from server.
+        if(site.expectedText) {
+          if(body) {
+            var lowerCaseBody; // Don't populate it until we need it.
+            _.forEach(site.expectedText, function (textObj) {
+              if (textObj.caseSensitive) {
+                if (!~body.indexOf(textObj.text)){
+                  accumulatedFails.push(
+                    'Expected (case sensitive) text in response body not found: ' +
+                    textObj.text
+                  );
+                }
+              } else {
+                if(!lowerCaseBody) {
+                  lowerCaseBody = body.toLowerCase();
+                }
+                if(!~lowerCaseBody.indexOf(textObj.text.toLowerCase())){
+                  accumulatedFails.push(
+                    'Expected (case insensitive) text in response body not found: ' +
+                    textObj.text.toLowerCase()
+                  );
+                }
+              }
+            });
+          } else {
+            accumulatedFails.push('Expected a response body from the request but it was empty.');
+          }
+        }
+
+        if(accumulatedFails.length === 0) {
           outAdapter.writeResult('success', site);
           return callback(null);
         } else {
-          site.errors = accumulatedHeaderFails;
+          site.errors = accumulatedFails;
           outAdapter.writeResult('fail', site);
           return callback(null);
         }
