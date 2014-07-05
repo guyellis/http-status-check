@@ -23,16 +23,16 @@ Feel free to contact me on twitter if you have any questions: [@wildfiction](htt
 ##Getting Started
 
 Running `node index.js` should give you an indication
- of how it works. It uses the `samplesites.json` file for
+ of how it works. It uses the `samplesites.js` file for
  the names of the sites to test.
  
-Copy `samplesites.json` to `checksites.json`. If `checksites.json`
-is found then it takes precedence over `samplesites.json`.
+Copy `samplesites.js` to `checksites.js`. If `checksites.js`
+is found then it takes precedence over `samplesites.js`.
 
-Now edit `checksites.json` and replace the sites with your own sites
+Now edit `checksites.js` and replace the sites with your own sites
 that you want to run checks on.
 
-##checksites.json config file
+##checksites.js config file
 
 * `sites` - an array of sites that will be checked
   * `name` - any name that you want to give this site. This will be logged to the console with the status.
@@ -41,6 +41,7 @@ that you want to run checks on.
   * `responseHeaders` - an object with a collection of response headers expected back from the site. Each of these is compared to the actual response headers received. 
   * `requestHeaders` - an object with a collection of request headers to send with the request. 
   * `disabled` - defaults to false. Set to true if you don't want this site to be checked. Useful if you don't want to delete the details from the .json config file but also don't want it run. Will appear in reports as "not run." 
+  * `excludedHeaders` - An array of headers that you expect not to be returned by the server. (For example, for security you may not want to X-Powered-By header to be returned.) If any of these headers are present then the check will be considered a failure and reported as such.  
 * `concurrentRequests` - The number of sites to check at the same time. Defaults to 3 if this is missing
   
 ## Future Features
@@ -52,4 +53,3 @@ Ideas for features that someone might find useful. These ideas can be implemente
 * twilio out adapter - An out adapter that sends the results via twilio.
 * mongo in adapter - An in adapter that reads the input from a MongoDB.
 * onPageText - An optional array of strings in the config json file against each site. Check the returned HTML from each request against the collection of strings and fail if not found. (Questions: Should be case insensitive? Should be able to specify case sensitivity?)
-* excludedResponseHeaders - Allow for an array of headers that should not be present in the response header collection. For example, the server identifying information that you might have stripped out.

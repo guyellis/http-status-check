@@ -17,7 +17,7 @@ describe('inAdapters/fileAdapter/', function() {
   });
 
   describe('getRunData()', function () {
-    it('should return checksites.json data if exists', function (done) {
+    it('should return checksites.js data if exists', function (done) {
       var existsSyncCallCount = 0;
       inAdapter.__set__('fs', {
         existsSync: function(filename) {
@@ -34,14 +34,14 @@ describe('inAdapters/fileAdapter/', function() {
   });
 
   describe('getRunData()', function () {
-    it('should return samplesites.json data if exists and if checksites.json is missing', function (done) {
+    it('should return samplesites.js data if exists and if checksites.js is missing', function (done) {
       var existsSyncCallCount = 0;
       inAdapter.__set__('fs', {
         existsSync: function(filename) {
           existsSyncCallCount++;
           if(existsSyncCallCount < 2) {
             // In the first call to existsSync we're checking
-            // for the existance of checksites.json.
+            // for the existance of checksites.js.
             // In this test we want to simulate that it doesn't
             // exist so going to return false the first time.
             return false;
@@ -58,7 +58,7 @@ describe('inAdapters/fileAdapter/', function() {
   });
 
   describe('getRunData()', function () {
-    it('should throw an exception if neither samplesites.json or checksites.json exist', function (done) {
+    it('should throw an exception if neither samplesites.js or checksites.js exist', function (done) {
       var existsSyncCallCount = 0;
       inAdapter.__set__('fs', {
         existsSync: function(filename) {
