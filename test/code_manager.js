@@ -16,9 +16,9 @@ describe('code/manager/', function() {
 					initCalled = true;
 				}
 			});
-			var expandInputCalled = false;
-			manager.__set__('expandInput', function() {
-				expandInputCalled = true;
+			var expandRequestUrlInputCalled = false;
+			manager.__set__('expandRequestUrlInput', function() {
+				expandRequestUrlInputCalled = true;
 			});
 			var concurrentRequests = 0;
 			manager.__set__('iterateURLs', function(concurrentRequestsParam, sites){
@@ -28,7 +28,7 @@ describe('code/manager/', function() {
 			manager.run({});
 			concurrentRequests.should.equal(3);
 			initCalled.should.equal(true);
-			expandInputCalled.should.equal(true);
+			expandRequestUrlInputCalled.should.equal(true);
 			done();
 		});
 		it('uses the number of concurrentRequests supplied', function (done) {
@@ -38,9 +38,9 @@ describe('code/manager/', function() {
 					initCalled = true;
 				}
 			});
-			var expandInputCalled = false;
-			manager.__set__('expandInput', function() {
-				expandInputCalled = true;
+			var expandRequestUrlInputCalled = false;
+			manager.__set__('expandRequestUrlInput', function() {
+				expandRequestUrlInputCalled = true;
 			});
 			var concurrentRequests = 0;
 			manager.__set__('iterateURLs', function(concurrentRequestsParam, sites){
@@ -50,7 +50,7 @@ describe('code/manager/', function() {
 			manager.run({concurrentRequests: 15});
 			concurrentRequests.should.equal(15);
 			initCalled.should.equal(true);
-			expandInputCalled.should.equal(true);
+			expandRequestUrlInputCalled.should.equal(true);
 			done();
 		});
 		it('should use 3 as the number of concurrentRequests if a number less than 1 is supplied', function (done) {
@@ -60,9 +60,9 @@ describe('code/manager/', function() {
 					initCalled = true;
 				}
 			});
-			var expandInputCalled = false;
-			manager.__set__('expandInput', function() {
-				expandInputCalled = true;
+			var expandRequestUrlInputCalled = false;
+			manager.__set__('expandRequestUrlInput', function() {
+				expandRequestUrlInputCalled = true;
 			});
 			var concurrentRequests = 0;
 			manager.__set__('iterateURLs', function(concurrentRequestsParam, sites){
@@ -72,12 +72,12 @@ describe('code/manager/', function() {
 			manager.run({concurrentRequests: -1});
 			concurrentRequests.should.equal(3);
 			initCalled.should.equal(true);
-			expandInputCalled.should.equal(true);
+			expandRequestUrlInputCalled.should.equal(true);
 			done();
 		});
 	});
 
-	describe('expandInput()', function () {
+	describe('expandRequestUrlInput()', function () {
 		it('expands arrays of requestUrls if they are an array', function (done) {
 			var sites = [
 				{
@@ -85,7 +85,7 @@ describe('code/manager/', function() {
 					"expectedStatus": 200,
 					"requestUrl": ["test1.com", "test2.com"]
 				}];
-			var results = manager.expandInput(sites);
+			var results = manager.expandRequestUrlInput(sites);
 			results.length.should.equal(2);
 			Array.isArray(results).should.equal(true);
 			done();
@@ -97,7 +97,7 @@ describe('code/manager/', function() {
 					"expectedStatus": 200,
 					"requestUrl": "test1.com"
 				}];
-			var results = manager.expandInput(sites);
+			var results = manager.expandRequestUrlInput(sites);
 			results.length.should.equal(1);
 			Array.isArray(results).should.equal(true);
 			done();

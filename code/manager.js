@@ -17,7 +17,7 @@ var iterateURLs = function(concurrentRequests, sites) {
 // the requestUrl on any of its elements is an array
 // it will duplicate that element and split out the
 // elements of the requestUrl array
-var expandInput = function(sites) {
+var expandRequestUrlInput = function(sites) {
 	var result = _.map(sites,function(site){
 		if(Array.isArray(site.requestUrl)){
 			var urls = site.requestUrl;
@@ -36,7 +36,7 @@ var expandInput = function(sites) {
 };
 
 var run = function(runData, outAdapter) {
-	var sites = expandInput(runData.sites);
+	var sites = expandRequestUrlInput(runData.sites);
 	var concurrentRequests = runData.concurrentRequests;
   if(!concurrentRequests || isNaN(concurrentRequests) || concurrentRequests < 1) {
     concurrentRequests = 3;
@@ -47,6 +47,6 @@ var run = function(runData, outAdapter) {
 
 module.exports = {
 	iterateURLs: iterateURLs,
-	expandInput: expandInput,
+  expandRequestUrlInput: expandRequestUrlInput,
 	run: run
 };
