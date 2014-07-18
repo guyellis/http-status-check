@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = {
   // concurrentRequests is an integer greater than zero. It specifies
   // the number of checks that you want to run in parallel.
