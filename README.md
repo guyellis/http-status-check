@@ -40,11 +40,11 @@ that you want to run checks on.
   * `requestUrl` - URL or array of URLs to of the site(s) to check
   * `responseHeaders` - an object with a collection of response headers expected back from the site. Each of these is compared to the actual response headers received. 
   * `requestHeaders` - an object with a collection of request headers to send with the request. 
-  * `disabled` - defaults to false. Set to true if you don't want this site to be checked. Useful if you don't want to delete the details from the .js config file but also don't want it run. Will appear in reports as "not run." 
-  * `excludedHeaders` - An array of headers that you expect not to be returned by the server. (For example, for security you may not want to X-Powered-By header to be returned.) If any of these headers are present then the check will be considered a failure and reported as such.
+  * `disabled` - defaults to false. Set to true if you don't want this site to be checked. Useful if you don't want to delete the details from the checksites.js config file but also don't want it run. Will appear in reports as "not run." 
+  * `excludedHeaders` - An array of headers that you expect not to be returned by the server. (For example, for security you may not want the X-Powered-By header to be returned.) If any of these headers are present then the check will be considered a failure and reported as such.
   * `expectedText` - A string or an array of strings or an array of objects. If an array of objects then each object should have a string 'text' property and an optional boolean caseSensitive property 
     * `text` - The text to find on the page
-    * `caseSensitive` - true/false to indicate if the comparison should be case sensitive. Defaults to false if missing
+    * `caseSensitive` - true/false to indicate if the comparison should be case sensitive. Defaults to false if missing and if expectedText is a string or array of strings.
 * `concurrentRequests` - The number of sites to check at the same time. Defaults to 3 if this is missing
   
 ## Future Features
