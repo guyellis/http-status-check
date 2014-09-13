@@ -80,7 +80,7 @@ var checkUri = function(site, callback) {
               var headerValue = response.headers[header];
               accumulatedFails.push(
                 'Expected header \'' + header +
-                '\' to NOT be present but it was an was set to: ' +
+                '\' to NOT be present but it is set to: ' +
                 headerValue
               );
             }

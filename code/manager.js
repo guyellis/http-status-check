@@ -3,6 +3,7 @@
 var uriCheck = require('./uriCheck');
 var _ = require('lodash');
 var async = require('async');
+var debug = require('debug')('manager');
 
 var iterateURLs = function(concurrentRequests, sites) {
 	async.eachLimit(sites, concurrentRequests, uriCheck.checkUri, function(err) {
@@ -83,6 +84,14 @@ var expandExpectedTextInput = function(sites) {
 
 var run = function(runData, outAdapter) {
 	var sites = expandExpectedTextInput(expandRequestUrlInput(runData.sites));
+
+  // At this point sites array has now been "normalized".
+  // Now take the allSites data and apply that to each element of the sites
+  // array that doesn't have that data
+  sites = _.map(sites, function(item){
+    return _.assign(_.clone(runData.allSites), item);
+  });
+
 	var concurrentRequests = runData.concurrentRequests;
   if(!concurrentRequests || isNaN(concurrentRequests) || concurrentRequests < 1) {
     concurrentRequests = 3;

@@ -46,6 +46,7 @@ that you want to run checks on.
     * `text` - The text to find on the page
     * `caseSensitive` - true/false to indicate if the comparison should be case sensitive. Defaults to false if missing and if expectedText is a string or array of strings.
 * `concurrentRequests` - The number of sites to check at the same time. Defaults to 3 if this is missing
+* `allSites` - Data that will be applied to each of the site objects above if it is missing from the site object. i.e. the data in the site object will take precedence over this data.
   
 ## Future Features
 

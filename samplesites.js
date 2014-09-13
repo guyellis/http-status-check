@@ -8,9 +8,11 @@ module.exports = {
   // site list in the "sites" array. For example, you might decide
   // that the excludeHeaders property with the 'X-Powered-By' item
   // is checked for all sites.
-  // NOTE: Not implemented yet, for future development.
   allSites: {
-    excludedHeaders: ['X-Powered-By']
+    excludedHeaders: ['X-Powered-By'],
+    requestHeaders: {
+      "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0"
+    }
   },
   // The sites key is an array of URIs objects that will be checked.
 	sites: [
