@@ -26,9 +26,9 @@
   "dependencies": {
     "async": "0.9.0",
     "debug": "^2.0.0",
-    "email-templates": "1.1.1",
+    "email-templates": "1.1.2",
     "lodash": "2.4.1",
-    "request": "2.42.0",
+    "request": "2.44.0",
     "sugar": "1.4.1"
   },
   "devDependencies": {
