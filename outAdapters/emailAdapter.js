@@ -1,13 +1,9 @@
 'use strict';
-var path = require('path');
-var templatesDir = path.resolve(__dirname, 'templates');
-var emailTemplates = require('email-templates');
+
 var nodemailer = require('nodemailer');
 var _ = require('lodash');
 
 var emailData = require('./emailActualData');
-
-console.log('templatesDir: ', templatesDir);
 
 var successHits = 0;
 var failHits = 0;
@@ -61,43 +57,27 @@ var writeResult = function(result, uri) {
 };
 
 var sendEmail = function() {
-  emailTemplates(templatesDir, function(err, template) {
+  var transport = nodemailer.createTransport("SMTP", emailData.transport);
 
+  transport.sendMail({
+    from: emailData.from.name.first + ' ' + emailData.from.name.last + ' <' + emailData.from.email + '>',
+    to: emailData.locals.email,
+    subject: emailData.subject + ' ' + Date.now().toString(),
+    html: html,
+    generateTextFromHTML: true
+    // text: text
+  }, function(err, responseStatus) {
     if (err) {
+      debug('Error in transport.sendMail():');
+      debug(err);
       throw err;
     } else {
-      var transport = nodemailer.createTransport("SMTP", emailData.transport);
-
-      // Send a single email
-      template('basic', emailData.locals, function(err, html/*, text*/) {
-        if (err) {
-          console.log(err);
-        } else {
-          transport.sendMail({
-            from: emailData.from.name.first + ' ' + emailData.from.name.last + ' <' + emailData.from.email + '>',
-            to: emailData.locals.email,
-            subject: emailData.subject + ' ' + Date.now().toString(),
-            html: html,
-            generateTextFromHTML: true
-            // text: text
-          }, function(err, responseStatus) {
-            if (err) {
-              throw err;
-            } else {
-              console.log('responseStatus.message: ', responseStatus.message);
-            }
-          });
-        }
-      });
+      console.log('responseStatus.message: ', responseStatus.message);
     }
   });
 };
 
 var done = function() {
-//	console.log('A total of ' + (successHits + failHits + disableHits) + ' URIs were tested.');
-//	console.log('Failure count: ', failHits);
-//	console.log('Success count: ', successHits);
-//	console.log('Disable count: ', disableHits);
   if(failHits > 0) {
     // We'll send an email if there are any failures.
     // If this is run infrequently (say daily) then you may want to send a success email as
