@@ -34,6 +34,8 @@ that you want to run checks on.
 
 ##checksites.js config file
 
+The `samplesites.js` file is heavily commented and a good starting point.
+
 * `sites` - an array of sites that will be checked
   * `name` - any name that you want to give this site. This will be logged to the console with the status.
   * `expectedStatus` - the status that you expected this site to return, e.g. 200 or 301
@@ -48,11 +50,6 @@ that you want to run checks on.
 * `concurrentRequests` - The number of sites to check at the same time. Defaults to 3 if this is missing
 * `allSites` - Data that will be applied to each of the site objects above if it is missing from the site object. i.e. the data in the site object will take precedence over this data.
   
-## Future Features
+## Enhancements and Bugs
 
-Ideas for features that someone might find useful. These ideas can be implemented at workshops and used as training.
-
-* Control Sites - Allow a config item on each site that is called 'control' or something similar. Defaults to false if missing and tells the script that we expect this site to be always available and use it to test our internet connection. e.g. google.com, yahoo.com, microsoft.com should always return 200 or 301. If they timeout then there's something wrong with our connectivity and we shouldn't assume a problem with the other sites. Run the control sites at the beginning and at the end.
-* email out adapter - An out adapter that emails the results to an email recipient.
-* twilio out adapter - An out adapter that sends the results via twilio.
-* mongo in adapter - An in adapter that reads the input from a MongoDB.
+Add requests for enhancements and bugs to: [HTTP Status Check Issues](https://github.com/guyellis/http-status-check/issues)
