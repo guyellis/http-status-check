@@ -3,7 +3,7 @@
 var uriCheck = require('./uriCheck');
 var _ = require('lodash');
 var async = require('async');
-var debug = require('debug')('manager');
+var debug = require('debug')('http-status-check:manager');
 
 var iterateURLs = function(concurrentRequests, sites) {
 	async.eachLimit(sites, concurrentRequests, uriCheck.checkUri, function(err) {

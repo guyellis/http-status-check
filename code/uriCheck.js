@@ -2,7 +2,7 @@
 
 var _ = require('lodash');
 var request = require('request');
-var debug = require('debug')('uriCheck');
+var debug = require('debug')('http-status-check:uriCheck');
 require('sugar');
 var outAdapter;
 
@@ -11,8 +11,6 @@ var init = function(output){
 };
 
 function startsWith(testString, protocols) {
-  debug('startsWith(), testString: %s', testString);
-  debug(protocols);
 	for(var i= 0,n=protocols.length; i<n; i++) {
 		if(testString.toLowerCase().startsWith(protocols[i].toLowerCase())) {
 			return true;
