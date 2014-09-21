@@ -1,6 +1,6 @@
 "use strict";
 
-var manager = require('./code/manager');
+var manager = require('./lib/manager');
 var inAdapter = require('./inAdapters/fileAdapter');
 var outAdapter = require('./outAdapters/consoleAdapter');
 

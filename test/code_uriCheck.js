@@ -5,9 +5,9 @@
 
 var should = require('chai').should();
 var rewire = require('rewire');
-var uriCheck = rewire('../code/uriCheck');
+var uriCheck = rewire('../lib/uriCheck');
 
-describe('code/uriCheck/', function() {
+describe('lib/uriCheck/', function() {
 	describe('init()', function () {
 		it('sets the outAdapter', function (done) {
 			uriCheck.init({test:true});
@@ -100,7 +100,7 @@ describe('code/uriCheck/', function() {
 			done();
 		});
 
-		it('should call writeResult with fail if the status code is not what is expected', function (done) {
+		it('should call writeResult with fail if the status lib is not what is expected', function (done) {
 			var site = {
 				"name": "Unit Test",
 				"expectedStatus": 200,

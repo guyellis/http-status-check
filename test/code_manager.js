@@ -5,10 +5,10 @@
 
 var should = require('chai').should();
 var rewire = require('rewire');
-var manager = rewire('../code/manager');
+var manager = rewire('../lib/manager');
 var _ = require('lodash');
 
-describe('code/manager/', function() {
+describe('lib/manager/', function() {
 	describe('run()', function () {
 		it('uses 3 as the default concurrentRequests if not supplied', function (done) {
 			var initCalled = false;
