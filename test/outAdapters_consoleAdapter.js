@@ -5,7 +5,7 @@
 
 var should = require('chai').should();
 var rewire = require('rewire');
-var outAdapter = rewire('../outAdapters/consoleAdapter');
+var outAdapter = rewire('../lib/outAdapters/consoleAdapter');
 
 describe('outAdapters/consoleAdapter/', function() {
 

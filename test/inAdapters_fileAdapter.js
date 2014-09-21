@@ -5,7 +5,7 @@
 
 var should = require('chai').should();
 var rewire = require('rewire');
-var inAdapter = rewire('../inAdapters/fileAdapter');
+var inAdapter = rewire('../lib/inAdapters/fileAdapter');
 
 describe('inAdapters/fileAdapter/', function() {
   inAdapter.__set__('require', function(filename) {
