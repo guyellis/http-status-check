@@ -2,6 +2,7 @@
 
 var _ = require('lodash');
 var request = require('request');
+var debug = require('debug')('uriCheck');
 require('sugar');
 var outAdapter;
 
@@ -10,7 +11,9 @@ var init = function(output){
 };
 
 function startsWith(testString, protocols) {
-	for(var i= 0,n=startsWith.length; i<n; i++) {
+  debug('startsWith(), testString: %s', testString);
+  debug(protocols);
+	for(var i= 0,n=protocols.length; i<n; i++) {
 		if(testString.toLowerCase().startsWith(protocols[i].toLowerCase())) {
 			return true;
 		}
@@ -46,6 +49,13 @@ var checkUri = function(site, callback) {
 		} else {
 			if(response.statusCode !== site.expectedStatus) {
 				var err = 'Expected HTTP status of ' + site.expectedStatus + ' and got ' + response.statusCode + '.';
+        if(response.statusCode >= 300 && response.statusCode < 400) {
+          // Some type of redirect. Let's add the location to the error result to help the user
+          // determine what the problem is.
+          if(response.headers && response.headers.location) {
+            err += ' Location: ' + response.headers.location;
+          }
+        }
 				site.errors = [err];
 				outAdapter.writeResult('fail', site);
 				return callback(null);
