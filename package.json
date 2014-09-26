@@ -6,7 +6,8 @@
   "scripts": {
     "test": "mocha",
     "win_istanbul": "istanbul.cmd cover node_modules\\mocha\\bin\\_mocha",
-    "istanbul": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha test/*.js test/**/*.js"
+    "istanbul": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha test/*.js test/**/*.js",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
@@ -36,5 +37,8 @@
     "istanbul": "*",
     "mocha": "*",
     "rewire": "*"
+  },
+  "in_adapter": {
+    "type": "./lib/inAdapters/fileAdapter"
   }
 }
