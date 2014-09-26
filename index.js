@@ -1,7 +1,8 @@
 "use strict";
 
 var manager = require('./lib/manager');
-var inAdapter = require('./lib/inAdapters/fileAdapter');
+var settings = require('./package.json');
+var inAdapter = require(settings.in_adapter.type);
 var outAdapter = require('./lib/outAdapters/consoleAdapter');
 
 var main = function() {
