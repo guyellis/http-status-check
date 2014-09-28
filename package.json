@@ -7,6 +7,7 @@
     "test": "mocha",
     "win_istanbul": "istanbul.cmd cover node_modules\\mocha\\bin\\_mocha",
     "istanbul": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha test/*.js test/**/*.js",
+    "jshint": "node_modules/.bin/jshint .",
     "start": "node index.js"
   },
   "repository": {
@@ -35,6 +36,7 @@
   "devDependencies": {
     "chai": "*",
     "istanbul": "*",
+    "jshint": "*",
     "mocha": "*",
     "rewire": "*"
   },
