@@ -70,7 +70,7 @@ describe('inAdapters/fileAdapter/', function() {
       try {
         inAdapter.getRunData();
       } catch(e) {
-        exceptionThrown = true
+        exceptionThrown = true;
       }
       existsSyncCallCount.should.equal(2);
       exceptionThrown.should.equal(true);

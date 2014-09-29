@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/guyellis/http-status-check.svg?branch=master)](https://travis-ci.org/guyellis/http-status-check)
 [![Code Climate](https://codeclimate.com/github/guyellis/http-status-check/badges/gpa.svg)](https://codeclimate.com/github/guyellis/http-status-check)
+[![Coverage Status](https://coveralls.io/repos/guyellis/http-status-check/badge.png?branch=master)](https://coveralls.io/r/guyellis/http-status-check?branch=master)
 
 Checks your sites' HTTP statuses
 
