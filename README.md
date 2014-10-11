@@ -47,6 +47,7 @@ The `samplesites.js` file is heavily commented and a good starting point.
   * `requestHeaders` - an object with a collection of request headers to send with the request. 
   * `disabled` - defaults to false. Set to true if you don't want this site to be checked. Useful if you don't want to delete the details from the checksites.js config file but also don't want it run. Will appear in reports as "not run." 
   * `excludedHeaders` - An array of headers that you expect not to be returned by the server. (For example, for security you may not want the X-Powered-By header to be returned.) If any of these headers are present then the check will be considered a failure and reported as such.
+  * `followRedirect` - If a URL returns redirect status (300 to 399) then continue to follow any redirects and don't check until an non-300 series status is returned. See samplesites.js for use case and further details.
   * `expectedText` - A string or an array of strings or an array of objects. If an array of objects then each object should have a string 'text' property and an optional boolean caseSensitive property 
     * `text` - The text to find on the page
     * `caseSensitive` - true/false to indicate if the comparison should be case sensitive. Defaults to false if missing and if expectedText is a string or array of strings.
