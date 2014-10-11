@@ -1,5 +1,10 @@
 'use strict';
 
+// Copy samplesites.js to checksites.js.
+// If checksites.js is found then it takes precedence over samplesites.js
+// .gitignore is set to NOT commit checksites.js so you can keep your
+// personal/client site list in here.
+
 module.exports = {
   // concurrentRequests is an integer greater than zero. It specifies
   // the number of checks that you want to run in parallel.
@@ -45,6 +50,23 @@ module.exports = {
       // in the response headers then the check will fail.
       // NOTE: Not implemented yet, for future development.
       excludedHeaders: ['X-Powered-By']
+		},
+		{
+			name: "LinkSilk Redirect To 200",
+			expectedStatus: 200,
+			requestUrl: "http://www.linksilk.com",
+			// By setting followRedirect to true we are telling HTTP Status Check
+			// to follow any 300 to 399 status until it gives us a non-300 series
+			// status and then check that against the expectedStatus.
+			// This is useful if you have a collection of short URLs like bit.ly
+			// that point to other URLs that might go bad. For example, you wrote
+			// an ebook and cleverly put bit.ly URLs in the eBook instead of
+			// the real URL so when the real URL is moved or goes away you can change
+			// where the bit.ly address points to. In order to keep track of which
+			// bit.ly addresses are still good you run them through HTTP Status Check
+			// with the followRedirect set to true which makes sure the final status
+			// is what you expect, usually a 200.
+			followRedirect: true
 		},
 		{
 			name: "Google",
