@@ -43,6 +43,11 @@
     "rewire": "*"
   },
   "in_adapter": {
-    "type": "./lib/inAdapters/fileAdapter"
+    "type": "./lib/inAdapters/fileAdapter",
+    "available_types": "fileAdapter"
+  },
+  "out_adapter": {
+    "type": "./lib/outAdapters/mailerAdapter",
+    "available_types":"consoleAdapter, emailAdapter, mailerAdapter"
   }
 }
