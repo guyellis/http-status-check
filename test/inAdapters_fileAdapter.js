@@ -1,6 +1,3 @@
-/*jshint node:true */
-/*global describe:false, it:false */
-
 'use strict';
 
 var should = require('chai').should();
@@ -20,7 +17,7 @@ describe('inAdapters/fileAdapter/', function() {
     it('should return checksites.js data if exists', function (done) {
       var existsSyncCallCount = 0;
       inAdapter.__set__('fs', {
-        existsSync: function(filename) {
+        existsSync: function(/*filename*/) {
           existsSyncCallCount++;
           return true;
         }
@@ -37,7 +34,7 @@ describe('inAdapters/fileAdapter/', function() {
     it('should return samplesites.js data if exists and if checksites.js is missing', function (done) {
       var existsSyncCallCount = 0;
       inAdapter.__set__('fs', {
-        existsSync: function(filename) {
+        existsSync: function(/*filename*/) {
           existsSyncCallCount++;
           if(existsSyncCallCount < 2) {
             // In the first call to existsSync we're checking
@@ -61,7 +58,7 @@ describe('inAdapters/fileAdapter/', function() {
     it('should throw an exception if neither samplesites.js or checksites.js exist', function (done) {
       var existsSyncCallCount = 0;
       inAdapter.__set__('fs', {
-        existsSync: function(filename) {
+        existsSync: function(/*filename*/) {
           existsSyncCallCount++;
           return false;
         }

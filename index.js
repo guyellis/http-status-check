@@ -2,7 +2,7 @@
 
 var manager = require('./lib/manager');
 var settings = require('./package.json');
-var inAdapter = require(settings.in_adapter.type);
+var inAdapter = require(settings.inAdapter.type);
 var outAdapter = require('./lib/outAdapters/consoleAdapter');
 
 var main = function() {

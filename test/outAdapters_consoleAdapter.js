@@ -1,6 +1,3 @@
-/*jshint node:true */
-/*global describe:false, it:false */
-
 'use strict';
 
 var should = require('chai').should();
@@ -40,7 +37,7 @@ describe('outAdapters/consoleAdapter/', function() {
   describe('writeResult()', function () {
     it('should increment success counter when successful', function (done) {
       outAdapter.writeResult('success', {});
-      var failHits = outAdapter.__get__('failHits');
+      //var failHits = outAdapter.__get__('failHits');
       var successHits = outAdapter.__get__('successHits');
       successHits.should.be.above(0);
       done();
@@ -51,7 +48,7 @@ describe('outAdapters/consoleAdapter/', function() {
     it('should increment fail counter when unsuccessful', function (done) {
       outAdapter.writeResult('fail', {errors: 'some error'});
       var failHits = outAdapter.__get__('failHits');
-      var successHits = outAdapter.__get__('successHits');
+      //var successHits = outAdapter.__get__('successHits');
       failHits.should.be.above(0);
       done();
     });

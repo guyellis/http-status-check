@@ -1,6 +1,3 @@
-/*jshint node:true */
-/*global describe:false, it:false */
-
 'use strict';
 
 var should = require('chai').should();
@@ -13,7 +10,7 @@ describe('lib/manager/', function() {
     it('uses 3 as the default concurrentRequests if not supplied', function (done) {
       var initCalled = false;
       manager.__set__('uriCheck', {
-        init: function(outAdapter) {
+        init: function(/*outAdapter*/) {
           initCalled = true;
         }
       });
@@ -22,7 +19,7 @@ describe('lib/manager/', function() {
         expandRequestUrlInputCalled = true;
       });
       var concurrentRequests = 0;
-      manager.__set__('iterateURLs', function(concurrentRequestsParam, sites){
+      manager.__set__('iterateURLs', function(concurrentRequestsParam/*, sites*/){
         concurrentRequests = concurrentRequestsParam;
       });
 
@@ -35,7 +32,7 @@ describe('lib/manager/', function() {
     it('uses the number of concurrentRequests supplied', function (done) {
       var initCalled = false;
       manager.__set__('uriCheck', {
-        init: function(outAdapter) {
+        init: function(/*outAdapter*/) {
           initCalled = true;
         }
       });
@@ -44,7 +41,7 @@ describe('lib/manager/', function() {
         expandRequestUrlInputCalled = true;
       });
       var concurrentRequests = 0;
-      manager.__set__('iterateURLs', function(concurrentRequestsParam, sites){
+      manager.__set__('iterateURLs', function(concurrentRequestsParam/*, sites*/){
         concurrentRequests = concurrentRequestsParam;
       });
 
@@ -57,7 +54,7 @@ describe('lib/manager/', function() {
     it('should use 3 as the number of concurrentRequests if a number less than 1 is supplied', function (done) {
       var initCalled = false;
       manager.__set__('uriCheck', {
-        init: function(outAdapter) {
+        init: function(/*outAdapter*/) {
           initCalled = true;
         }
       });
@@ -66,7 +63,7 @@ describe('lib/manager/', function() {
         expandRequestUrlInputCalled = true;
       });
       var concurrentRequests = 0;
-      manager.__set__('iterateURLs', function(concurrentRequestsParam, sites){
+      manager.__set__('iterateURLs', function(concurrentRequestsParam/*, sites*/){
         concurrentRequests = concurrentRequestsParam;
       });
 

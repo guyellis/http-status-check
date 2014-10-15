@@ -1,6 +1,3 @@
-/*jshint node:true */
-/*global describe:false, it:false */
-
 'use strict';
 
 var should = require('chai').should();
@@ -42,7 +39,7 @@ describe('lib/uriCheck/', function() {
         disabled: true
       };
       var checkUriCallCount = 0;
-      uriCheck.__set__('checkUri', function(site,callback){
+      uriCheck.__set__('checkUri', function(/*site, callback*/){
         checkUriCallCount++;
       });
       var writeResultCallCount = 0;
@@ -83,7 +80,7 @@ describe('lib/uriCheck/', function() {
       var writeResultCallCount = 0;
       var writeResultResult = '';
       uriCheck.__set__('outAdapter',{
-        writeResult: function(result, uri) {
+        writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -124,7 +121,7 @@ describe('lib/uriCheck/', function() {
       var writeResultCallCount = 0;
       var writeResultResult = '';
       uriCheck.__set__('outAdapter',{
-        writeResult: function(result, uri) {
+        writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -167,7 +164,7 @@ describe('lib/uriCheck/', function() {
       var writeResultCallCount = 0;
       var writeResultResult = '';
       uriCheck.__set__('outAdapter',{
-        writeResult: function(result, uri) {
+        writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -208,7 +205,7 @@ describe('lib/uriCheck/', function() {
       var writeResultCallCount = 0;
       var writeResultResult = '';
       uriCheck.__set__('outAdapter',{
-        writeResult: function(result, uri) {
+        writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -245,7 +242,7 @@ describe('lib/uriCheck/', function() {
       var writeResultCallCount = 0;
       var writeResultResult = '';
       uriCheck.__set__('outAdapter',{
-        writeResult: function(result, uri) {
+        writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -282,7 +279,7 @@ describe('lib/uriCheck/', function() {
       var writeResultCallCount = 0;
       var writeResultResult = '';
       uriCheck.__set__('outAdapter',{
-        writeResult: function(result, uri) {
+        writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -319,7 +316,7 @@ describe('lib/uriCheck/', function() {
       var writeResultCallCount = 0;
       var writeResultResult = '';
       uriCheck.__set__('outAdapter',{
-        writeResult: function(result, uri) {
+        writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -362,7 +359,7 @@ describe('lib/uriCheck/', function() {
       var writeResultCallCount = 0;
       var writeResultResult = '';
       uriCheck.__set__('outAdapter',{
-        writeResult: function(result, uri) {
+        writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -399,7 +396,7 @@ describe('lib/uriCheck/', function() {
       var writeResultCallCount = 0;
       var writeResultResult = '';
       uriCheck.__set__('outAdapter',{
-        writeResult: function(result, uri) {
+        writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
         }
