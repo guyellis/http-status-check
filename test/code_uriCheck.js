@@ -113,7 +113,10 @@ describe('lib/uriCheck/', function() {
         get: function(options, callback) {
           requestGetCallCount++;
           var response = {
-            statusCode: 301
+            statusCode: 301,
+            headers: {
+              location: 'www.newplace.com'
+            }
           };
           return callback(null,response);
         }
@@ -126,16 +129,15 @@ describe('lib/uriCheck/', function() {
           writeResultCallCount++;
         }
       });
-      var errValue = {};
-      uriCheck.checkUri(site, function(err) {
-        errValue = err;
-      });
-      requestGetCallCount.should.equal(1);
-      writeResultCallCount.should.equal(1);
-      should.not.exist(errValue);
-      writeResultResult.should.equal('fail');
 
-      done();
+      uriCheck.checkUri(site, function(err) {
+        should.not.exist(err);
+        requestGetCallCount.should.equal(1);
+        writeResultCallCount.should.equal(1);
+        writeResultResult.should.equal('fail');
+
+        done();
+      });
     });
 
     it('should call writeResult with fail if the response headers do not match', function (done) {
