@@ -171,16 +171,13 @@ describe('lib/uriCheck/', function() {
           writeResultCallCount++;
         }
       });
-      var errValue = {};
       uriCheck.checkUri(site, function(err) {
-        errValue = err;
+        should.not.exist(err);
+        requestGetCallCount.should.equal(1);
+        writeResultCallCount.should.equal(1);
+        writeResultResult.should.equal('fail');
+        done();
       });
-      requestGetCallCount.should.equal(1);
-      writeResultCallCount.should.equal(1);
-      should.not.exist(errValue);
-      writeResultResult.should.equal('fail');
-
-      done();
     });
 
     it('should call writeResult with fail if an excludedHeaders header is present', function (done) {
@@ -212,16 +209,13 @@ describe('lib/uriCheck/', function() {
           writeResultCallCount++;
         }
       });
-      var errValue = {};
       uriCheck.checkUri(site, function(err) {
-        errValue = err;
+        should.not.exist(err);
+        requestGetCallCount.should.equal(1);
+        writeResultCallCount.should.equal(1);
+        writeResultResult.should.equal('fail');
+        done();
       });
-      requestGetCallCount.should.equal(1);
-      writeResultCallCount.should.equal(1);
-      should.not.exist(errValue);
-      writeResultResult.should.equal('fail');
-
-      done();
     });
 
     it('should call writeResult with fail if expected case insensitive text is missing', function (done) {
@@ -249,16 +243,14 @@ describe('lib/uriCheck/', function() {
           writeResultCallCount++;
         }
       });
-      var errValue = {};
-      uriCheck.checkUri(site, function(err) {
-        errValue = err;
-      });
-      requestGetCallCount.should.equal(1);
-      writeResultCallCount.should.equal(1);
-      should.not.exist(errValue);
-      writeResultResult.should.equal('fail');
 
-      done();
+      uriCheck.checkUri(site, function(err) {
+        should.not.exist(err);
+        requestGetCallCount.should.equal(1);
+        writeResultCallCount.should.equal(1);
+        writeResultResult.should.equal('fail');
+        done();
+      });
     });
 
     it('should call writeResult with fail if expected case-sensitive text is missing', function (done) {
@@ -286,16 +278,14 @@ describe('lib/uriCheck/', function() {
           writeResultCallCount++;
         }
       });
-      var errValue = {};
-      uriCheck.checkUri(site, function(err) {
-        errValue = err;
-      });
-      requestGetCallCount.should.equal(1);
-      writeResultCallCount.should.equal(1);
-      should.not.exist(errValue);
-      writeResultResult.should.equal('fail');
 
-      done();
+      uriCheck.checkUri(site, function(err) {
+        should.not.exist(err);
+        requestGetCallCount.should.equal(1);
+        writeResultCallCount.should.equal(1);
+        writeResultResult.should.equal('fail');
+        done();
+      });
     });
 
 
@@ -323,16 +313,14 @@ describe('lib/uriCheck/', function() {
           writeResultCallCount++;
         }
       });
-      var errValue = {};
-      uriCheck.checkUri(site, function(err) {
-        errValue = err;
-      });
-      requestGetCallCount.should.equal(1);
-      writeResultCallCount.should.equal(1);
-      should.not.exist(errValue);
-      writeResultResult.should.equal('fail');
 
-      done();
+      uriCheck.checkUri(site, function(err) {
+        should.not.exist(err);
+        requestGetCallCount.should.equal(1);
+        writeResultCallCount.should.equal(1);
+        writeResultResult.should.equal('fail');
+        done();
+      });
     });
 
     it('should call writeResult with success if the response headers and statuses match', function (done) {
@@ -366,16 +354,14 @@ describe('lib/uriCheck/', function() {
           writeResultCallCount++;
         }
       });
-      var errValue = {};
-      uriCheck.checkUri(site, function(err) {
-        errValue = err;
-      });
-      requestGetCallCount.should.equal(1);
-      writeResultCallCount.should.equal(1);
-      should.not.exist(errValue);
-      writeResultResult.should.equal('success');
 
-      done();
+      uriCheck.checkUri(site, function(err) {
+        should.not.exist(err);
+        requestGetCallCount.should.equal(1);
+        writeResultCallCount.should.equal(1);
+        writeResultResult.should.equal('success');
+        done();
+      });
     });
 
     it('should call writeResult with success if the statuses match', function (done) {
@@ -403,16 +389,14 @@ describe('lib/uriCheck/', function() {
           writeResultCallCount++;
         }
       });
-      var errValue = {};
-      uriCheck.checkUri(site, function(err) {
-        errValue = err;
-      });
-      requestGetCallCount.should.equal(1);
-      writeResultCallCount.should.equal(1);
-      should.not.exist(errValue);
-      writeResultResult.should.equal('success');
 
-      done();
+      uriCheck.checkUri(site, function(err) {
+        should.not.exist(err);
+        requestGetCallCount.should.equal(1);
+        writeResultCallCount.should.equal(1);
+        writeResultResult.should.equal('success');
+        done();
+      });
     });
   });
 
