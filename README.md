@@ -67,3 +67,22 @@ The `samplesites.js` file is heavily commented and a good starting point.
 ## Enhancements and Bugs
 
 Add requests for enhancements and bugs to: [HTTP Status Check Issues](https://github.com/guyellis/http-status-check/issues)
+
+## Contribute
+
+You are encouraged to fork this repository, edit the code, and submit a pull request to have your changes included.
+ Even if you have never done this before and it seems scary. Especially if you have never done this before. One of the
+ objectives of this project is to provide a safe and encouraging project where new comers can learn about the mechanics
+ of open source, GitHub source control and coding in JavaScript.
+ 
+If you are completely new then the best place to start is to start by seeing if you can add a unit test to the project.
+A test will improve the quality and health of the project and not break anything that anyone is using. You can also
+add comments and debug() statements to existing tests as you read understand and learn the code. There's also nothing
+wrong in adding a question in the code if something isn't obvious. Hopefully someone will replace your question with
+an explanation of how that section of code works.
+
+Once you feel comfortable then try and improve existing code. The unit tests should protect you against making mistakes.
+You can try and find inefficiencies or better ways to do something. For example, replace a loop with a lodash method.
+
+Have a look at the code coverage and see if you can find some code that hasn't been covered by a test and fill that gap.
+
