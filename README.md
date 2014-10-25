@@ -23,6 +23,16 @@ node index.js
 
 Feel free to contact me on twitter if you have any questions: [@wildfiction](https://twitter.com/wildfiction)
 
+##Objectives
+
+The objectives of the http-status-check project are as follows:
+
+* Provide a fully-functional utility that most web developers will find useful for keeping tabs on the health of web sites that they are responsible for.
+* Provide an example codebase that can be used in workshops and presentations for developers who are learning Node.js
+* Provide examples of how a Node.js project can be structured, tested and reported on.
+* Provide a safe and encouraging environment for developers who are new to Open Source development to get their feet wet in contributing for the first time (through pull requests).
+* Maintain 100% coverage and demonstrate that this might not just be a vanity metric.
+
 ##Getting Started
 
 Running `node index.js` should give you an indication
