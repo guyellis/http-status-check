@@ -11,6 +11,9 @@
     "coveralls": "istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js --verbose",
     "start": "node index.js"
   },
+  "pre-commit": [
+    "jshint"
+  ],
   "engines": {
     "node": ">= 0.10"
   },
@@ -43,6 +46,7 @@
     "istanbul": "*",
     "jshint": "*",
     "mocha": "*",
+    "pre-commit": "*",
     "rewire": "*"
   },
   "inAdapter": {
