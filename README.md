@@ -20,6 +20,12 @@ npm install http-status-check
 node index.js
 ```
 
+To show only failures in the output:
+
+```
+node index.js --only-output-failures
+```
+
 ##Questions?
 
 Feel free to contact me on twitter if you have any questions: [@wildfiction](https://twitter.com/wildfiction)
