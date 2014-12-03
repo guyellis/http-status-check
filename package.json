@@ -53,5 +53,18 @@
   },
   "inAdapter": {
     "type": "./lib/inAdapters/fileAdapter"
+  },
+  // concurrentRequests is an integer greater than zero. It specifies
+  // the number of checks that you want to run in parallel.
+  "concurrentRequests": 3,
+  // The allSites property applies each of its properties to each
+  // site list in the "sites" array. For example, you might decide
+  // that the excludeHeaders property with the 'X-Powered-By' item
+  // is checked for all sites.
+  "allSites": {
+    "excludedHeaders": ['X-Powered-By'],
+    "requestHeaders": {
+      "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0"
+    }
   }
 }
