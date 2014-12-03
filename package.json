@@ -12,7 +12,8 @@
     "start": "node index.js"
   },
   "pre-commit": [
-    "jshint", "test"
+    "jshint",
+    "test"
   ],
   "engines": {
     "node": ">= 0.10"
@@ -41,13 +42,14 @@
     "sugar": "1.4.1"
   },
   "devDependencies": {
-    "chai": "*",
+    "bunyan": "^1.2.3",
+    "chai": "^1.10.0",
     "coveralls": "*",
     "istanbul": "*",
-    "jshint": "*",
+    "jshint": "^2.5.10",
     "mocha": "*",
     "pre-commit": "*",
-    "rewire": "*"
+    "rewire": "^2.1.3"
   },
   "inAdapter": {
     "type": "./lib/inAdapters/fileAdapter"

@@ -79,8 +79,8 @@ describe('outAdapters/consoleAdapter/', function() {
   describe('done()', function () {
     it('should call console.log()', function (done) {
       var logCallCount = 0;
-      outAdapter.__set__('console',{
-        log: function() {
+      outAdapter.__set__('log',{
+        info: function() {
           logCallCount++;
         }
       });
