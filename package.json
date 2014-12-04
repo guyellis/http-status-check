@@ -53,5 +53,12 @@
   },
   "inAdapter": {
     "type": "./lib/inAdapters/fileAdapter"
+  },
+  "concurrentRequests": 3,
+  "allSites": {
+    "excludedHeaders": ["X-Powered-By"],
+    "requestHeaders": {
+      "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0"
+    }
   }
 }

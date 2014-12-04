@@ -22,8 +22,8 @@ describe('lib/manager/', function() {
       manager.__set__('iterateURLs', function(concurrentRequestsParam/*, sites*/){
         concurrentRequests = concurrentRequestsParam;
       });
-
-      manager.run({});
+      
+      manager.run({},{});
       concurrentRequests.should.equal(3);
       initCalled.should.equal(true);
       expandRequestUrlInputCalled.should.equal(true);
@@ -45,7 +45,7 @@ describe('lib/manager/', function() {
         concurrentRequests = concurrentRequestsParam;
       });
 
-      manager.run({concurrentRequests: 15});
+      manager.run({},{concurrentRequests: 15});
       concurrentRequests.should.equal(15);
       initCalled.should.equal(true);
       expandRequestUrlInputCalled.should.equal(true);
@@ -67,7 +67,7 @@ describe('lib/manager/', function() {
         concurrentRequests = concurrentRequestsParam;
       });
 
-      manager.run({concurrentRequests: -1});
+      manager.run({concurrentRequests: -1},{});
       concurrentRequests.should.equal(3);
       initCalled.should.equal(true);
       expandRequestUrlInputCalled.should.equal(true);

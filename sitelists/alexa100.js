@@ -2,12 +2,6 @@
 
 // See samplesites.js for annotation of what each property does
 module.exports = {
-  concurrentRequests: 200, // More than number of sites being requested
-  allSites: {
-    requestHeaders: {
-      "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0"
-    }
-  },
   sites: [
     {
       name: '101 Sites',

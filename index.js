@@ -8,8 +8,8 @@ var outAdapter = require('./lib/outAdapters/consoleAdapter');
 
 var onlyOutputFails = _.contains(process.argv.slice(2), '--only-output-failures');
 var main = function(onlyOutputFails) {
-  var runData = inAdapter.getRunData();
-  manager.run(runData, outAdapter, onlyOutputFails);
+  var sites = inAdapter.getRunData();
+  manager.run(sites, settings, outAdapter, onlyOutputFails);
 };
 
 main(onlyOutputFails);
