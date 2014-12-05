@@ -9,11 +9,15 @@
     "istanbul": "istanbul cover ./node_modules/mocha/bin/_mocha",
     "jshint": "jshint .",
     "coveralls": "istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js --verbose",
-    "start": "node index.js"
+    "start": "node index.js",
+    "pre-commit-stash-save": "git stash --keep-index",
+    "post-commit-stash-pop": "git stash pop"
   },
   "pre-commit": [
     "jshint",
-    "test"
+    "pre-commit-stash-save",
+    "test",
+    "post-commit-stash-pop"
   ],
   "engines": {
     "node": ">= 0.10"
