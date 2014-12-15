@@ -6,13 +6,13 @@ var settings = require('./package.json');
 var inAdapter = require(settings.inAdapter.type);
 var outAdapter = require('./lib/outAdapters/consoleAdapter');
 
-var onlyOutputFails = _.contains(process.argv.slice(2), '--only-output-failures');
-var main = function(onlyOutputFails) {
+var verbose = _.contains(process.argv.slice(2), '--verbose');
+var main = function(verbose) {
   var sites = inAdapter.getRunData();
-  manager.run(sites, settings, outAdapter, onlyOutputFails);
+  manager.run(sites, settings, outAdapter, verbose);
 };
 
-main(onlyOutputFails);
+main(verbose);
 
 module.exports = {
   main: main

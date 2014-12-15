@@ -36,7 +36,8 @@ describe('lib/uriCheck/', function() {
   describe('checkUri()', function () {
     it('should terminate early if the site is disabled', function (done) {
       var site = {
-        disabled: true
+        disabled: true,
+        verbose: true
       };
       var checkUriCallCount = 0;
       uriCheck.__set__('checkUri', function(/*site, callback*/){
@@ -330,7 +331,8 @@ describe('lib/uriCheck/', function() {
         "requestUrl": "www.unittest.com",
         "responseHeaders": {
           "location": "http://unittest.com/"
-        }
+        },
+        verbose:true
       };
 
       var requestGetCallCount = 0;
@@ -368,7 +370,8 @@ describe('lib/uriCheck/', function() {
       var site = {
         "name": "Unit Test",
         "expectedStatus": 301,
-        "requestUrl": "www.unittest.com"
+        "requestUrl": "www.unittest.com",
+        verbose: true
       };
 
       var requestGetCallCount = 0;
