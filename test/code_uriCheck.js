@@ -25,7 +25,7 @@ describe('lib/uriCheck/', function() {
       done();
     });
 
-    it('should return false if the string starts with one of the array items', function (done) {
+    it('should return false if the string does not start with one of the array items', function (done) {
       var protocols = ['that', 'is'];
       var result = startsWith(testString,protocols);
       result.should.equal(false);
