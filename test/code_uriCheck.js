@@ -8,7 +8,7 @@ describe('lib/uriCheck/', function() {
   describe('init()', function () {
     it('sets the outAdapter', function (done) {
       uriCheck.init({test:true});
-      var outAdapter = uriCheck.__get__("outAdapter");
+      var outAdapter = uriCheck.__get__('outAdapter');
       outAdapter.test.should.equal(true);
       done();
     });
@@ -62,12 +62,12 @@ describe('lib/uriCheck/', function() {
 
     it('should call writeResult with fail if request.get() returns an error', function (done) {
       var site = {
-        "name": "Unit Test",
-        "expectedStatus": 200,
+        'name': 'Unit Test',
+        'expectedStatus': 200,
         // missing http in front of requestedUrl will be added by call to checkUri
-        "requestUrl": "www.unittest.com",
-        "requestHeaders": {
-          "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0"
+        'requestUrl': 'www.unittest.com',
+        'requestHeaders': {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0'
         }
       };
 
@@ -100,12 +100,12 @@ describe('lib/uriCheck/', function() {
 
     it('should call writeResult with fail if the status lib is not what is expected', function (done) {
       var site = {
-        "name": "Unit Test",
-        "expectedStatus": 200,
+        'name': 'Unit Test',
+        'expectedStatus': 200,
         // missing http in front of requestedUrl will be added by call to checkUri
-        "requestUrl": "www.unittest.com",
-        "requestHeaders": {
-          "User-Agent": "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0"
+        'requestUrl': 'www.unittest.com',
+        'requestHeaders': {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:30.0) Gecko/20100101 Firefox/30.0'
         }
       };
 
@@ -143,11 +143,11 @@ describe('lib/uriCheck/', function() {
 
     it('should call writeResult with fail if the response headers do not match', function (done) {
       var site = {
-        "name": "Unit Test",
-        "expectedStatus": 301,
-        "requestUrl": "www.unittest.com",
-        "responseHeaders": {
-          "location": "http://unittest.com/"
+        'name': 'Unit Test',
+        'expectedStatus': 301,
+        'requestUrl': 'www.unittest.com',
+        'responseHeaders': {
+          'location': 'http://unittest.com/'
         }
       };
 
@@ -183,9 +183,9 @@ describe('lib/uriCheck/', function() {
 
     it('should call writeResult with fail if an excludedHeaders header is present', function (done) {
       var site = {
-        name: "Unit Test",
+        name: 'Unit Test',
         expectedStatus: 200,
-        requestUrl: "www.unittest.com",
+        requestUrl: 'www.unittest.com',
         excludedHeaders: ['X-Powered-By']
       };
 
@@ -221,9 +221,9 @@ describe('lib/uriCheck/', function() {
 
     it('should call writeResult with fail if expected case insensitive text is missing', function (done) {
       var site = {
-        name: "Unit Test",
+        name: 'Unit Test',
         expectedStatus: 200,
-        requestUrl: "www.unittest.com",
+        requestUrl: 'www.unittest.com',
         expectedText: [{text: 'some random text'}]
       };
 
@@ -256,9 +256,9 @@ describe('lib/uriCheck/', function() {
 
     it('should call writeResult with fail if expected case-sensitive text is missing', function (done) {
       var site = {
-        name: "Unit Test",
+        name: 'Unit Test',
         expectedStatus: 200,
-        requestUrl: "www.unittest.com",
+        requestUrl: 'www.unittest.com',
         expectedText: [{text: 'Random Text', caseSensitive: true}]
       };
 
@@ -292,9 +292,9 @@ describe('lib/uriCheck/', function() {
 
     it('should call writeResult with fail if there is expected text and the response body is missing', function (done) {
       var site = {
-        name: "Unit Test",
+        name: 'Unit Test',
         expectedStatus: 200,
-        requestUrl: "www.unittest.com",
+        requestUrl: 'www.unittest.com',
         expectedText: [{text: 'Random Text', caseSensitive: true}]
       };
 
@@ -326,11 +326,11 @@ describe('lib/uriCheck/', function() {
 
     it('should call writeResult with success if the response headers and statuses match', function (done) {
       var site = {
-        "name": "Unit Test",
-        "expectedStatus": 301,
-        "requestUrl": "www.unittest.com",
-        "responseHeaders": {
-          "location": "http://unittest.com/"
+        'name': 'Unit Test',
+        'expectedStatus': 301,
+        'requestUrl': 'www.unittest.com',
+        'responseHeaders': {
+          'location': 'http://unittest.com/'
         },
         verbose:true
       };
@@ -368,9 +368,9 @@ describe('lib/uriCheck/', function() {
 
     it('should call writeResult with success if the statuses match', function (done) {
       var site = {
-        "name": "Unit Test",
-        "expectedStatus": 301,
-        "requestUrl": "www.unittest.com",
+        'name': 'Unit Test',
+        'expectedStatus': 301,
+        'requestUrl': 'www.unittest.com',
         verbose: true
       };
 

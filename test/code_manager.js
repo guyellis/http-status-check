@@ -79,9 +79,9 @@ describe('lib/manager/', function() {
     it('expands arrays of requestUrls if they are an array', function (done) {
       var sites = [
         {
-          "name": "TestSite",
-          "expectedStatus": 200,
-          "requestUrl": ["test1.com", "test2.com"]
+          'name': 'TestSite',
+          'expectedStatus': 200,
+          'requestUrl': ['test1.com', 'test2.com']
         }];
       var results = manager.expandRequestUrlInput(sites);
       results.length.should.equal(2);
@@ -91,9 +91,9 @@ describe('lib/manager/', function() {
     it('does nothing if requestUrls is not an array', function (done) {
       var sites = [
         {
-          "name": "TestSite",
-          "expectedStatus": 200,
-          "requestUrl": "test1.com"
+          'name': 'TestSite',
+          'expectedStatus': 200,
+          'requestUrl': 'test1.com'
         }];
       var results = manager.expandRequestUrlInput(sites);
       results.length.should.equal(1);
@@ -106,9 +106,9 @@ describe('lib/manager/', function() {
     it('calls uriCheck.done() when finished', function (done) {
       var sites = [
         {
-          "name": "TestSite",
-          "expectedStatus": 200,
-          "requestUrl": "test1.com"
+          'name': 'TestSite',
+          'expectedStatus': 200,
+          'requestUrl': 'test1.com'
         }];
       var checkUriCallCount = 0;
       var doneCallCount = 0;
@@ -129,9 +129,9 @@ describe('lib/manager/', function() {
     it('throws an error if checkUri calls back with error', function (done) {
       var sites = [
         {
-          "name": "TestSite",
-          "expectedStatus": 200,
-          "requestUrl": "test1.com"
+          'name': 'TestSite',
+          'expectedStatus': 200,
+          'requestUrl': 'test1.com'
         }];
       var checkUriCallCount = 0;
       var doneCallCount = 0;
@@ -161,9 +161,9 @@ describe('lib/manager/', function() {
     it('should do nothing if there is no expectedText property', function (done) {
       var sites = [
         {
-          name: "TestSite",
+          name: 'TestSite',
           expectedStatus: 200,
-          requestUrl: "test1.com"
+          requestUrl: 'test1.com'
         }];
 
       var results = manager.expandExpectedTextInput(sites);
@@ -180,9 +180,9 @@ describe('lib/manager/', function() {
       // Setup for the test
       var sites = [
         {
-          name: "TestSite",
+          name: 'TestSite',
           expectedStatus: 200,
-          requestUrl: "test1.com",
+          requestUrl: 'test1.com',
           expectedText: 'some search string'
         }];
 
@@ -205,9 +205,9 @@ describe('lib/manager/', function() {
       // Setup for the test
       var sites = [
         {
-          name: "TestSite",
+          name: 'TestSite',
           expectedStatus: 200,
-          requestUrl: "test1.com",
+          requestUrl: 'test1.com',
           expectedText: ['some search string', { text: '2nd string'}, {text: '3rd string', caseSensitive: true}]
         }];
 
@@ -235,9 +235,9 @@ describe('lib/manager/', function() {
     it('should throw an Error if the expectedText object does not have a text property', function (done) {
       // Setup for the test
       var sites = [{
-        name: "TestSite",
+        name: 'TestSite',
         expectedStatus: 200,
-        requestUrl: "test1.com",
+        requestUrl: 'test1.com',
         expectedText: { random: '2nd string'}
       }];
 
@@ -259,9 +259,9 @@ describe('lib/manager/', function() {
     it('should throw an Error if the expectedText object has an unrecognized type', function (done) {
       // Setup for the test
       var sites = [{
-        name: "TestSite",
+        name: 'TestSite',
         expectedStatus: 200,
-        requestUrl: "test1.com",
+        requestUrl: 'test1.com',
         expectedText: true
       }];
 
