@@ -16,7 +16,8 @@
   "quotmark": "single",
   "maxdepth": 3,
   "trailing": true,
-  "maxstatements": 67,
+  /* TODO: Get maxstatements to 15 */
+  "maxstatements": 25,
   "maxlen": 120,
   "eqnull": true,
   "funcscope": true,
