@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "bunyan": "^1.2.3",
-    "chai": "^1.10.0",
+    "chai": "^2.0.0",
     "coveralls": "*",
     "istanbul": "*",
     "jshint": "^2.5.10",
