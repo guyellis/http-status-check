@@ -7,7 +7,8 @@
     "pre-commit-update": "node_modules/.bin/npm-update-outdated",
     "test": "mocha",
     "posttest": "jshint .",
-    "istanbul": "istanbul cover ./node_modules/mocha/bin/_mocha",
+    "check-coverage": "istanbul check-coverage --statements 100 ./coverage/coverage.json",
+    "coverage": "istanbul cover ./node_modules/mocha/bin/_mocha",
     "jshint": "jshint .",
     "coveralls": "istanbul cover ./node_modules/.bin/_mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js --verbose",
     "start": "node index.js",
@@ -18,8 +19,9 @@
     "pre-commit-update",
     "jshint",
     "pre-commit-stash-save",
-    "test",
-    "post-commit-stash-pop"
+    "coverage",
+    "post-commit-stash-pop",
+    "check-coverage"
   ],
   "engines": {
     "node": ">= 0.10"
