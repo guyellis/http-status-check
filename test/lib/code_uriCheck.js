@@ -2,7 +2,7 @@
 
 var should = require('chai').should();
 var rewire = require('rewire');
-var uriCheck = rewire('../lib/uriCheck');
+var uriCheck = rewire('../../lib/uriCheck');
 
 describe('lib/uriCheck/', function() {
   describe('init()', function () {

@@ -2,7 +2,7 @@
 
 var should = require('chai').should();
 var rewire = require('rewire');
-var manager = rewire('../lib/manager');
+var manager = rewire('../../lib/manager');
 var _ = require('lodash');
 
 describe('lib/manager/', function() {
@@ -22,7 +22,7 @@ describe('lib/manager/', function() {
       manager.__set__('iterateURLs', function(concurrentRequestsParam/*, sites*/){
         concurrentRequests = concurrentRequestsParam;
       });
-      
+
       manager.run({},{});
       concurrentRequests.should.equal(3);
       initCalled.should.equal(true);
