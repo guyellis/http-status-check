@@ -1,6 +1,6 @@
 {
   "name": "http-status-check",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Utility to check the HTTP status of URL endpoints",
   "main": "index.js",
   "scripts": {
