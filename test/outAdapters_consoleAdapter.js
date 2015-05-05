@@ -36,7 +36,7 @@ describe('outAdapters/consoleAdapter/', function() {
 
   describe('writeResult()', function () {
     it('should increment success counter when successful', function (done) {
-      outAdapter.writeResult('success', {});
+      outAdapter.writeResult('success', {verbose: true});
       //var failHits = outAdapter.__get__('failHits');
       var successHits = outAdapter.__get__('successHits');
       successHits.should.be.above(0);
@@ -56,7 +56,7 @@ describe('outAdapters/consoleAdapter/', function() {
 
   describe('writeResult()', function () {
     it('should increment disabled counter when url is disabled', function (done) {
-      outAdapter.writeResult('disabled', {errors: 'some error'});
+      outAdapter.writeResult('disabled', {verbose: true});
       var disableHits = outAdapter.__get__('disableHits');
       disableHits.should.be.above(0);
       done();
