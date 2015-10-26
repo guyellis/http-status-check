@@ -20,14 +20,14 @@ describe('lib/uriCheck/', function() {
 
     it('should return true if the string starts with one of the array items', function (done) {
       var protocols = ['this', 'is'];
-      var result = startsWith(testString,protocols);
+      var result = startsWith(testString, protocols);
       result.should.equal(true);
       done();
     });
 
     it('should return false if the string does not start with one of the array items', function (done) {
       var protocols = ['that', 'is'];
-      var result = startsWith(testString,protocols);
+      var result = startsWith(testString, protocols);
       result.should.equal(false);
       done();
     });
@@ -44,7 +44,7 @@ describe('lib/uriCheck/', function() {
         checkUriCallCount++;
       });
       var writeResultCallCount = 0;
-      uriCheck.__set__('outAdapter',{
+      uriCheck.__set__('outAdapter', {
         writeResult: function() {
           writeResultCallCount++;
         }
@@ -80,7 +80,7 @@ describe('lib/uriCheck/', function() {
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      uriCheck.__set__('outAdapter',{
+      uriCheck.__set__('outAdapter', {
         writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
@@ -119,12 +119,12 @@ describe('lib/uriCheck/', function() {
               location: 'www.newplace.com'
             }
           };
-          return callback(null,response);
+          return callback(null, response);
         }
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      uriCheck.__set__('outAdapter',{
+      uriCheck.__set__('outAdapter', {
         writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
@@ -161,12 +161,12 @@ describe('lib/uriCheck/', function() {
               'location': 'it is not a match'
             }
           };
-          return callback(null,response);
+          return callback(null, response);
         }
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      uriCheck.__set__('outAdapter',{
+      uriCheck.__set__('outAdapter', {
         writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
@@ -199,12 +199,12 @@ describe('lib/uriCheck/', function() {
               'x-powered-by': 'ASP.NET'
             }
           };
-          return callback(null,response);
+          return callback(null, response);
         }
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      uriCheck.__set__('outAdapter',{
+      uriCheck.__set__('outAdapter', {
         writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
@@ -233,12 +233,12 @@ describe('lib/uriCheck/', function() {
           requestGetCallCount++;
           var response = { statusCode: 200 };
           var body = 'this body does not have the random text we are looking for';
-          return callback(null,response, body);
+          return callback(null, response, body);
         }
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      uriCheck.__set__('outAdapter',{
+      uriCheck.__set__('outAdapter', {
         writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
@@ -268,12 +268,12 @@ describe('lib/uriCheck/', function() {
           requestGetCallCount++;
           var response = { statusCode: 200 };
           var body = 'this body does not have the random text we are looking for';
-          return callback(null,response, body);
+          return callback(null, response, body);
         }
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      uriCheck.__set__('outAdapter',{
+      uriCheck.__set__('outAdapter', {
         writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
@@ -303,12 +303,12 @@ describe('lib/uriCheck/', function() {
         get: function(options, callback) {
           requestGetCallCount++;
           var response = { statusCode: 200 };
-          return callback(null,response);
+          return callback(null, response);
         }
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      uriCheck.__set__('outAdapter',{
+      uriCheck.__set__('outAdapter', {
         writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
@@ -345,12 +345,12 @@ describe('lib/uriCheck/', function() {
               'location': 'http://unittest.com/'
             }
           };
-          return callback(null,response);
+          return callback(null, response);
         }
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      uriCheck.__set__('outAdapter',{
+      uriCheck.__set__('outAdapter', {
         writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
@@ -381,12 +381,12 @@ describe('lib/uriCheck/', function() {
           var response = {
             statusCode: 301
           };
-          return callback(null,response);
+          return callback(null, response);
         }
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      uriCheck.__set__('outAdapter',{
+      uriCheck.__set__('outAdapter', {
         writeResult: function(result/*, uri*/) {
           writeResultResult = result;
           writeResultCallCount++;
