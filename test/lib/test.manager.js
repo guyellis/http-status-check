@@ -23,7 +23,7 @@ describe('lib/manager/', function() {
         concurrentRequests = concurrentRequestsParam;
       });
 
-      manager.run({},{});
+      manager.run({}, {});
       concurrentRequests.should.equal(3);
       initCalled.should.equal(true);
       expandRequestUrlInputCalled.should.equal(true);
@@ -45,7 +45,7 @@ describe('lib/manager/', function() {
         concurrentRequests = concurrentRequestsParam;
       });
 
-      manager.run({},{concurrentRequests: 15});
+      manager.run({}, {concurrentRequests: 15});
       concurrentRequests.should.equal(15);
       initCalled.should.equal(true);
       expandRequestUrlInputCalled.should.equal(true);
@@ -67,7 +67,7 @@ describe('lib/manager/', function() {
         concurrentRequests = concurrentRequestsParam;
       });
 
-      manager.run({concurrentRequests: -1},{});
+      manager.run({concurrentRequests: -1}, {});
       concurrentRequests.should.equal(3);
       initCalled.should.equal(true);
       expandRequestUrlInputCalled.should.equal(true);
@@ -112,8 +112,8 @@ describe('lib/manager/', function() {
         }];
       var checkUriCallCount = 0;
       var doneCallCount = 0;
-      manager.__set__('uriCheck',{
-        checkUri: function(site,callback){
+      manager.__set__('uriCheck', {
+        checkUri: function(site, callback){
           checkUriCallCount++;
           callback();
         },
@@ -135,8 +135,8 @@ describe('lib/manager/', function() {
         }];
       var checkUriCallCount = 0;
       var doneCallCount = 0;
-      manager.__set__('uriCheck',{
-        checkUri: function(site,callback){
+      manager.__set__('uriCheck', {
+        checkUri: function(site, callback){
           checkUriCallCount++;
           callback(new Error('Unit Test Error'));
         },
