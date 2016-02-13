@@ -7,5 +7,6 @@
     "guyellis"
   ],
   "rules": {
+    "no-underscore-dangle": 0
   }
 }
