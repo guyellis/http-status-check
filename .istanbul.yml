@@ -1,0 +1,23 @@
+verbose: false
+instrumentation:
+    root: .
+    default-excludes: true
+    excludes: ['sitelists/*']
+    include-all-sources: true
+reporting:
+    print: summary
+    reports:
+        - lcov
+    dir: ./coverage
+    watermarks:
+        statements: [50, 80]
+        lines: [50, 80]
+        functions: [50, 80]
+        branches: [50, 80]
+check:
+    global:
+        statements: 79
+        lines: 78
+        branches: 74
+        functions: 81
+        excludes: []
