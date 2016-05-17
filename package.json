@@ -25,7 +25,7 @@
     "chai": "^3.0.0",
     "coveralls": "*",
     "eslint": "^2.0.0",
-    "eslint-config-guyellis": "0.0.5",
+    "eslint-config-guyellis": "0.0.6",
     "istanbul": "*",
     "mocha": "*",
     "npm-update-outdated": "^0.1.3",
