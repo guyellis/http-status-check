@@ -71,5 +71,5 @@
     "start": "node index.js",
     "test": "node_modules/.bin/mocha ./test/ --recursive"
   },
-  "version": "1.0.3"
+  "version": "1.1.0"
 }
