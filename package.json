@@ -16,7 +16,7 @@
     "lodash": "^4.0.0",
     "nodemailer": "^2.0.0",
     "request": "^2.57.0",
-    "string": "^3.2.0",
+    "string": "^3.3.2",
     "sugar": "^2.0.0"
   },
   "description": "Utility to check the HTTP status of URL endpoints",
