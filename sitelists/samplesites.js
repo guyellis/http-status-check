@@ -18,18 +18,18 @@ module.exports = {
       // http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
       expectedStatus: 200,
       // The requestUrl is the URI that you want checked.
-      requestUrl: 'http://linksilk.com'
+      requestUrl: 'https://linksilk.com'
     },
     {
       name: 'LinkSilk WWW',
       expectedStatus: 301,
-      requestUrl: 'http://www.linksilk.com',
+      requestUrl: 'https://www.linksilk.com',
       // The responseHeaders is a collection of HTTP headers you expect the
       // server to return. This example expects an HTTP status of 301 which
       // is a redirect. Accompanying the redirect you need a location header
       // which tells the requester where to redirect to.
       responseHeaders: {
-        location: 'http://linksilk.com/'
+        location: 'https://linksilk.com/'
       },
       // The excludedHeaders array is a list of HTTP headers that you don't
       // expect the server to return. For example, for security you might have
@@ -41,7 +41,7 @@ module.exports = {
     {
       name: 'LinkSilk Redirect To 200',
       expectedStatus: 200,
-      requestUrl: 'http://www.linksilk.com',
+      requestUrl: 'https://www.linksilk.com',
       // By setting followRedirect to true we are telling HTTP Status Check
       // to follow any 300 to 399 status until it gives us a non-300 series
       // status and then check that against the expectedStatus.

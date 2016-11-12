@@ -6,15 +6,15 @@ var inAdapter = rewire('../../../lib/inAdapters/fileAdapter');
 
 describe('inAdapters/fileAdapter/', function() {
   inAdapter.__set__('require', function(filename) {
-    if(filename.indexOf('checksites') > 0) {
-      return {unit: 'checksites'};
+    if(filename.indexOf('alexa100') > 0) {
+      return {unit: 'alexa100'};
     } else {
       return {unit: 'samplesites'};
     }
   });
 
   describe('getRunData()', function () {
-    it('should return checksites.js data if exists', function (done) {
+    it('should return samplesites.js data if exists', function (done) {
       var existsSyncCallCount = 0;
       inAdapter.__set__('fs', {
         existsSync: function(/*filename*/) {
@@ -32,37 +32,13 @@ describe('inAdapters/fileAdapter/', function() {
       var runData = inAdapter.getRunData();
       existsSyncCallCount.should.equal(2);
       should.exist(runData.unit);
-      runData.unit.should.equal('checksites');
-      done();
-    });
-  });
-
-  describe('getRunData()', function () {
-    it('should return samplesites.js data if exists and if checksites.js is missing', function (done) {
-      var existsSyncCallCount = 0;
-      inAdapter.__set__('fs', {
-        existsSync: function(/*filename*/) {
-          existsSyncCallCount++;
-          if(existsSyncCallCount < 3) {
-            // In the first call to existsSync we're checking
-            // for the existance of checksites.js.
-            // In this test we want to simulate that it doesn't
-            // exist so going to return false the first time.
-            return false;
-          }
-          return true;
-        }
-      });
-      var runData = inAdapter.getRunData();
-      existsSyncCallCount.should.equal(3);
-      should.exist(runData.unit);
       runData.unit.should.equal('samplesites');
       done();
     });
   });
 
   describe('getRunData()', function () {
-    it('should throw an exception if neither samplesites.js or checksites.js exist', function (done) {
+    it('should throw an exception if checksites.js does not exist', function (done) {
       var existsSyncCallCount = 0;
       inAdapter.__set__('fs', {
         existsSync: function(/*filename*/) {
@@ -76,7 +52,7 @@ describe('inAdapters/fileAdapter/', function() {
       } catch(e) {
         exceptionThrown = true;
       }
-      existsSyncCallCount.should.equal(3);
+      existsSyncCallCount.should.equal(2);
       exceptionThrown.should.equal(true);
       done();
     });
