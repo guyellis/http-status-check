@@ -28,3 +28,5 @@ sitelists/checksites.js
 runcheck.sh
 
 lib/outAdapters/emailActualData.js
+
+.vscode/

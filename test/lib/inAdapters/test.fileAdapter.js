@@ -39,6 +39,11 @@ describe('inAdapters/fileAdapter/', function() {
 
   describe('getRunData()', function () {
     it('should throw an exception if checksites.js does not exist', function (done) {
+      // Save previous state of HTTP_STATUS_CHECK_FILE if it is truthy
+      var previouseHttpStatusCheckFileValue = process.env.HTTP_STATUS_CHECK_FILE;
+      if(previouseHttpStatusCheckFileValue) {
+        delete process.env.HTTP_STATUS_CHECK_FILE;
+      }
       var existsSyncCallCount = 0;
       inAdapter.__set__('fs', {
         existsSync: function(/*filename*/) {
@@ -54,6 +59,12 @@ describe('inAdapters/fileAdapter/', function() {
       }
       existsSyncCallCount.should.equal(2);
       exceptionThrown.should.equal(true);
+
+      // Restore previous state of HTTP_STATUS_CHECK_FILE
+      if(previouseHttpStatusCheckFileValue) {
+        process.env.HTTP_STATUS_CHECK_FILE = previouseHttpStatusCheckFileValue;
+      }
+
       done();
     });
   });
