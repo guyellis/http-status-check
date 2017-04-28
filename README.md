@@ -1,4 +1,6 @@
 # HTTP Status Check
+
+[![Greenkeeper badge](https://badges.greenkeeper.io/guyellis/http-status-check.svg)](https://greenkeeper.io/)
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/guyellis/http-status-check?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 [![Build Status](https://travis-ci.org/guyellis/http-status-check.svg?branch=master)](https://travis-ci.org/guyellis/http-status-check)
