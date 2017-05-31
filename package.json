@@ -22,7 +22,7 @@
   "description": "Utility to check the HTTP status of URL endpoints",
   "devDependencies": {
     "bunyan": "^1.2.3",
-    "chai": "^3.0.0",
+    "chai": "^4.0.1",
     "coveralls": "*",
     "eslint": "^3.0.0",
     "eslint-config-guyellis": "0.0.6",
