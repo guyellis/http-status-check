@@ -15,7 +15,7 @@ Checks your sites' HTTP statuses
 npm install http-status-check
 ```
 
-##Run
+## Run
 
 ```
 node index.js
@@ -27,11 +27,11 @@ To show only failures in the output:
 node index.js --only-output-failures
 ```
 
-##Questions?
+## Questions?
 
 Feel free to contact me on twitter if you have any questions: [@wildfiction](https://twitter.com/wildfiction)
 
-##Objectives
+## Objectives
 
 The objectives of the http-status-check project are as follows:
 
@@ -41,7 +41,7 @@ The objectives of the http-status-check project are as follows:
 * Provide a safe and encouraging environment for developers who are new to Open Source development to get their feet wet in contributing for the first time (through pull requests).
 * Maintain 100% coverage and demonstrate that this might not just be a vanity metric.
 
-##Getting Started
+## Getting Started
 
 Running `node index.js` should give you an indication
  of how it works. It uses the `samplesites.js` file for
@@ -53,7 +53,7 @@ is found then it takes precedence over `samplesites.js`.
 Now edit `checksites.js` and replace the sites with your own sites
 that you want to run checks on.
 
-##checksites.js config file
+## checksites.js config file
 
 The `samplesites.js` file is heavily commented and a good starting point.
 
