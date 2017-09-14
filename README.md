@@ -43,15 +43,11 @@ The objectives of the http-status-check project are as follows:
 
 ## Getting Started
 
-Running `node index.js` should give you an indication
- of how it works. It uses the `samplesites.js` file for
- the names of the sites to test.
+Running `node index.js` should give you an indication of how it works. It uses the `samplesites.js` file for the names of the sites to test.
  
-Copy `samplesites.js` to `checksites.js`. If `checksites.js`
-is found then it takes precedence over `samplesites.js`.
+Copy `samplesites.js` to `checksites.js`. If `checksites.js` is found then it takes precedence over `samplesites.js`.
 
-Now edit `checksites.js` and replace the sites with your own sites
-that you want to run checks on.
+Now edit `checksites.js` and replace the sites with your own sites that you want to run checks on.
 
 ## checksites.js config file
 
