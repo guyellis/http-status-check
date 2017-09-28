@@ -23,7 +23,7 @@
   "devDependencies": {
     "bunyan": "1.8.12",
     "chai": "4.1.2",
-    "coveralls": "2.13.1",
+    "coveralls": "2.13.2",
     "eslint": "4.7.2",
     "eslint-config-guyellis": "0.0.6",
     "istanbul": "0.4.5",
