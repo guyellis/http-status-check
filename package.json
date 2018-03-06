@@ -14,7 +14,7 @@
     "async": "2.6.0",
     "debug": "3.1.0",
     "lodash": "4.17.5",
-    "nodemailer": "4.6.0",
+    "nodemailer": "4.6.1",
     "request": "2.83.0",
     "string": "3.3.3",
     "sugar": "2.0.4"
