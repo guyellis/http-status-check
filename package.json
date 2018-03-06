@@ -49,10 +49,7 @@
   "name": "http-status-check",
   "pre-commit": [
     "lint",
-    "pre-commit-update",
-    "pre-commit-stash-save",
     "coverage",
-    "post-commit-stash-pop",
     "check-coverage"
   ],
   "repository": {
