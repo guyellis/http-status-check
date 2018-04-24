@@ -30,7 +30,7 @@
     "mocha": "5.1.1",
     "npm-update-outdated": "0.1.6",
     "pre-commit": "1.2.2",
-    "rewire": "4.0.0"
+    "rewire": "4.0.1"
   },
   "engines": {
     "node": ">= 6.2"
