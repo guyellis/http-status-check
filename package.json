@@ -15,7 +15,7 @@
     "debug": "3.1.0",
     "lodash": "4.17.10",
     "nodemailer": "4.6.4",
-    "request": "2.85.0",
+    "request": "2.86.0",
     "string": "3.3.3",
     "sugar": "2.0.4"
   },
