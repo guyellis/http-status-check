@@ -70,7 +70,7 @@ module.exports = {
     {
       name: 'HTTP Status Check on Guy\'s Blog',
       expectedStatus: 200,
-      requestUrl: 'http://www.guyellisrocks.com/2014/06/http-status-check.html',
+      requestUrl: 'https://www.guyellisrocks.com/2014/06/http-status-check.html',
       // The expectedText property can be a string, an object or an array.
       // If it's a string then it denotes the case-insensitive text that is expected
       //   in the body of the response.
@@ -84,7 +84,7 @@ module.exports = {
     {
       name: 'Missing URL example',
       expectedStatus: 404,
-      requestUrl: 'http://www.guyellisrocks.com/2014/06/will-this-get-written.html'
+      requestUrl: 'https://www.guyellisrocks.com/2014/06/will-this-get-written.html'
     }
   ]
 };
