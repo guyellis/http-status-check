@@ -17,7 +17,7 @@
     "nodemailer": "4.7.0",
     "request": "2.88.0",
     "string": "3.3.3",
-    "sugar": "2.0.4"
+    "sugar": "2.0.5"
   },
   "description": "Utility to check the HTTP status of URL endpoints",
   "devDependencies": {
