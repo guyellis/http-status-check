@@ -27,7 +27,7 @@
     "eslint": "6.4.0",
     "eslint-config-guyellis": "0.0.6",
     "istanbul": "0.4.5",
-    "mocha": "6.2.0",
+    "mocha": "6.2.1",
     "npm-update-outdated": "0.1.6",
     "pre-commit": "1.2.2",
     "rewire": "4.0.1"
