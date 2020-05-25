@@ -24,7 +24,7 @@
     "bunyan": "1.8.12",
     "chai": "4.2.0",
     "coveralls": "3.1.0",
-    "eslint": "7.0.0",
+    "eslint": "7.1.0",
     "eslint-config-guyellis": "0.0.6",
     "istanbul": "0.4.5",
     "mocha": "7.1.2",
