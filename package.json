@@ -21,7 +21,7 @@
   },
   "description": "Utility to check the HTTP status of URL endpoints",
   "devDependencies": {
-    "bunyan": "1.8.12",
+    "bunyan": "1.8.13",
     "chai": "4.2.0",
     "coveralls": "3.1.0",
     "eslint": "7.3.1",
