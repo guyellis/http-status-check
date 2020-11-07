@@ -14,7 +14,7 @@
     "async": "3.2.0",
     "debug": "4.2.0",
     "lodash": "4.17.20",
-    "nodemailer": "6.4.14",
+    "nodemailer": "6.4.15",
     "request": "2.88.2",
     "string": "3.3.3",
     "sugar": "2.0.6"
@@ -24,10 +24,10 @@
     "bunyan": "1.8.14",
     "chai": "4.2.0",
     "coveralls": "3.1.0",
-    "eslint": "7.12.1",
+    "eslint": "7.13.0",
     "eslint-config-guyellis": "0.0.6",
     "istanbul": "0.4.5",
-    "mocha": "8.2.0",
+    "mocha": "8.2.1",
     "npm-update-outdated": "0.1.6",
     "pre-commit": "1.2.2",
     "rewire": "5.0.0"
