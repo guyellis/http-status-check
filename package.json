@@ -32,9 +32,6 @@
     "pre-commit": "1.2.2",
     "rewire": "5.0.0"
   },
-  "engines": {
-    "node": "16.1.0"
-  },
   "homepage": "https://github.com/guyellis/http-status-check",
   "inAdapter": {
     "type": "./lib/inAdapters/fileAdapter"
