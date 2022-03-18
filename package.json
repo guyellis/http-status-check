@@ -12,7 +12,7 @@
   "concurrentRequests": 10,
   "dependencies": {
     "async": "3.2.3",
-    "debug": "4.3.3",
+    "debug": "4.3.4",
     "lodash": "4.17.21",
     "nodemailer": "6.7.2",
     "request": "2.88.2",
