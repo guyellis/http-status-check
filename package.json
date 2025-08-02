@@ -30,7 +30,7 @@
     "mocha": "11.7.1",
     "npm-update-outdated": "0.1.6",
     "pre-commit": "1.2.2",
-    "rewire": "8.0.0"
+    "rewire": "9.0.0"
   },
   "homepage": "https://github.com/guyellis/http-status-check",
   "inAdapter": {
