@@ -29,7 +29,7 @@
     "istanbul": "0.4.5",
     "mocha": "11.7.5",
     "npm-update-outdated": "0.1.6",
-    "pre-commit": "1.2.2",
+    "pre-commit": "2.0.0",
     "rewire": "9.0.1"
   },
   "homepage": "https://github.com/guyellis/http-status-check",
