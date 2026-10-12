@@ -37,6 +37,7 @@
     "npm-update-outdated": "0.1.6",
     "pre-commit": "2.0.0",
     "typescript": "6.0.3",
+    "vite": "8.3.4",
     "vitest": "5.0.4"
   },
   "homepage": "https://github.com/guyellis/http-status-check",
@@ -49,7 +50,8 @@
     "checker"
   ],
   "license": "MIT",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "exports": "./dist/index.js",
   "type": "module",
   "name": "http-status-check",
   "pre-commit": [
@@ -61,14 +63,15 @@
     "url": "https://github.com/guyellis/http-status-check.git"
   },
   "scripts": {
+    "build": "vite build",
     "coverage": "vitest run --coverage",
     "lint": "node_modules/.bin/eslint --ext .js .",
     "lintfix": "node_modules/.bin/eslint --ext .js . --fix",
     "post-commit-stash-pop": "git stash pop",
     "pre-commit-stash-save": "git stash --keep-index",
     "pre-commit-update": "node_modules/.bin/npm-update-outdated",
-    "start": "node index.js",
-    "test": "tsc --noEmit && vitest run",
+    "start": "node dist/index.js",
+    "test": "tsc --noEmit && vitest run && npm run build",
     "typecheck": "tsc --noEmit"
   },
   "version": "1.1.0"
