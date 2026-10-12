@@ -2,10 +2,11 @@
 
 import request from 'request';
 import uriCheck from '../../lib/uriCheck.js';
+import type { NormalizedSite, OutAdapter, SiteConfig } from '../../lib/types.js';
 
-function checkUriPromise(site) {
-  return new Promise(function(resolve, reject) {
-    uriCheck.checkUri(site, function(err) {
+function checkUriPromise(site: NormalizedSite | SiteConfig): Promise<void> {
+  return new Promise<void>(function(resolve, reject) {
+    uriCheck.checkUri(site as NormalizedSite, function(err) {
       if (err) {
         return reject(err);
       }
@@ -18,8 +19,8 @@ describe('lib/uriCheck/', function() {
   describe('init()', function () {
     it('sets the outAdapter', function () {
       uriCheck.init({ test: true });
-      var outAdapter = uriCheck.getOutAdapter();
-      expect(outAdapter.test).toBe(true);
+      var outAdapter = uriCheck.getOutAdapter() as { test?: boolean } | undefined;
+      expect(outAdapter?.test).toBe(true);
     });
   });
 
@@ -42,12 +43,12 @@ describe('lib/uriCheck/', function() {
 
   describe('checkUri()', function () {
     it('should terminate early if the site is disabled', async function () {
-      var site = {
+      var site: SiteConfig = {
         disabled: true,
         verbose: true
       };
       var writeResultCallCount = 0;
-      var outAdapter = {
+      var outAdapter: OutAdapter = {
         writeResult: function() {
           writeResultCallCount++;
         }
@@ -63,7 +64,7 @@ describe('lib/uriCheck/', function() {
     });
 
     it('should call writeResult with fail if request.get() returns an error', async function () {
-      var site = {
+      var site: SiteConfig = {
         'name': 'Unit Test',
         'expectedStatus': 200,
         'requestUrl': 'www.unittest.com',
@@ -72,13 +73,19 @@ describe('lib/uriCheck/', function() {
         }
       };
 
-      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(options, callback) {
-        return callback({ Error: new Error('Unit Test Error') });
+      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(
+        options: request.RequiredUriUrl & request.CoreOptions,
+        callback?: request.RequestCallback
+      ) {
+        if (callback) {
+          callback({ Error: new Error('Unit Test Error') } as unknown as Error, {} as request.Response, '');
+        }
+        return {} as request.Request;
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      var outAdapter = {
-        writeResult: function(result) {
+      var outAdapter: OutAdapter = {
+        writeResult: function(result: string) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -94,7 +101,7 @@ describe('lib/uriCheck/', function() {
     });
 
     it('should call writeResult with fail if the status lib is not what is expected', async function () {
-      var site = {
+      var site: SiteConfig = {
         'name': 'Unit Test',
         'expectedStatus': 200,
         'requestUrl': 'www.unittest.com',
@@ -103,19 +110,25 @@ describe('lib/uriCheck/', function() {
         }
       };
 
-      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(options, callback) {
+      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(
+        options: request.RequiredUriUrl & request.CoreOptions,
+        callback?: request.RequestCallback
+      ) {
         var response = {
           statusCode: 301,
           headers: {
             location: 'www.newplace.com'
           }
-        };
-        return callback(null, response);
+        } as unknown as request.Response;
+        if (callback) {
+          callback(null, response, '');
+        }
+        return {} as request.Request;
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      var outAdapter = {
-        writeResult: function(result) {
+      var outAdapter: OutAdapter = {
+        writeResult: function(result: string) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -131,7 +144,7 @@ describe('lib/uriCheck/', function() {
     });
 
     it('should call writeResult with fail if the response headers do not match', async function () {
-      var site = {
+      var site: SiteConfig = {
         'name': 'Unit Test',
         'expectedStatus': 301,
         'requestUrl': 'www.unittest.com',
@@ -140,19 +153,25 @@ describe('lib/uriCheck/', function() {
         }
       };
 
-      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(options, callback) {
+      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(
+        options: request.RequiredUriUrl & request.CoreOptions,
+        callback?: request.RequestCallback
+      ) {
         var response = {
           statusCode: 301,
           headers: {
             'location': 'it is not a match'
           }
-        };
-        return callback(null, response);
+        } as unknown as request.Response;
+        if (callback) {
+          callback(null, response, '');
+        }
+        return {} as request.Request;
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      var outAdapter = {
-        writeResult: function(result) {
+      var outAdapter: OutAdapter = {
+        writeResult: function(result: string) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -168,26 +187,32 @@ describe('lib/uriCheck/', function() {
     });
 
     it('should call writeResult with fail if an excludedHeaders header is present', async function () {
-      var site = {
+      var site: SiteConfig = {
         name: 'Unit Test',
         expectedStatus: 200,
         requestUrl: 'www.unittest.com',
         excludedHeaders: ['X-Powered-By']
       };
 
-      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(options, callback) {
+      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(
+        options: request.RequiredUriUrl & request.CoreOptions,
+        callback?: request.RequestCallback
+      ) {
         var response = {
           statusCode: 200,
           headers: {
             'x-powered-by': 'ASP.NET'
           }
-        };
-        return callback(null, response);
+        } as unknown as request.Response;
+        if (callback) {
+          callback(null, response, '');
+        }
+        return {} as request.Request;
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      var outAdapter = {
-        writeResult: function(result) {
+      var outAdapter: OutAdapter = {
+        writeResult: function(result: string) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -203,22 +228,28 @@ describe('lib/uriCheck/', function() {
     });
 
     it('should call writeResult with fail if expected case insensitive text is missing', async function () {
-      var site = {
+      var site: SiteConfig = {
         name: 'Unit Test',
         expectedStatus: 200,
         requestUrl: 'www.unittest.com',
         expectedText: [{ text: 'some random text' }]
       };
 
-      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(options, callback) {
-        var response = { statusCode: 200 };
+      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(
+        options: request.RequiredUriUrl & request.CoreOptions,
+        callback?: request.RequestCallback
+      ) {
+        var response = { statusCode: 200 } as unknown as request.Response;
         var body = 'this body does not have the random text we are looking for';
-        return callback(null, response, body);
+        if (callback) {
+          callback(null, response, body);
+        }
+        return {} as request.Request;
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      var outAdapter = {
-        writeResult: function(result) {
+      var outAdapter: OutAdapter = {
+        writeResult: function(result: string) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -234,22 +265,28 @@ describe('lib/uriCheck/', function() {
     });
 
     it('should call writeResult with fail if expected case-sensitive text is missing', async function () {
-      var site = {
+      var site: SiteConfig = {
         name: 'Unit Test',
         expectedStatus: 200,
         requestUrl: 'www.unittest.com',
         expectedText: [{ text: 'Random Text', caseSensitive: true }]
       };
 
-      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(options, callback) {
-        var response = { statusCode: 200 };
+      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(
+        options: request.RequiredUriUrl & request.CoreOptions,
+        callback?: request.RequestCallback
+      ) {
+        var response = { statusCode: 200 } as unknown as request.Response;
         var body = 'this body does not have the random text we are looking for';
-        return callback(null, response, body);
+        if (callback) {
+          callback(null, response, body);
+        }
+        return {} as request.Request;
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      var outAdapter = {
-        writeResult: function(result) {
+      var outAdapter: OutAdapter = {
+        writeResult: function(result: string) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -265,21 +302,27 @@ describe('lib/uriCheck/', function() {
     });
 
     it('should call writeResult with fail if there is expected text and the response body is missing', async function () {
-      var site = {
+      var site: SiteConfig = {
         name: 'Unit Test',
         expectedStatus: 200,
         requestUrl: 'www.unittest.com',
         expectedText: [{ text: 'Random Text', caseSensitive: true }]
       };
 
-      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(options, callback) {
-        var response = { statusCode: 200 };
-        return callback(null, response);
+      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(
+        options: request.RequiredUriUrl & request.CoreOptions,
+        callback?: request.RequestCallback
+      ) {
+        var response = { statusCode: 200 } as unknown as request.Response;
+        if (callback) {
+          callback(null, response, '');
+        }
+        return {} as request.Request;
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      var outAdapter = {
-        writeResult: function(result) {
+      var outAdapter: OutAdapter = {
+        writeResult: function(result: string) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -295,7 +338,7 @@ describe('lib/uriCheck/', function() {
     });
 
     it('should call writeResult with success if the response headers and statuses match', async function () {
-      var site = {
+      var site: SiteConfig = {
         'name': 'Unit Test',
         'expectedStatus': 301,
         'requestUrl': 'www.unittest.com',
@@ -305,19 +348,25 @@ describe('lib/uriCheck/', function() {
         verbose: true
       };
 
-      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(options, callback) {
+      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(
+        options: request.RequiredUriUrl & request.CoreOptions,
+        callback?: request.RequestCallback
+      ) {
         var response = {
           statusCode: 301,
           headers: {
             'location': 'http://unittest.com/'
           }
-        };
-        return callback(null, response);
+        } as unknown as request.Response;
+        if (callback) {
+          callback(null, response, '');
+        }
+        return {} as request.Request;
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      var outAdapter = {
-        writeResult: function(result) {
+      var outAdapter: OutAdapter = {
+        writeResult: function(result: string) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -333,23 +382,29 @@ describe('lib/uriCheck/', function() {
     });
 
     it('should call writeResult with success if the statuses match', async function () {
-      var site = {
+      var site: SiteConfig = {
         'name': 'Unit Test',
         'expectedStatus': 301,
         'requestUrl': 'www.unittest.com',
         verbose: true
       };
 
-      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(options, callback) {
+      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(
+        options: request.RequiredUriUrl & request.CoreOptions,
+        callback?: request.RequestCallback
+      ) {
         var response = {
           statusCode: 301
-        };
-        return callback(null, response);
+        } as unknown as request.Response;
+        if (callback) {
+          callback(null, response, '');
+        }
+        return {} as request.Request;
       });
       var writeResultCallCount = 0;
       var writeResultResult = '';
-      var outAdapter = {
-        writeResult: function(result) {
+      var outAdapter: OutAdapter = {
+        writeResult: function(result: string) {
           writeResultResult = result;
           writeResultCallCount++;
         }
@@ -365,50 +420,62 @@ describe('lib/uriCheck/', function() {
     });
 
     it('should set followRedirect to true in request options when site.followRedirect is true', async function () {
-      var site = {
+      var site: SiteConfig = {
         name: 'Unit Test',
         expectedStatus: 200,
         requestUrl: 'www.unittest.com',
         followRedirect: true
       };
-      var outAdapter = {
+      var outAdapter: OutAdapter = {
         writeResult: vi.fn()
       };
       uriCheck.init(outAdapter);
-      var capturedOptions;
-      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(options, callback) {
+      var capturedOptions: (request.RequiredUriUrl & request.CoreOptions) | undefined;
+      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(
+        options: request.RequiredUriUrl & request.CoreOptions,
+        callback?: request.RequestCallback
+      ) {
         capturedOptions = options;
-        return callback(null, { statusCode: 200 });
+        if (callback) {
+          callback(null, { statusCode: 200 } as unknown as request.Response, '');
+        }
+        return {} as request.Request;
       });
 
       await checkUriPromise(site);
 
       expect(requestSpy).toHaveBeenCalledTimes(1);
-      expect(capturedOptions.followRedirect).toBe(true);
+      expect(capturedOptions?.followRedirect).toBe(true);
       expect(outAdapter.writeResult).toHaveBeenCalledWith('success', site);
       requestSpy.mockRestore();
     });
 
     it('should set followRedirect to false in request options when site.followRedirect is not provided', async function () {
-      var site = {
+      var site: SiteConfig = {
         name: 'Unit Test',
         expectedStatus: 200,
         requestUrl: 'www.unittest.com'
       };
-      var outAdapter = {
+      var outAdapter: OutAdapter = {
         writeResult: vi.fn()
       };
       uriCheck.init(outAdapter);
-      var capturedOptions;
-      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(options, callback) {
+      var capturedOptions: (request.RequiredUriUrl & request.CoreOptions) | undefined;
+      var requestSpy = vi.spyOn(request, 'get').mockImplementation(function(
+        options: request.RequiredUriUrl & request.CoreOptions,
+        callback?: request.RequestCallback
+      ) {
         capturedOptions = options;
-        return callback(null, { statusCode: 200 });
+        if (callback) {
+          callback(null, { statusCode: 200 } as unknown as request.Response, '');
+        }
+        return {} as request.Request;
       });
 
       await checkUriPromise(site);
 
       expect(requestSpy).toHaveBeenCalledTimes(1);
-      expect(capturedOptions.followRedirect).toBe(false);
+      expect(capturedOptions?.followRedirect).toBe(false);
       expect(outAdapter.writeResult).toHaveBeenCalledWith('success', site);
       requestSpy.mockRestore();
     });
@@ -417,7 +484,7 @@ describe('lib/uriCheck/', function() {
   describe('done()', function () {
     it('should call the outAdapters done method', function () {
       var doneCallCount = 0;
-      var outAdapter = {
+      var outAdapter: OutAdapter = {
         done: function () {
           doneCallCount++;
         }

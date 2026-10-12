@@ -5,17 +5,18 @@ import request from 'request';
 import createDebug from 'debug';
 import S from 'string';
 import 'sugar';
+import type { ExpectedTextObject, NormalizedSite, OutAdapter } from './types.js';
 
 var debug = createDebug('http-status-check:uriCheck');
-var outAdapter;
+var outAdapter: OutAdapter | undefined;
 
-var init = function(output) {
+var init = function(output?: OutAdapter): void {
   outAdapter = output;
 };
 
-function startsWith(testString, protocols) {
-  for(var i = 0, n = protocols.length; i < n; i++) {
-    if(S(testString.toLowerCase()).startsWith(protocols[i].toLowerCase())){
+function startsWith(testString: string, protocols: string[]): boolean {
+  for (var i = 0, n = protocols.length; i < n; i++) {
+    if (S(testString.toLowerCase()).startsWith(protocols[i].toLowerCase())) {
       return true;
     }
   }
@@ -24,20 +25,24 @@ function startsWith(testString, protocols) {
 
 // If responseHeaders is not empty then evaluate that they all have the
 // expected values.
-function checkHeaders(site, response, accumulatedFails) {
-  if(!site.responseHeaders) {
+function checkHeaders(
+  site: NormalizedSite,
+  response: { headers: Record<string, string | string[] | undefined> },
+  accumulatedFails: string[]
+): void {
+  if (!site.responseHeaders) {
     return;
   }
 
   for (var header in site.responseHeaders) {
-    if (site.responseHeaders.hasOwnProperty(header)) {
+    if (Object.prototype.hasOwnProperty.call(site.responseHeaders, header)) {
       var actualHeaderValue = response.headers[header];
       var expectedHeaderValue = site.responseHeaders[header];
-      if(actualHeaderValue !== expectedHeaderValue) {
+      if (actualHeaderValue !== expectedHeaderValue) {
         accumulatedFails.push(
           'Expected header \'' + header + '\' to be ' +
-                expectedHeaderValue + ' but instead it was ' +
-                actualHeaderValue
+            expectedHeaderValue + ' but instead it was ' +
+            actualHeaderValue
         );
       }
     }
@@ -46,8 +51,12 @@ function checkHeaders(site, response, accumulatedFails) {
 
 // If excludedHeaders is not empty then ensure that none of them have been
 // returned by the server.
-function checkExcludedHeaders(site, response, accumulatedFails) {
-  if(!site.excludedHeaders) {
+function checkExcludedHeaders(
+  site: NormalizedSite,
+  response: { headers: Record<string, string | string[] | undefined> },
+  accumulatedFails: string[]
+): void {
+  if (!site.excludedHeaders) {
     return;
   }
 
@@ -66,8 +75,12 @@ function checkExcludedHeaders(site, response, accumulatedFails) {
 
 // expectedText is not empty then check that the expected text is in
 // the response body received back from server.
-function checkBody(site, body, accumulatedFails) {
-  if(!site.expectedText) {
+function checkBody(
+  site: NormalizedSite,
+  body: string | undefined,
+  accumulatedFails: string[]
+): void {
+  if (!site.expectedText) {
     return;
   }
 
@@ -76,20 +89,20 @@ function checkBody(site, body, accumulatedFails) {
     return;
   }
 
-  var lowerCaseBody; // Don't populate it until we need it.
-  _.forEach(site.expectedText, function (textObj) {
+  var lowerCaseBody: string | undefined;
+  _.forEach(site.expectedText, function(textObj: ExpectedTextObject) {
     if (textObj.caseSensitive) {
-      if (body.indexOf(textObj.text) === -1){
+      if (body.indexOf(textObj.text) === -1) {
         accumulatedFails.push(
           'Expected (case sensitive) text in response body not found: ' +
           textObj.text
         );
       }
     } else {
-      if(!lowerCaseBody) {
+      if (!lowerCaseBody) {
         lowerCaseBody = body.toLowerCase();
       }
-      if(lowerCaseBody.indexOf(textObj.text.toLowerCase()) === -1) {
+      if (lowerCaseBody.indexOf(textObj.text.toLowerCase()) === -1) {
         accumulatedFails.push(
           'Expected (case insensitive) text in response body not found: ' +
           textObj.text.toLowerCase()
@@ -99,50 +112,53 @@ function checkBody(site, body, accumulatedFails) {
   });
 }
 
-var checkUri = function(site, callback) {
+var checkUri = function(site: NormalizedSite, callback: (err?: Error | null) => void): void {
   if (site.disabled) {
-    outAdapter.writeResult('disabled', site);
+    outAdapter?.writeResult?.('disabled', site);
     return callback(null);
   }
 
-  var options = {
-    // TODO: Add unit tests for this. Need to use sinon to mock a response for request.
+  var options: {
+    followRedirect: boolean;
+    uri: string;
+    headers?: Record<string, string>;
+  } = {
     followRedirect: !!site.followRedirect,
     uri: site.requestUrl
   };
   // Check that uri has a protocol
-  if(!startsWith(options.uri, ['http://', 'https://'])) {
+  if (!startsWith(options.uri, ['http://', 'https://'])) {
     options.uri = 'http://' + options.uri;
   }
 
-  if(site.requestHeaders) {
+  if (site.requestHeaders) {
     options.headers = site.requestHeaders;
   }
 
   request.get(options, function(error, response, body) {
-    if(error) {
+    if (error) {
       debug('error in request GET:');
       debug(error);
       site.errors = error;
-      outAdapter.writeResult('fail', site);
+      outAdapter?.writeResult?.('fail', site);
       return callback(null);
     }
 
-    if(response.statusCode !== site.expectedStatus) {
+    if (response.statusCode !== site.expectedStatus) {
       var err = 'Expected HTTP status of ' + site.expectedStatus + ' and got ' + response.statusCode + '.';
-      if(response.statusCode >= 300 && response.statusCode < 400) {
+      if (response.statusCode >= 300 && response.statusCode < 400) {
         // Some type of redirect. Let's add the location to the error result to help the user
         // determine what the problem is.
-        if(response.headers && response.headers.location) {
+        if (response.headers && response.headers.location) {
           err += ' Location: ' + response.headers.location;
         }
       }
       site.errors = [err];
-      outAdapter.writeResult('fail', site);
+      outAdapter?.writeResult?.('fail', site);
       return callback(null);
     }
 
-    var accumulatedFails = [];
+    var accumulatedFails: string[] = [];
 
     // If responseHeaders is not empty then evaluate that they all have the
     // expected values.
@@ -156,22 +172,22 @@ var checkUri = function(site, callback) {
     // the response body received back from server.
     checkBody(site, body, accumulatedFails);
 
-    if(accumulatedFails.length === 0) {
-      outAdapter.writeResult('success', site);
+    if (accumulatedFails.length === 0) {
+      outAdapter?.writeResult?.('success', site);
       return callback(null);
     } else {
       site.errors = accumulatedFails;
-      outAdapter.writeResult('fail', site);
+      outAdapter?.writeResult?.('fail', site);
       return callback(null);
     }
   });
 };
 
-var done = function() {
-  outAdapter.done();
+var done = function(): void {
+  outAdapter?.done?.();
 };
 
-var getOutAdapter = function() {
+var getOutAdapter = function(): OutAdapter | undefined {
   return outAdapter;
 };
 
@@ -192,4 +208,3 @@ export {
 };
 
 export default uriCheck;
-

@@ -13,15 +13,15 @@ describe('inAdapters/fileAdapter/', function() {
   });
 
   describe('getRunData()', function () {
-    it('should return samplesites.js data if exists', async function () {
+    it('should return samplesites.ts data if exists', async function () {
       var checksitesChecked = false;
       var samplesitesChecked = false;
       var existsSpy = vi.spyOn(fs, 'existsSync').mockImplementation(function(filePath) {
-        if (typeof filePath === 'string' && filePath.includes('checksites.js')) {
+        if (typeof filePath === 'string' && filePath.includes('checksites.ts')) {
           checksitesChecked = true;
           return false;
         }
-        if (typeof filePath === 'string' && filePath.includes('samplesites.js')) {
+        if (typeof filePath === 'string' && filePath.includes('samplesites.ts')) {
           samplesitesChecked = true;
           return true;
         }
@@ -38,13 +38,13 @@ describe('inAdapters/fileAdapter/', function() {
       existsSpy.mockRestore();
     });
 
-    it('should throw an exception if checksites.js and samplesites.js do not exist', async function () {
+    it('should throw an exception if checksites.ts and samplesites.ts do not exist', async function () {
       var previousHttpStatusCheckFileValue = process.env.HTTP_STATUS_CHECK_FILE;
       if (previousHttpStatusCheckFileValue) {
         delete process.env.HTTP_STATUS_CHECK_FILE;
       }
       var existsSpy = vi.spyOn(fs, 'existsSync').mockImplementation(function(filePath) {
-        if (typeof filePath === 'string' && (filePath.includes('checksites.js') || filePath.includes('samplesites.js'))) {
+        if (typeof filePath === 'string' && (filePath.includes('checksites.ts') || filePath.includes('samplesites.ts'))) {
           return false;
         }
         return false;
@@ -53,9 +53,9 @@ describe('inAdapters/fileAdapter/', function() {
       var exceptionThrown = false;
       try {
         await inAdapter.getRunData();
-      } catch (e) {
+      } catch (e: unknown) {
         exceptionThrown = true;
-        expect(e.message).toBe('Expecting HTTP_STATUS_CHECK_FILE environment or checksites.js or samplesites.js to exist.');
+        expect((e as Error).message).toBe('Expecting HTTP_STATUS_CHECK_FILE environment or checksites.ts or samplesites.ts to exist.');
       }
       expect(exceptionThrown).toBe(true);
 
@@ -66,7 +66,7 @@ describe('inAdapters/fileAdapter/', function() {
     });
 
     it('should return custom file data if HTTP_STATUS_CHECK_FILE exists', async function () {
-      var samplePath = __dirname + '/../../../sitelists/samplesites.js';
+      var samplePath = __dirname + '/../../../sitelists/samplesites.ts';
       process.env.HTTP_STATUS_CHECK_FILE = samplePath;
 
       var existsSpy = vi.spyOn(fs, 'existsSync').mockReturnValue(true);

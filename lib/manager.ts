@@ -3,10 +3,16 @@
 import _ from 'lodash';
 import async from 'async';
 import uriCheck from './uriCheck.js';
+import type { ExpectedTextObject, NormalizedSite, OutAdapter, RunData, Settings, SiteConfig } from './types.js';
 
-var iterateURLs = function(concurrentRequests, sites) {
+interface ExpectedTextError extends Error {
+  expectedText?: unknown;
+  type?: string;
+}
+
+var iterateURLs = function(concurrentRequests: number, sites: NormalizedSite[]): void {
   async.eachLimit(sites, concurrentRequests, uriCheck.checkUri, function(err) {
-    if(err) {
+    if (err) {
       throw err;
     }
     uriCheck.done();
@@ -17,13 +23,14 @@ var iterateURLs = function(concurrentRequests, sites) {
 // the requestUrl on any of its elements is an array
 // it will duplicate that element and split out the
 // elements of the requestUrl array
-var expandRequestUrlInput = function(sites) {
-  var result = _.map(sites, function(site){
-    if(_.isArray(site.requestUrl)){
+var expandRequestUrlInput = function(sites: SiteConfig[]): SiteConfig[] {
+  var result = _.map(sites, function(site) {
+    if (_.isArray(site.requestUrl)) {
       var urls = site.requestUrl;
-      delete site.requestUrl;
-      return _.map(urls, function(url){
-        var newItem = _.cloneDeep(site);
+      var baseSite = _.cloneDeep(site);
+      delete (baseSite as Partial<SiteConfig>).requestUrl;
+      return _.map(urls, function(url) {
+        var newItem = _.cloneDeep(baseSite);
         newItem.requestUrl = url;
         return newItem;
       });
@@ -32,17 +39,17 @@ var expandRequestUrlInput = function(sites) {
     }
   });
 
-  return _.flatten(result);
+  return _.flatten(result as (SiteConfig | SiteConfig[])[]);
 };
 
 // This function accepts an array of sites and will
 // iterate through each site object and expand the
 // expectedText property out into an arry of objects
 // if it is not already an array of objects.
-var expandExpectedTextInput = function(sites) {
-  var err;
-  return _.map(sites, function(site){
-    if(site.expectedText) {
+var expandExpectedTextInput = function(sites: SiteConfig[]): NormalizedSite[] {
+  var err: ExpectedTextError;
+  return _.map(sites, function(site): NormalizedSite {
+    if (site.expectedText) {
       // We expect site.expectdText to be one of the
       // following:
       // 1. a string: "some search text"
@@ -51,45 +58,51 @@ var expandExpectedTextInput = function(sites) {
       //
       // First step, if it's not an array then we need to get it into a 1 element array
       // for the rest of the function.
-      if(!_.isArray(site.expectedText)){
-        site.expectedText = [site.expectedText];
-      }
+      var expectedTextArray = !_.isArray(site.expectedText)
+        ? [site.expectedText]
+        : site.expectedText;
+
       // Now we know that it's an array of 1 or more "somethings." We'll iterate through
       // that and make each of them objects and throw errors for anything we can't handle
       // or recognize
-      site.expectedText = _.map(site.expectedText, function(expectedText){
-        if(_.isObject(expectedText)) {
+      var normalizedExpectedText = _.map(expectedTextArray, function(expectedText): ExpectedTextObject {
+        if (_.isObject(expectedText)) {
           // We have an expectation that if this is already an object that it has at a minimum
           // the 'text' property
-          if(!expectedText.text) {
+          var obj = expectedText as Record<string, unknown>;
+          if (!('text' in obj) || !obj.text) {
             err = new Error('text property is missing from expectedText object.');
             err.expectedText = expectedText;
             throw err;
           }
-        } else if(_.isString(expectedText)) {
-          expectedText = { text: expectedText };
+          return expectedText as unknown as ExpectedTextObject;
+        } else if (_.isString(expectedText)) {
+          return { text: expectedText };
         } else {
           err = new Error('Unknown/Unexpected type for text property.');
           err.expectedText = expectedText;
           err.type = typeof expectedText;
           throw err;
         }
-        return expectedText;
       });
+      return {
+        ...site,
+        requestUrl: site.requestUrl as string,
+        expectedText: normalizedExpectedText
+      };
     }
-    return site;
+    return site as NormalizedSite;
   });
 };
 
-var manager = {
-  iterateURLs: iterateURLs,
-  expandRequestUrlInput: expandRequestUrlInput,
-  expandExpectedTextInput: expandExpectedTextInput,
-  run: start
-};
-
-var start = function(runData, settings, outAdapter, verbose) {
-  var sites = manager.expandExpectedTextInput(manager.expandRequestUrlInput(runData.sites));
+var start = function(
+  runData: RunData | Partial<RunData>,
+  settings: Settings | Partial<Settings>,
+  outAdapter?: OutAdapter,
+  verbose?: boolean
+): void {
+  var inputSites = (runData && runData.sites) ? runData.sites : [];
+  var sites = manager.expandExpectedTextInput(manager.expandRequestUrlInput(inputSites));
   if (settings.allSites) {
     settings.allSites.verbose = verbose;
   }
@@ -102,14 +115,19 @@ var start = function(runData, settings, outAdapter, verbose) {
   });
 
   var concurrentRequests = settings.concurrentRequests;
-  if(!concurrentRequests || isNaN(concurrentRequests) || concurrentRequests < 1) {
+  if (!concurrentRequests || isNaN(concurrentRequests) || concurrentRequests < 1) {
     concurrentRequests = 3;
   }
   uriCheck.init(outAdapter);
   manager.iterateURLs(concurrentRequests, sites);
 };
 
-manager.run = start;
+var manager = {
+  iterateURLs: iterateURLs,
+  expandRequestUrlInput: expandRequestUrlInput,
+  expandExpectedTextInput: expandExpectedTextInput,
+  run: start
+};
 
 export {
   iterateURLs,
@@ -119,4 +137,3 @@ export {
 };
 
 export default manager;
-
