@@ -17,15 +17,15 @@ describe('inAdapters/fileAdapter/', function() {
       var checksitesChecked = false;
       var samplesitesChecked = false;
       var existsSpy = vi.spyOn(fs, 'existsSync').mockImplementation(function(filePath) {
-        if (typeof filePath === 'string' && filePath.includes('checksites.ts')) {
+        if (typeof filePath === 'string' && (filePath.includes('checksites.ts') || filePath.includes('checksites.js'))) {
           checksitesChecked = true;
           return false;
         }
-        if (typeof filePath === 'string' && filePath.includes('samplesites.ts')) {
+        if (typeof filePath === 'string' && (filePath.includes('samplesites.ts') || filePath.includes('samplesites.js'))) {
           samplesitesChecked = true;
           return true;
         }
-        return true;
+        return false;
       });
 
       var runData = await inAdapter.getRunData();
@@ -44,7 +44,7 @@ describe('inAdapters/fileAdapter/', function() {
         delete process.env.HTTP_STATUS_CHECK_FILE;
       }
       var existsSpy = vi.spyOn(fs, 'existsSync').mockImplementation(function(filePath) {
-        if (typeof filePath === 'string' && (filePath.includes('checksites.ts') || filePath.includes('samplesites.ts'))) {
+        if (typeof filePath === 'string' && (filePath.includes('checksites.ts') || filePath.includes('checksites.js') || filePath.includes('samplesites.ts') || filePath.includes('samplesites.js'))) {
           return false;
         }
         return false;

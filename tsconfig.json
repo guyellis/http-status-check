@@ -21,6 +21,7 @@
     "lib/**/*",
     "sitelists/**/*",
     "test/**/*",
+    "vite.config.ts",
     "vitest.config.ts"
   ]
 }
