@@ -1,6 +1,6 @@
 'use strict';
 
-var outAdapter = require('../../../lib/outAdapters/consoleAdapter');
+import outAdapter from '../../../lib/outAdapters/consoleAdapter.js';
 
 describe('outAdapters/consoleAdapter/', function() {
 

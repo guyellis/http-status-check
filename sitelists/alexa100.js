@@ -1,7 +1,7 @@
 'use strict';
 
 // See samplesites.js for annotation of what each property does
-module.exports = {
+export default {
   sites: [
     {
       name: '101 Sites',

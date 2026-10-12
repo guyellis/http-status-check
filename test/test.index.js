@@ -1,16 +1,16 @@
 'use strict';
 
-var manager = require('../lib/manager');
-var inAdapter = require('../lib/inAdapters/fileAdapter');
+import inAdapter from '../lib/inAdapters/fileAdapter.js';
+import manager from '../lib/manager.js';
 
 describe('index/', function() {
   describe('main()', function () {
-    it('should call getRunData() and manager.run()', function () {
-      var getRunDataSpy = vi.spyOn(inAdapter, 'getRunData').mockReturnValue({ sites: [] });
+    it('should call getRunData() and manager.run()', async function () {
+      var getRunDataSpy = vi.spyOn(inAdapter, 'getRunData').mockResolvedValue({ sites: [] });
       var runSpy = vi.spyOn(manager, 'run').mockImplementation(function() {});
-      var index = require('../index');
+      var index = await import('../index.js');
 
-      index.main();
+      await index.main();
 
       expect(getRunDataSpy).toHaveBeenCalled();
       expect(runSpy).toHaveBeenCalled();

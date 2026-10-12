@@ -1,7 +1,7 @@
 'use strict';
 
-var request = require('request');
-var uriCheck = require('../../lib/uriCheck');
+import request from 'request';
+import uriCheck from '../../lib/uriCheck.js';
 
 function checkUriPromise(site) {
   return new Promise(function(resolve, reject) {
