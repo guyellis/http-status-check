@@ -1,82 +1,89 @@
 'use strict';
 
-var should = require('chai').should();
-var rewire = require('rewire');
-var manager = rewire('../../lib/manager');
 var _ = require('lodash');
+var manager = require('../../lib/manager');
+var uriCheck = require('../../lib/uriCheck');
 
 describe('lib/manager/', function() {
   describe('run()', function () {
-    it('uses 3 as the default concurrentRequests if not supplied', function (done) {
+    it('uses 3 as the default concurrentRequests if not supplied', function () {
       var initCalled = false;
-      manager.__set__('uriCheck', {
-        init: function(/*outAdapter*/) {
-          initCalled = true;
-        }
+      var initSpy = vi.spyOn(uriCheck, 'init').mockImplementation(function() {
+        initCalled = true;
       });
       var expandRequestUrlInputCalled = false;
-      manager.__set__('expandRequestUrlInput', function() {
+      var expandSpy = vi.spyOn(manager, 'expandRequestUrlInput').mockImplementation(function(sites) {
         expandRequestUrlInputCalled = true;
+        return sites || [];
       });
       var concurrentRequests = 0;
-      manager.__set__('iterateURLs', function(concurrentRequestsParam/*, sites*/){
+      var iterateSpy = vi.spyOn(manager, 'iterateURLs').mockImplementation(function(concurrentRequestsParam) {
         concurrentRequests = concurrentRequestsParam;
       });
 
       manager.run({}, {});
-      concurrentRequests.should.equal(3);
-      initCalled.should.equal(true);
-      expandRequestUrlInputCalled.should.equal(true);
-      done();
+      expect(concurrentRequests).toBe(3);
+      expect(initCalled).toBe(true);
+      expect(expandRequestUrlInputCalled).toBe(true);
+
+      initSpy.mockRestore();
+      expandSpy.mockRestore();
+      iterateSpy.mockRestore();
     });
-    it('uses the number of concurrentRequests supplied', function (done) {
+
+    it('uses the number of concurrentRequests supplied', function () {
       var initCalled = false;
-      manager.__set__('uriCheck', {
-        init: function(/*outAdapter*/) {
-          initCalled = true;
-        }
+      var initSpy = vi.spyOn(uriCheck, 'init').mockImplementation(function() {
+        initCalled = true;
       });
       var expandRequestUrlInputCalled = false;
-      manager.__set__('expandRequestUrlInput', function() {
+      var expandSpy = vi.spyOn(manager, 'expandRequestUrlInput').mockImplementation(function(sites) {
         expandRequestUrlInputCalled = true;
+        return sites || [];
       });
       var concurrentRequests = 0;
-      manager.__set__('iterateURLs', function(concurrentRequestsParam/*, sites*/){
+      var iterateSpy = vi.spyOn(manager, 'iterateURLs').mockImplementation(function(concurrentRequestsParam) {
         concurrentRequests = concurrentRequestsParam;
       });
 
       manager.run({}, {concurrentRequests: 15});
-      concurrentRequests.should.equal(15);
-      initCalled.should.equal(true);
-      expandRequestUrlInputCalled.should.equal(true);
-      done();
+      expect(concurrentRequests).toBe(15);
+      expect(initCalled).toBe(true);
+      expect(expandRequestUrlInputCalled).toBe(true);
+
+      initSpy.mockRestore();
+      expandSpy.mockRestore();
+      iterateSpy.mockRestore();
     });
-    it('should use 3 as the number of concurrentRequests if a number less than 1 is supplied', function (done) {
+
+    it('should use 3 as the number of concurrentRequests if a number less than 1 is supplied', function () {
       var initCalled = false;
-      manager.__set__('uriCheck', {
-        init: function(/*outAdapter*/) {
-          initCalled = true;
-        }
+      var initSpy = vi.spyOn(uriCheck, 'init').mockImplementation(function() {
+        initCalled = true;
       });
       var expandRequestUrlInputCalled = false;
-      manager.__set__('expandRequestUrlInput', function() {
+      var expandSpy = vi.spyOn(manager, 'expandRequestUrlInput').mockImplementation(function(sites) {
         expandRequestUrlInputCalled = true;
+        return sites || [];
       });
       var concurrentRequests = 0;
-      manager.__set__('iterateURLs', function(concurrentRequestsParam/*, sites*/){
+      var iterateSpy = vi.spyOn(manager, 'iterateURLs').mockImplementation(function(concurrentRequestsParam) {
         concurrentRequests = concurrentRequestsParam;
       });
 
       manager.run({concurrentRequests: -1}, {});
-      concurrentRequests.should.equal(3);
-      initCalled.should.equal(true);
-      expandRequestUrlInputCalled.should.equal(true);
-      done();
+      expect(concurrentRequests).toBe(3);
+      expect(initCalled).toBe(true);
+      expect(expandRequestUrlInputCalled).toBe(true);
+
+      initSpy.mockRestore();
+      expandSpy.mockRestore();
+      iterateSpy.mockRestore();
     });
   });
 
   describe('expandRequestUrlInput()', function () {
-    it('expands arrays of requestUrls if they are an array', function (done) {
+    it('expands arrays of requestUrls if they are an array', function () {
       var sites = [
         {
           'name': 'TestSite',
@@ -84,11 +91,11 @@ describe('lib/manager/', function() {
           'requestUrl': ['test1.com', 'test2.com']
         }];
       var results = manager.expandRequestUrlInput(sites);
-      results.length.should.equal(2);
-      Array.isArray(results).should.equal(true);
-      done();
+      expect(results.length).toBe(2);
+      expect(Array.isArray(results)).toBe(true);
     });
-    it('does nothing if requestUrls is not an array', function (done) {
+
+    it('does nothing if requestUrls is not an array', function () {
       var sites = [
         {
           'name': 'TestSite',
@@ -96,14 +103,13 @@ describe('lib/manager/', function() {
           'requestUrl': 'test1.com'
         }];
       var results = manager.expandRequestUrlInput(sites);
-      results.length.should.equal(1);
-      Array.isArray(results).should.equal(true);
-      done();
+      expect(results.length).toBe(1);
+      expect(Array.isArray(results)).toBe(true);
     });
   });
 
   describe('iterateURLs()', function () {
-    it('calls uriCheck.done() when finished', function (done) {
+    it('calls uriCheck.done() when finished', function () {
       var sites = [
         {
           'name': 'TestSite',
@@ -112,21 +118,23 @@ describe('lib/manager/', function() {
         }];
       var checkUriCallCount = 0;
       var doneCallCount = 0;
-      manager.__set__('uriCheck', {
-        checkUri: function(site, callback){
-          checkUriCallCount++;
-          callback();
-        },
-        done: function() {
-          doneCallCount++;
-        }
+      var checkSpy = vi.spyOn(uriCheck, 'checkUri').mockImplementation(function(site, callback) {
+        checkUriCallCount++;
+        callback();
       });
+      var doneSpy = vi.spyOn(uriCheck, 'done').mockImplementation(function() {
+        doneCallCount++;
+      });
+
       manager.iterateURLs(3, sites);
-      checkUriCallCount.should.equal(1);
-      doneCallCount.should.equal(1);
-      done();
+      expect(checkUriCallCount).toBe(1);
+      expect(doneCallCount).toBe(1);
+
+      checkSpy.mockRestore();
+      doneSpy.mockRestore();
     });
-    it('throws an error if checkUri calls back with error', function (done) {
+
+    it('throws an error if checkUri calls back with error', function () {
       var sites = [
         {
           'name': 'TestSite',
@@ -135,30 +143,31 @@ describe('lib/manager/', function() {
         }];
       var checkUriCallCount = 0;
       var doneCallCount = 0;
-      manager.__set__('uriCheck', {
-        checkUri: function(site, callback){
-          checkUriCallCount++;
-          callback(new Error('Unit Test Error'));
-        },
-        done: function() {
-          doneCallCount++;
-        }
+      var checkSpy = vi.spyOn(uriCheck, 'checkUri').mockImplementation(function(site, callback) {
+        checkUriCallCount++;
+        callback(new Error('Unit Test Error'));
       });
+      var doneSpy = vi.spyOn(uriCheck, 'done').mockImplementation(function() {
+        doneCallCount++;
+      });
+
       var exceptionText = '';
       try {
         manager.iterateURLs(3, sites);
-      } catch(e) {
+      } catch (e) {
         exceptionText = e.toString();
       }
-      exceptionText.should.equal('Error: Unit Test Error');
-      checkUriCallCount.should.equal(1);
-      doneCallCount.should.equal(0);
-      done();
+      expect(exceptionText).toBe('Error: Unit Test Error');
+      expect(checkUriCallCount).toBe(1);
+      expect(doneCallCount).toBe(0);
+
+      checkSpy.mockRestore();
+      doneSpy.mockRestore();
     });
   });
 
   describe('expandExpectedTextInput()', function () {
-    it('should do nothing if there is no expectedText property', function (done) {
+    it('should do nothing if there is no expectedText property', function () {
       var sites = [
         {
           name: 'TestSite',
@@ -168,16 +177,14 @@ describe('lib/manager/', function() {
 
       var results = manager.expandExpectedTextInput(sites);
 
-      should.exist(results);
-      _.isArray(results).should.equal(true);
-      results.length.should.equal(1);
-      should.not.exist(results[0].expectedText);
-      results[0].name.should.equal('TestSite');
-      done();
+      expect(results).toBeDefined();
+      expect(_.isArray(results)).toBe(true);
+      expect(results.length).toBe(1);
+      expect(results[0].expectedText).toBeUndefined();
+      expect(results[0].name).toBe('TestSite');
     });
 
-    it('should expand expectedText property if it is a single string', function (done) {
-      // Setup for the test
+    it('should expand expectedText property if it is a single string', function () {
       var sites = [
         {
           name: 'TestSite',
@@ -186,23 +193,18 @@ describe('lib/manager/', function() {
           expectedText: 'some search string'
         }];
 
-      // Execute function we want to test
       var results = manager.expandExpectedTextInput(sites);
 
-      // Assertions
-      should.exist(results);
-      _.isArray(results).should.equal(true);
-      results.length.should.equal(1);
-      results[0].name.should.equal('TestSite');
-      _.isArray(results[0].expectedText).should.equal(true);
-      results[0].expectedText.length.should.equal(1);
-      results[0].expectedText[0].text.should.equal('some search string');
-
-      done();
+      expect(results).toBeDefined();
+      expect(_.isArray(results)).toBe(true);
+      expect(results.length).toBe(1);
+      expect(results[0].name).toBe('TestSite');
+      expect(_.isArray(results[0].expectedText)).toBe(true);
+      expect(results[0].expectedText.length).toBe(1);
+      expect(results[0].expectedText[0].text).toBe('some search string');
     });
 
-    it('should expand expectedText property if it is an array of strings and/or objects', function (done) {
-      // Setup for the test
+    it('should expand expectedText property if it is an array of strings and/or objects', function () {
       var sites = [
         {
           name: 'TestSite',
@@ -211,29 +213,24 @@ describe('lib/manager/', function() {
           expectedText: ['some search string', { text: '2nd string'}, {text: '3rd string', caseSensitive: true}]
         }];
 
-      // Execute function we want to test
       var results = manager.expandExpectedTextInput(sites);
 
-      // Assertions
-      should.exist(results);
-      _.isArray(results).should.equal(true);
-      results.length.should.equal(1);
-      results[0].name.should.equal('TestSite');
-      _.isArray(results[0].expectedText).should.equal(true);
-      results[0].expectedText.length.should.equal(3);
-      results[0].expectedText[0].text.should.equal('some search string');
-      should.not.exist(results[0].expectedText[0].caseSensitive);
-      results[0].expectedText[1].text.should.equal('2nd string');
-      should.not.exist(results[0].expectedText[1].caseSensitive);
-      results[0].expectedText[2].text.should.equal('3rd string');
-      should.exist(results[0].expectedText[2].caseSensitive);
-      results[0].expectedText[2].caseSensitive.should.equal(true);
-
-      done();
+      expect(results).toBeDefined();
+      expect(_.isArray(results)).toBe(true);
+      expect(results.length).toBe(1);
+      expect(results[0].name).toBe('TestSite');
+      expect(_.isArray(results[0].expectedText)).toBe(true);
+      expect(results[0].expectedText.length).toBe(3);
+      expect(results[0].expectedText[0].text).toBe('some search string');
+      expect(results[0].expectedText[0].caseSensitive).toBeUndefined();
+      expect(results[0].expectedText[1].text).toBe('2nd string');
+      expect(results[0].expectedText[1].caseSensitive).toBeUndefined();
+      expect(results[0].expectedText[2].text).toBe('3rd string');
+      expect(results[0].expectedText[2].caseSensitive).toBeDefined();
+      expect(results[0].expectedText[2].caseSensitive).toBe(true);
     });
 
-    it('should throw an Error if the expectedText object does not have a text property', function (done) {
-      // Setup for the test
+    it('should throw an Error if the expectedText object does not have a text property', function () {
       var sites = [{
         name: 'TestSite',
         expectedStatus: 200,
@@ -243,21 +240,16 @@ describe('lib/manager/', function() {
 
       var error;
       try {
-        // Execute function we want to test
         manager.expandExpectedTextInput(sites);
-      } catch(e) {
+      } catch (e) {
         error = e;
       }
 
-      // Assertions
-      should.exist(error);
-      error.message.should.equal('text property is missing from expectedText object.');
-
-      done();
+      expect(error).toBeDefined();
+      expect(error.message).toBe('text property is missing from expectedText object.');
     });
 
-    it('should throw an Error if the expectedText object has an unrecognized type', function (done) {
-      // Setup for the test
+    it('should throw an Error if the expectedText object has an unrecognized type', function () {
       var sites = [{
         name: 'TestSite',
         expectedStatus: 200,
@@ -267,17 +259,13 @@ describe('lib/manager/', function() {
 
       var error;
       try {
-        // Execute function we want to test
         manager.expandExpectedTextInput(sites);
-      } catch(e) {
+      } catch (e) {
         error = e;
       }
 
-      // Assertions
-      should.exist(error);
-      error.message.should.equal('Unknown/Unexpected type for text property.');
-
-      done();
+      expect(error).toBeDefined();
+      expect(error.message).toBe('Unknown/Unexpected type for text property.');
     });
   });
 
