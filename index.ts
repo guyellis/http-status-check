@@ -11,7 +11,7 @@ var inAdapterPath = settings.inAdapter.type.endsWith('.js')
 var inAdapterModule = await import(inAdapterPath);
 var inAdapter = inAdapterModule.default || inAdapterModule;
 
-var main = async function(verbosity) {
+var main = async function(verbosity?: boolean): Promise<void> {
   var sites = await inAdapter.getRunData();
   manager.run(sites, settings, outAdapter, verbosity);
 };
