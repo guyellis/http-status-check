@@ -2,9 +2,6 @@
 
 import createDebug from 'debug';
 import _ from 'lodash';
-import request from 'request';
-import S from 'string';
-import 'sugar';
 import type { ExpectedTextObject, NormalizedSite, OutAdapter } from './types.js';
 
 const debug = createDebug('http-status-check:uriCheck');
@@ -16,7 +13,7 @@ const init = function (output?: OutAdapter): void {
 
 function startsWith(testString: string, protocols: string[]): boolean {
   for (let i = 0, n = protocols.length; i < n; i++) {
-    if (S(testString.toLowerCase()).startsWith(protocols[i].toLowerCase())) {
+    if (testString.toLowerCase().startsWith(protocols[i].toLowerCase())) {
       return true;
     }
   }
@@ -36,7 +33,7 @@ function checkHeaders(
 
   for (const header in site.responseHeaders) {
     if (Object.prototype.hasOwnProperty.call(site.responseHeaders, header)) {
-      const actualHeaderValue = response.headers[header];
+      const actualHeaderValue = response.headers[header] ?? response.headers[header.toLowerCase()];
       const expectedHeaderValue = site.responseHeaders[header];
       if (actualHeaderValue !== expectedHeaderValue) {
         accumulatedFails.push(
@@ -118,70 +115,72 @@ const checkUri = function (site: NormalizedSite, callback: (err?: Error | null) 
     return callback(null);
   }
 
-  const options: {
-    followRedirect: boolean;
-    uri: string;
-    headers?: Record<string, string>;
-  } = {
-    followRedirect: !!site.followRedirect,
-    uri: site.requestUrl,
-  };
+  let uri = site.requestUrl;
   // Check that uri has a protocol
-  if (!startsWith(options.uri, ['http://', 'https://'])) {
-    options.uri = 'http://' + options.uri;
+  if (!startsWith(uri, ['http://', 'https://'])) {
+    uri = 'http://' + uri;
   }
 
-  if (site.requestHeaders) {
-    options.headers = site.requestHeaders;
-  }
+  const options: RequestInit = {
+    headers: site.requestHeaders,
+    redirect: site.followRedirect ? 'follow' : 'manual',
+  };
 
-  request.get(options, function (error, response, body) {
-    if (error) {
-      debug('error in request GET:');
+  fetch(uri, options)
+    .then(async function (response) {
+      const body = await response.text();
+
+      if (response.status !== site.expectedStatus) {
+        let err =
+          'Expected HTTP status of ' + site.expectedStatus + ' and got ' + response.status + '.';
+        if (response.status >= 300 && response.status < 400) {
+          // Some type of redirect. Let's add the location to the error result to help the user
+          // determine what the problem is.
+          const location = response.headers.get('location');
+          if (location) {
+            err += ' Location: ' + location;
+          }
+        }
+        site.errors = [err];
+        outAdapter?.writeResult?.('fail', site);
+        return callback(null);
+      }
+
+      const responseHeaders: Record<string, string> = {};
+      response.headers.forEach(function (value, key) {
+        responseHeaders[key.toLowerCase()] = value;
+      });
+
+      const accumulatedFails: string[] = [];
+
+      // If responseHeaders is not empty then evaluate that they all have the
+      // expected values.
+      checkHeaders(site, { headers: responseHeaders }, accumulatedFails);
+
+      // If excludedHeaders is not empty then ensure that none of them have been
+      // returned by the server.
+      checkExcludedHeaders(site, { headers: responseHeaders }, accumulatedFails);
+
+      // expectedText is not empty then check that the expected text is in
+      // the response body received back from server.
+      checkBody(site, body, accumulatedFails);
+
+      if (accumulatedFails.length === 0) {
+        outAdapter?.writeResult?.('success', site);
+        return callback(null);
+      } else {
+        site.errors = accumulatedFails;
+        outAdapter?.writeResult?.('fail', site);
+        return callback(null);
+      }
+    })
+    .catch(function (error: unknown) {
+      debug('error in fetch:');
       debug(error);
       site.errors = error;
       outAdapter?.writeResult?.('fail', site);
       return callback(null);
-    }
-
-    if (response.statusCode !== site.expectedStatus) {
-      let err =
-        'Expected HTTP status of ' + site.expectedStatus + ' and got ' + response.statusCode + '.';
-      if (response.statusCode >= 300 && response.statusCode < 400) {
-        // Some type of redirect. Let's add the location to the error result to help the user
-        // determine what the problem is.
-        if (response.headers && response.headers.location) {
-          err += ' Location: ' + response.headers.location;
-        }
-      }
-      site.errors = [err];
-      outAdapter?.writeResult?.('fail', site);
-      return callback(null);
-    }
-
-    const accumulatedFails: string[] = [];
-
-    // If responseHeaders is not empty then evaluate that they all have the
-    // expected values.
-    checkHeaders(site, response, accumulatedFails);
-
-    // If excludedHeaders is not empty then ensure that none of them have been
-    // returned by the server.
-    checkExcludedHeaders(site, response, accumulatedFails);
-
-    // expectedText is not empty then check that the expected text is in
-    // the response body received back from server.
-    checkBody(site, body, accumulatedFails);
-
-    if (accumulatedFails.length === 0) {
-      outAdapter?.writeResult?.('success', site);
-      return callback(null);
-    } else {
-      site.errors = accumulatedFails;
-      outAdapter?.writeResult?.('fail', site);
-      return callback(null);
-    }
-  });
+    });
 };
 
 const done = function (): void {

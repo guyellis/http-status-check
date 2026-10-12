@@ -1,6 +1,5 @@
 'use strict';
 
-import request from 'request';
 import type { NormalizedSite, OutAdapter, SiteConfig } from '../../lib/types.js';
 import uriCheck from '../../lib/uriCheck.js';
 
@@ -54,16 +53,16 @@ describe('lib/uriCheck/', function () {
         },
       };
       uriCheck.init(outAdapter);
-      const requestSpy = vi.spyOn(request, 'get');
+      const fetchSpy = vi.spyOn(globalThis, 'fetch');
 
       await checkUriPromise(site);
 
-      expect(requestSpy).not.toHaveBeenCalled();
+      expect(fetchSpy).not.toHaveBeenCalled();
       expect(writeResultCallCount).toBe(1);
-      requestSpy.mockRestore();
+      fetchSpy.mockRestore();
     });
 
-    it('should call writeResult with fail if request.get() returns an error', async function () {
+    it('should call writeResult with fail if fetch() returns an error', async function () {
       const site: SiteConfig = {
         expectedStatus: 200,
         name: 'Unit Test',
@@ -73,19 +72,9 @@ describe('lib/uriCheck/', function () {
         requestUrl: 'www.unittest.com',
       };
 
-      const requestSpy = vi.spyOn(request, 'get').mockImplementation(function (
-        options: request.RequiredUriUrl & request.CoreOptions,
-        callback?: request.RequestCallback,
-      ) {
-        if (callback) {
-          callback(
-            { Error: new Error('Unit Test Error') } as unknown as Error,
-            {} as request.Response,
-            '',
-          );
-        }
-        return {} as request.Request;
-      });
+      const fetchSpy = vi
+        .spyOn(globalThis, 'fetch')
+        .mockRejectedValue(new Error('Unit Test Error'));
       let writeResultCallCount = 0;
       let writeResultResult = '';
       const outAdapter: OutAdapter = {
@@ -98,10 +87,10 @@ describe('lib/uriCheck/', function () {
 
       await checkUriPromise(site);
 
-      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
       expect(writeResultCallCount).toBe(1);
       expect(writeResultResult).toBe('fail');
-      requestSpy.mockRestore();
+      fetchSpy.mockRestore();
     });
 
     it('should call writeResult with fail if the status lib is not what is expected', async function () {
@@ -114,21 +103,14 @@ describe('lib/uriCheck/', function () {
         requestUrl: 'www.unittest.com',
       };
 
-      const requestSpy = vi.spyOn(request, 'get').mockImplementation(function (
-        options: request.RequiredUriUrl & request.CoreOptions,
-        callback?: request.RequestCallback,
-      ) {
-        const response = {
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response('', {
           headers: {
             location: 'www.newplace.com',
           },
-          statusCode: 301,
-        } as unknown as request.Response;
-        if (callback) {
-          callback(null, response, '');
-        }
-        return {} as request.Request;
-      });
+          status: 301,
+        }),
+      );
       let writeResultCallCount = 0;
       let writeResultResult = '';
       const outAdapter: OutAdapter = {
@@ -141,10 +123,10 @@ describe('lib/uriCheck/', function () {
 
       await checkUriPromise(site);
 
-      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
       expect(writeResultCallCount).toBe(1);
       expect(writeResultResult).toBe('fail');
-      requestSpy.mockRestore();
+      fetchSpy.mockRestore();
     });
 
     it('should call writeResult with fail if the response headers do not match', async function () {
@@ -157,21 +139,14 @@ describe('lib/uriCheck/', function () {
         },
       };
 
-      const requestSpy = vi.spyOn(request, 'get').mockImplementation(function (
-        options: request.RequiredUriUrl & request.CoreOptions,
-        callback?: request.RequestCallback,
-      ) {
-        const response = {
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response('', {
           headers: {
             location: 'it is not a match',
           },
-          statusCode: 301,
-        } as unknown as request.Response;
-        if (callback) {
-          callback(null, response, '');
-        }
-        return {} as request.Request;
-      });
+          status: 301,
+        }),
+      );
       let writeResultCallCount = 0;
       let writeResultResult = '';
       const outAdapter: OutAdapter = {
@@ -184,10 +159,10 @@ describe('lib/uriCheck/', function () {
 
       await checkUriPromise(site);
 
-      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
       expect(writeResultCallCount).toBe(1);
       expect(writeResultResult).toBe('fail');
-      requestSpy.mockRestore();
+      fetchSpy.mockRestore();
     });
 
     it('should call writeResult with fail if an excludedHeaders header is present', async function () {
@@ -198,21 +173,14 @@ describe('lib/uriCheck/', function () {
         requestUrl: 'www.unittest.com',
       };
 
-      const requestSpy = vi.spyOn(request, 'get').mockImplementation(function (
-        options: request.RequiredUriUrl & request.CoreOptions,
-        callback?: request.RequestCallback,
-      ) {
-        const response = {
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response('', {
           headers: {
             'x-powered-by': 'ASP.NET',
           },
-          statusCode: 200,
-        } as unknown as request.Response;
-        if (callback) {
-          callback(null, response, '');
-        }
-        return {} as request.Request;
-      });
+          status: 200,
+        }),
+      );
       let writeResultCallCount = 0;
       let writeResultResult = '';
       const outAdapter: OutAdapter = {
@@ -225,10 +193,10 @@ describe('lib/uriCheck/', function () {
 
       await checkUriPromise(site);
 
-      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
       expect(writeResultCallCount).toBe(1);
       expect(writeResultResult).toBe('fail');
-      requestSpy.mockRestore();
+      fetchSpy.mockRestore();
     });
 
     it('should call writeResult with fail if expected case insensitive text is missing', async function () {
@@ -239,17 +207,11 @@ describe('lib/uriCheck/', function () {
         requestUrl: 'www.unittest.com',
       };
 
-      const requestSpy = vi.spyOn(request, 'get').mockImplementation(function (
-        options: request.RequiredUriUrl & request.CoreOptions,
-        callback?: request.RequestCallback,
-      ) {
-        const response = { statusCode: 200 } as unknown as request.Response;
-        const body = 'this body does not have the random text we are looking for';
-        if (callback) {
-          callback(null, response, body);
-        }
-        return {} as request.Request;
-      });
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response('this body does not have the random text we are looking for', {
+          status: 200,
+        }),
+      );
       let writeResultCallCount = 0;
       let writeResultResult = '';
       const outAdapter: OutAdapter = {
@@ -262,10 +224,10 @@ describe('lib/uriCheck/', function () {
 
       await checkUriPromise(site);
 
-      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
       expect(writeResultCallCount).toBe(1);
       expect(writeResultResult).toBe('fail');
-      requestSpy.mockRestore();
+      fetchSpy.mockRestore();
     });
 
     it('should call writeResult with fail if expected case-sensitive text is missing', async function () {
@@ -276,17 +238,11 @@ describe('lib/uriCheck/', function () {
         requestUrl: 'www.unittest.com',
       };
 
-      const requestSpy = vi.spyOn(request, 'get').mockImplementation(function (
-        options: request.RequiredUriUrl & request.CoreOptions,
-        callback?: request.RequestCallback,
-      ) {
-        const response = { statusCode: 200 } as unknown as request.Response;
-        const body = 'this body does not have the random text we are looking for';
-        if (callback) {
-          callback(null, response, body);
-        }
-        return {} as request.Request;
-      });
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response('this body does not have the random text we are looking for', {
+          status: 200,
+        }),
+      );
       let writeResultCallCount = 0;
       let writeResultResult = '';
       const outAdapter: OutAdapter = {
@@ -299,10 +255,10 @@ describe('lib/uriCheck/', function () {
 
       await checkUriPromise(site);
 
-      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
       expect(writeResultCallCount).toBe(1);
       expect(writeResultResult).toBe('fail');
-      requestSpy.mockRestore();
+      fetchSpy.mockRestore();
     });
 
     it('should call writeResult with fail if there is expected text and the response body is missing', async function () {
@@ -313,16 +269,11 @@ describe('lib/uriCheck/', function () {
         requestUrl: 'www.unittest.com',
       };
 
-      const requestSpy = vi.spyOn(request, 'get').mockImplementation(function (
-        options: request.RequiredUriUrl & request.CoreOptions,
-        callback?: request.RequestCallback,
-      ) {
-        const response = { statusCode: 200 } as unknown as request.Response;
-        if (callback) {
-          callback(null, response, '');
-        }
-        return {} as request.Request;
-      });
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response('', {
+          status: 200,
+        }),
+      );
       let writeResultCallCount = 0;
       let writeResultResult = '';
       const outAdapter: OutAdapter = {
@@ -335,10 +286,10 @@ describe('lib/uriCheck/', function () {
 
       await checkUriPromise(site);
 
-      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
       expect(writeResultCallCount).toBe(1);
       expect(writeResultResult).toBe('fail');
-      requestSpy.mockRestore();
+      fetchSpy.mockRestore();
     });
 
     it('should call writeResult with success if the response headers and statuses match', async function () {
@@ -352,21 +303,14 @@ describe('lib/uriCheck/', function () {
         verbose: true,
       };
 
-      const requestSpy = vi.spyOn(request, 'get').mockImplementation(function (
-        options: request.RequiredUriUrl & request.CoreOptions,
-        callback?: request.RequestCallback,
-      ) {
-        const response = {
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response('', {
           headers: {
             location: 'http://unittest.com/',
           },
-          statusCode: 301,
-        } as unknown as request.Response;
-        if (callback) {
-          callback(null, response, '');
-        }
-        return {} as request.Request;
-      });
+          status: 301,
+        }),
+      );
       let writeResultCallCount = 0;
       let writeResultResult = '';
       const outAdapter: OutAdapter = {
@@ -379,10 +323,10 @@ describe('lib/uriCheck/', function () {
 
       await checkUriPromise(site);
 
-      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
       expect(writeResultCallCount).toBe(1);
       expect(writeResultResult).toBe('success');
-      requestSpy.mockRestore();
+      fetchSpy.mockRestore();
     });
 
     it('should call writeResult with success if the statuses match', async function () {
@@ -393,18 +337,11 @@ describe('lib/uriCheck/', function () {
         verbose: true,
       };
 
-      const requestSpy = vi.spyOn(request, 'get').mockImplementation(function (
-        options: request.RequiredUriUrl & request.CoreOptions,
-        callback?: request.RequestCallback,
-      ) {
-        const response = {
-          statusCode: 301,
-        } as unknown as request.Response;
-        if (callback) {
-          callback(null, response, '');
-        }
-        return {} as request.Request;
-      });
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response('', {
+          status: 301,
+        }),
+      );
       let writeResultCallCount = 0;
       let writeResultResult = '';
       const outAdapter: OutAdapter = {
@@ -417,13 +354,13 @@ describe('lib/uriCheck/', function () {
 
       await checkUriPromise(site);
 
-      expect(requestSpy).toHaveBeenCalledTimes(1);
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
       expect(writeResultCallCount).toBe(1);
       expect(writeResultResult).toBe('success');
-      requestSpy.mockRestore();
+      fetchSpy.mockRestore();
     });
 
-    it('should set followRedirect to true in request options when site.followRedirect is true', async function () {
+    it('should set redirect to follow in fetch options when site.followRedirect is true', async function () {
       const site: SiteConfig = {
         expectedStatus: 200,
         followRedirect: true,
@@ -434,27 +371,24 @@ describe('lib/uriCheck/', function () {
         writeResult: vi.fn(),
       };
       uriCheck.init(outAdapter);
-      let capturedOptions: (request.RequiredUriUrl & request.CoreOptions) | undefined;
-      const requestSpy = vi.spyOn(request, 'get').mockImplementation(function (
-        options: request.RequiredUriUrl & request.CoreOptions,
-        callback?: request.RequestCallback,
+      let capturedOptions: RequestInit | undefined;
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(function (
+        _input: RequestInfo | URL,
+        init?: RequestInit,
       ) {
-        capturedOptions = options;
-        if (callback) {
-          callback(null, { statusCode: 200 } as unknown as request.Response, '');
-        }
-        return {} as request.Request;
+        capturedOptions = init;
+        return Promise.resolve(new Response('', { status: 200 }));
       });
 
       await checkUriPromise(site);
 
-      expect(requestSpy).toHaveBeenCalledTimes(1);
-      expect(capturedOptions?.followRedirect).toBe(true);
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      expect(capturedOptions?.redirect).toBe('follow');
       expect(outAdapter.writeResult).toHaveBeenCalledWith('success', site);
-      requestSpy.mockRestore();
+      fetchSpy.mockRestore();
     });
 
-    it('should set followRedirect to false in request options when site.followRedirect is not provided', async function () {
+    it('should set redirect to manual in fetch options when site.followRedirect is not provided', async function () {
       const site: SiteConfig = {
         expectedStatus: 200,
         name: 'Unit Test',
@@ -464,24 +398,79 @@ describe('lib/uriCheck/', function () {
         writeResult: vi.fn(),
       };
       uriCheck.init(outAdapter);
-      let capturedOptions: (request.RequiredUriUrl & request.CoreOptions) | undefined;
-      const requestSpy = vi.spyOn(request, 'get').mockImplementation(function (
-        options: request.RequiredUriUrl & request.CoreOptions,
-        callback?: request.RequestCallback,
+      let capturedOptions: RequestInit | undefined;
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(function (
+        _input: RequestInfo | URL,
+        init?: RequestInit,
       ) {
-        capturedOptions = options;
-        if (callback) {
-          callback(null, { statusCode: 200 } as unknown as request.Response, '');
-        }
-        return {} as request.Request;
+        capturedOptions = init;
+        return Promise.resolve(new Response('', { status: 200 }));
       });
 
       await checkUriPromise(site);
 
-      expect(requestSpy).toHaveBeenCalledTimes(1);
-      expect(capturedOptions?.followRedirect).toBe(false);
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      expect(capturedOptions?.redirect).toBe('manual');
       expect(outAdapter.writeResult).toHaveBeenCalledWith('success', site);
-      requestSpy.mockRestore();
+      fetchSpy.mockRestore();
+    });
+
+    it('should prepend http:// to uri when missing protocol and pass requestHeaders', async function () {
+      const site: SiteConfig = {
+        expectedStatus: 200,
+        name: 'Unit Test',
+        requestHeaders: {
+          'X-Custom-Header': 'custom-val',
+        },
+        requestUrl: 'www.unittest.com',
+      };
+      const outAdapter: OutAdapter = {
+        writeResult: vi.fn(),
+      };
+      uriCheck.init(outAdapter);
+      let capturedUri: RequestInfo | URL | undefined;
+      let capturedOptions: RequestInit | undefined;
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(function (
+        input: RequestInfo | URL,
+        init?: RequestInit,
+      ) {
+        capturedUri = input;
+        capturedOptions = init;
+        return Promise.resolve(new Response('', { status: 200 }));
+      });
+
+      await checkUriPromise(site);
+
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      expect(capturedUri).toBe('http://www.unittest.com');
+      expect(capturedOptions?.headers).toEqual({ 'X-Custom-Header': 'custom-val' });
+      expect(outAdapter.writeResult).toHaveBeenCalledWith('success', site);
+      fetchSpy.mockRestore();
+    });
+
+    it('should not prepend protocol if already https://', async function () {
+      const site: SiteConfig = {
+        expectedStatus: 200,
+        name: 'Unit Test',
+        requestUrl: 'https://www.unittest.com',
+      };
+      const outAdapter: OutAdapter = {
+        writeResult: vi.fn(),
+      };
+      uriCheck.init(outAdapter);
+      let capturedUri: RequestInfo | URL | undefined;
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(function (
+        input: RequestInfo | URL,
+      ) {
+        capturedUri = input;
+        return Promise.resolve(new Response('', { status: 200 }));
+      });
+
+      await checkUriPromise(site);
+
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      expect(capturedUri).toBe('https://www.unittest.com');
+      fetchSpy.mockRestore();
     });
   });
 
