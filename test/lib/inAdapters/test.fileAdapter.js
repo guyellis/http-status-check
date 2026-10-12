@@ -1,7 +1,11 @@
 'use strict';
 
-var fs = require('fs');
-var inAdapter = require('../../../lib/inAdapters/fileAdapter');
+import fs from 'fs';
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import inAdapter from '../../../lib/inAdapters/fileAdapter.js';
+
+var __dirname = dirname(fileURLToPath(import.meta.url));
 
 describe('inAdapters/fileAdapter/', function() {
   beforeEach(function() {
@@ -9,7 +13,7 @@ describe('inAdapters/fileAdapter/', function() {
   });
 
   describe('getRunData()', function () {
-    it('should return samplesites.js data if exists', function () {
+    it('should return samplesites.js data if exists', async function () {
       var checksitesChecked = false;
       var samplesitesChecked = false;
       var existsSpy = vi.spyOn(fs, 'existsSync').mockImplementation(function(filePath) {
@@ -24,7 +28,7 @@ describe('inAdapters/fileAdapter/', function() {
         return true;
       });
 
-      var runData = inAdapter.getRunData();
+      var runData = await inAdapter.getRunData();
       expect(checksitesChecked).toBe(true);
       expect(samplesitesChecked).toBe(true);
       expect(runData).toBeDefined();
@@ -34,7 +38,7 @@ describe('inAdapters/fileAdapter/', function() {
       existsSpy.mockRestore();
     });
 
-    it('should throw an exception if checksites.js and samplesites.js do not exist', function () {
+    it('should throw an exception if checksites.js and samplesites.js do not exist', async function () {
       var previousHttpStatusCheckFileValue = process.env.HTTP_STATUS_CHECK_FILE;
       if (previousHttpStatusCheckFileValue) {
         delete process.env.HTTP_STATUS_CHECK_FILE;
@@ -48,7 +52,7 @@ describe('inAdapters/fileAdapter/', function() {
 
       var exceptionThrown = false;
       try {
-        inAdapter.getRunData();
+        await inAdapter.getRunData();
       } catch (e) {
         exceptionThrown = true;
         expect(e.message).toBe('Expecting HTTP_STATUS_CHECK_FILE environment or checksites.js or samplesites.js to exist.');
@@ -61,13 +65,13 @@ describe('inAdapters/fileAdapter/', function() {
       }
     });
 
-    it('should return custom file data if HTTP_STATUS_CHECK_FILE exists', function () {
+    it('should return custom file data if HTTP_STATUS_CHECK_FILE exists', async function () {
       var samplePath = __dirname + '/../../../sitelists/samplesites.js';
       process.env.HTTP_STATUS_CHECK_FILE = samplePath;
 
       var existsSpy = vi.spyOn(fs, 'existsSync').mockReturnValue(true);
 
-      var runData = inAdapter.getRunData();
+      var runData = await inAdapter.getRunData();
       expect(runData).toBeDefined();
       expect(runData.sites).toBeDefined();
 

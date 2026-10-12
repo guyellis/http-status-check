@@ -40,6 +40,7 @@
   ],
   "license": "MIT",
   "main": "index.js",
+  "type": "module",
   "name": "http-status-check",
   "pre-commit": [
     "lint",

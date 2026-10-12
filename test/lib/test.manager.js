@@ -1,8 +1,8 @@
 'use strict';
 
-var _ = require('lodash');
-var manager = require('../../lib/manager');
-var uriCheck = require('../../lib/uriCheck');
+import _ from 'lodash';
+import manager from '../../lib/manager.js';
+import uriCheck from '../../lib/uriCheck.js';
 
 describe('lib/manager/', function() {
   describe('run()', function () {

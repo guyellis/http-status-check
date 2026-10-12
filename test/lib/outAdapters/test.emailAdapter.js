@@ -1,6 +1,6 @@
 'use strict';
 
-var outAdapter = require('../../../lib/outAdapters/emailAdapter');
+import outAdapter from '../../../lib/outAdapters/emailAdapter.js';
 
 describe('outAdapters/emailAdapter/', function() {
 

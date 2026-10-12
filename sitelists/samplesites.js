@@ -5,7 +5,7 @@
 // .gitignore is set to NOT commit checksites.js so you can keep your
 // personal/client site list in here.
 
-module.exports = {
+export default {
   // The sites key is an array of URIs objects that will be checked.
   sites: [
     {

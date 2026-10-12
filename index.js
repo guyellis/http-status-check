@@ -1,20 +1,28 @@
 'use strict';
 
-var _ = require('lodash');
-var manager = require('./lib/manager');
-var settings = require('./package.json');
-var inAdapter = require(settings.inAdapter.type);
-var outAdapter = require('./lib/outAdapters/consoleAdapter');
+import _ from 'lodash';
+import manager from './lib/manager.js';
+import settings from './package.json' with { type: 'json' };
+import outAdapter from './lib/outAdapters/consoleAdapter.js';
 
+var inAdapterPath = settings.inAdapter.type.endsWith('.js')
+  ? settings.inAdapter.type
+  : settings.inAdapter.type + '.js';
+var inAdapterModule = await import(inAdapterPath);
+var inAdapter = inAdapterModule.default || inAdapterModule;
 
-var main = function(verbosity) {
-  var sites = inAdapter.getRunData();
+var main = async function(verbosity) {
+  var sites = await inAdapter.getRunData();
   manager.run(sites, settings, outAdapter, verbosity);
 };
 
 var verbose = _.includes(process.argv.slice(2), '--verbose');
-main(verbose);
+await main(verbose);
 
-module.exports = {
+export {
+  main
+};
+
+export default {
   main: main
 };
