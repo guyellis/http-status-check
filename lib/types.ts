@@ -5,10 +5,7 @@ export interface ExpectedTextObject {
   caseSensitive?: boolean;
 }
 
-export type ExpectedTextInput =
-  | string
-  | ExpectedTextObject
-  | (string | ExpectedTextObject)[];
+export type ExpectedTextInput = string | ExpectedTextObject | (string | ExpectedTextObject)[];
 
 export interface SiteConfig {
   name?: string;

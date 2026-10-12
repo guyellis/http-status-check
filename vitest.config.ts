@@ -2,19 +2,19 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    globals: true,
-    environment: 'node',
-    include: ['test/**/*.{js,ts}', '**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     coverage: {
+      exclude: ['sitelists/*'],
       provider: 'v8',
       reporter: ['text', 'html', 'json'],
-      exclude: ['sitelists/*'],
       thresholds: {
-        statements: 79,
-        lines: 78,
         branches: 74,
-        functions: 81
-      }
-    }
-  }
+        functions: 81,
+        lines: 78,
+        statements: 79,
+      },
+    },
+    environment: 'node',
+    globals: true,
+    include: ['test/**/*.{js,ts}', '**/*.{test,spec}.?(c|m)[jt]s?(x)'],
+  },
 });

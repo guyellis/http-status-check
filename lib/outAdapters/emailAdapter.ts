@@ -1,33 +1,35 @@
 'use strict';
 
-import nodemailer from 'nodemailer';
-import _ from 'lodash';
-import createDebug from 'debug';
 import bunyan from 'bunyan';
-import emailData from './emailSampleData.js';
+import createDebug from 'debug';
+import _ from 'lodash';
+import nodemailer from 'nodemailer';
 import type { NormalizedSite } from '../types.js';
+import emailData from './emailSampleData.js';
 
-var debug = createDebug('http-status-check:emailAdapter');
-var log = bunyan.createLogger({
+const debug = createDebug('http-status-check:emailAdapter');
+const log = bunyan.createLogger({
   name: 'http-status-check',
-  streams: [{
-    path: './httpstatuscheck.log'
-  }]
+  streams: [
+    {
+      path: './httpstatuscheck.log',
+    },
+  ],
 });
 
-var successHits = 0;
-var failHits = 0;
-var disableHits = 0;
+let successHits = 0;
+let failHits = 0;
+let disableHits = 0;
 
-var success: string[] = [];
-var fail: Array<{ text: string; errors?: unknown }> = [];
-var disabled: string[] = [];
+const success: string[] = [];
+const fail: Array<{ text: string; errors?: unknown }> = [];
+const disabled: string[] = [];
 
-var organizeErrors = function(errors: unknown): string[] {
-  var errorList: unknown;
+const organizeErrors = function (errors: unknown): string[] {
+  let errorList: unknown;
   if (!Array.isArray(errors)) {
     if (_.isObject(errors)) {
-      errorList = _.map(errors as Record<string, unknown>, function(value, key) {
+      errorList = _.map(errors as Record<string, unknown>, function (value, key) {
         return key + ': ' + value;
       });
     } else {
@@ -36,14 +38,19 @@ var organizeErrors = function(errors: unknown): string[] {
   } else {
     errorList = errors;
   }
-  return _.flatten(errorList as unknown[]).map(function(item) {
+  return _.flatten(errorList as unknown[]).map(function (item) {
     return String(item);
   });
 };
 
-var writeResult = function(
+const writeResult = function (
   result: string,
-  uri: Partial<NormalizedSite> & { verbose?: boolean; name?: string; requestUrl?: string; errors?: unknown }
+  uri: Partial<NormalizedSite> & {
+    verbose?: boolean;
+    name?: string;
+    requestUrl?: string;
+    errors?: unknown;
+  },
 ): void {
   switch (result) {
     case 'success':
@@ -55,8 +62,8 @@ var writeResult = function(
         uri.errors = organizeErrors(uri.errors);
       }
       fail.push({
+        errors: uri.errors,
         text: 'X ' + uri.name + ' (' + uri.requestUrl + ') failed. Here are the problems:',
-        errors: uri.errors
       });
       failHits++;
       break;
@@ -69,32 +76,46 @@ var writeResult = function(
   }
 };
 
-var sendEmail = function(): void {
-  var transport = (nodemailer.createTransport as unknown as (service: string, options: unknown) => {
-    sendMail(
-      options: Record<string, unknown>,
-      callback: (err: Error | null, responseStatus?: { message?: string }) => void
-    ): void;
-  })('SMTP', emailData.transport);
-  var html = 'need to define some html';
-
-  transport.sendMail({
-    from: emailData.from.name.first + ' ' + emailData.from.name.last + ' <' + emailData.from.email + '>',
-    to: emailData.locals.email,
-    subject: emailData.subject + ' ' + Date.now().toString(),
-    html: html
-  }, function(err: Error | null, responseStatus?: { message?: string }) {
-    if (err) {
-      debug('Error in transport.sendMail():');
-      debug(err);
-      throw err;
-    } else {
-      console.log('responseStatus.message: ', responseStatus?.message);
+const sendEmail = function (): void {
+  const transport = (
+    nodemailer.createTransport as unknown as (
+      service: string,
+      options: unknown,
+    ) => {
+      sendMail(
+        options: Record<string, unknown>,
+        callback: (err: Error | null, responseStatus?: { message?: string }) => void,
+      ): void;
     }
-  });
+  )('SMTP', emailData.transport);
+  const html = 'need to define some html';
+
+  transport.sendMail(
+    {
+      from:
+        emailData.from.name.first +
+        ' ' +
+        emailData.from.name.last +
+        ' <' +
+        emailData.from.email +
+        '>',
+      html: html,
+      subject: emailData.subject + ' ' + Date.now().toString(),
+      to: emailData.locals.email,
+    },
+    function (err: Error | null, responseStatus?: { message?: string }) {
+      if (err) {
+        debug('Error in transport.sendMail():');
+        debug(err);
+        throw err;
+      } else {
+        debug('responseStatus.message: ', responseStatus?.message);
+      }
+    },
+  );
 };
 
-var done = function(): void {
+const done = function (): void {
   if (failHits > 0) {
     sendEmail();
   }
@@ -105,32 +126,32 @@ var done = function(): void {
   log.info('Disable count: ', disableHits);
 };
 
-var getSuccessHits = function(): number {
+const getSuccessHits = function (): number {
   return successHits;
 };
 
-var getFailHits = function(): number {
+const getFailHits = function (): number {
   return failHits;
 };
 
-var getDisableHits = function(): number {
+const getDisableHits = function (): number {
   return disableHits;
 };
 
-var resetHits = function(): void {
+const resetHits = function (): void {
   successHits = 0;
   failHits = 0;
   disableHits = 0;
 };
 
-var emailAdapter = {
-  writeResult: writeResult,
+const emailAdapter = {
   done: done,
-  organizeErrors: organizeErrors,
-  getSuccessHits: getSuccessHits,
-  getFailHits: getFailHits,
   getDisableHits: getDisableHits,
-  resetHits: resetHits
+  getFailHits: getFailHits,
+  getSuccessHits: getSuccessHits,
+  organizeErrors: organizeErrors,
+  resetHits: resetHits,
+  writeResult: writeResult,
 };
 
 export {
@@ -140,7 +161,7 @@ export {
   getSuccessHits,
   getFailHits,
   getDisableHits,
-  resetHits
+  resetHits,
 };
 
 export default emailAdapter;
