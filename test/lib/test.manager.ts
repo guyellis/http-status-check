@@ -2,23 +2,27 @@
 
 import _ from 'lodash';
 import manager from '../../lib/manager.js';
-import uriCheck from '../../lib/uriCheck.js';
 import type { NormalizedSite, SiteConfig } from '../../lib/types.js';
+import uriCheck from '../../lib/uriCheck.js';
 
-describe('lib/manager/', function() {
+describe('lib/manager/', function () {
   describe('run()', function () {
     it('uses 3 as the default concurrentRequests if not supplied', function () {
-      var initCalled = false;
-      var initSpy = vi.spyOn(uriCheck, 'init').mockImplementation(function() {
+      let initCalled = false;
+      const initSpy = vi.spyOn(uriCheck, 'init').mockImplementation(function () {
         initCalled = true;
       });
-      var expandRequestUrlInputCalled = false;
-      var expandSpy = vi.spyOn(manager, 'expandRequestUrlInput').mockImplementation(function(sites: SiteConfig[]) {
+      let expandRequestUrlInputCalled = false;
+      const expandSpy = vi.spyOn(manager, 'expandRequestUrlInput').mockImplementation(function (
+        sites: SiteConfig[],
+      ) {
         expandRequestUrlInputCalled = true;
         return sites || [];
       });
-      var concurrentRequests = 0;
-      var iterateSpy = vi.spyOn(manager, 'iterateURLs').mockImplementation(function(concurrentRequestsParam: number) {
+      let concurrentRequests = 0;
+      const iterateSpy = vi.spyOn(manager, 'iterateURLs').mockImplementation(function (
+        concurrentRequestsParam: number,
+      ) {
         concurrentRequests = concurrentRequestsParam;
       });
 
@@ -33,17 +37,21 @@ describe('lib/manager/', function() {
     });
 
     it('uses the number of concurrentRequests supplied', function () {
-      var initCalled = false;
-      var initSpy = vi.spyOn(uriCheck, 'init').mockImplementation(function() {
+      let initCalled = false;
+      const initSpy = vi.spyOn(uriCheck, 'init').mockImplementation(function () {
         initCalled = true;
       });
-      var expandRequestUrlInputCalled = false;
-      var expandSpy = vi.spyOn(manager, 'expandRequestUrlInput').mockImplementation(function(sites: SiteConfig[]) {
+      let expandRequestUrlInputCalled = false;
+      const expandSpy = vi.spyOn(manager, 'expandRequestUrlInput').mockImplementation(function (
+        sites: SiteConfig[],
+      ) {
         expandRequestUrlInputCalled = true;
         return sites || [];
       });
-      var concurrentRequests = 0;
-      var iterateSpy = vi.spyOn(manager, 'iterateURLs').mockImplementation(function(concurrentRequestsParam: number) {
+      let concurrentRequests = 0;
+      const iterateSpy = vi.spyOn(manager, 'iterateURLs').mockImplementation(function (
+        concurrentRequestsParam: number,
+      ) {
         concurrentRequests = concurrentRequestsParam;
       });
 
@@ -58,17 +66,21 @@ describe('lib/manager/', function() {
     });
 
     it('should use 3 as the number of concurrentRequests if a number less than 1 is supplied', function () {
-      var initCalled = false;
-      var initSpy = vi.spyOn(uriCheck, 'init').mockImplementation(function() {
+      let initCalled = false;
+      const initSpy = vi.spyOn(uriCheck, 'init').mockImplementation(function () {
         initCalled = true;
       });
-      var expandRequestUrlInputCalled = false;
-      var expandSpy = vi.spyOn(manager, 'expandRequestUrlInput').mockImplementation(function(sites: SiteConfig[]) {
+      let expandRequestUrlInputCalled = false;
+      const expandSpy = vi.spyOn(manager, 'expandRequestUrlInput').mockImplementation(function (
+        sites: SiteConfig[],
+      ) {
         expandRequestUrlInputCalled = true;
         return sites || [];
       });
-      var concurrentRequests = 0;
-      var iterateSpy = vi.spyOn(manager, 'iterateURLs').mockImplementation(function(concurrentRequestsParam: number) {
+      let concurrentRequests = 0;
+      const iterateSpy = vi.spyOn(manager, 'iterateURLs').mockImplementation(function (
+        concurrentRequestsParam: number,
+      ) {
         concurrentRequests = concurrentRequestsParam;
       });
 
@@ -85,25 +97,27 @@ describe('lib/manager/', function() {
 
   describe('expandRequestUrlInput()', function () {
     it('expands arrays of requestUrls if they are an array', function () {
-      var sites: SiteConfig[] = [
+      const sites: SiteConfig[] = [
         {
-          'name': 'TestSite',
-          'expectedStatus': 200,
-          'requestUrl': ['test1.com', 'test2.com']
-        }];
-      var results = manager.expandRequestUrlInput(sites);
+          expectedStatus: 200,
+          name: 'TestSite',
+          requestUrl: ['test1.com', 'test2.com'],
+        },
+      ];
+      const results = manager.expandRequestUrlInput(sites);
       expect(results.length).toBe(2);
       expect(Array.isArray(results)).toBe(true);
     });
 
     it('does nothing if requestUrls is not an array', function () {
-      var sites: SiteConfig[] = [
+      const sites: SiteConfig[] = [
         {
-          'name': 'TestSite',
-          'expectedStatus': 200,
-          'requestUrl': 'test1.com'
-        }];
-      var results = manager.expandRequestUrlInput(sites);
+          expectedStatus: 200,
+          name: 'TestSite',
+          requestUrl: 'test1.com',
+        },
+      ];
+      const results = manager.expandRequestUrlInput(sites);
       expect(results.length).toBe(1);
       expect(Array.isArray(results)).toBe(true);
     });
@@ -111,19 +125,23 @@ describe('lib/manager/', function() {
 
   describe('iterateURLs()', function () {
     it('calls uriCheck.done() when finished', function () {
-      var sites: NormalizedSite[] = [
+      const sites: NormalizedSite[] = [
         {
-          'name': 'TestSite',
-          'expectedStatus': 200,
-          'requestUrl': 'test1.com'
-        }];
-      var checkUriCallCount = 0;
-      var doneCallCount = 0;
-      var checkSpy = vi.spyOn(uriCheck, 'checkUri').mockImplementation(function(site: NormalizedSite, callback: (err?: Error | null) => void) {
+          expectedStatus: 200,
+          name: 'TestSite',
+          requestUrl: 'test1.com',
+        },
+      ];
+      let checkUriCallCount = 0;
+      let doneCallCount = 0;
+      const checkSpy = vi.spyOn(uriCheck, 'checkUri').mockImplementation(function (
+        site: NormalizedSite,
+        callback: (err?: Error | null) => void,
+      ) {
         checkUriCallCount++;
         callback();
       });
-      var doneSpy = vi.spyOn(uriCheck, 'done').mockImplementation(function() {
+      const doneSpy = vi.spyOn(uriCheck, 'done').mockImplementation(function () {
         doneCallCount++;
       });
 
@@ -136,23 +154,27 @@ describe('lib/manager/', function() {
     });
 
     it('throws an error if checkUri calls back with error', function () {
-      var sites: NormalizedSite[] = [
+      const sites: NormalizedSite[] = [
         {
-          'name': 'TestSite',
-          'expectedStatus': 200,
-          'requestUrl': 'test1.com'
-        }];
-      var checkUriCallCount = 0;
-      var doneCallCount = 0;
-      var checkSpy = vi.spyOn(uriCheck, 'checkUri').mockImplementation(function(site: NormalizedSite, callback: (err?: Error | null) => void) {
+          expectedStatus: 200,
+          name: 'TestSite',
+          requestUrl: 'test1.com',
+        },
+      ];
+      let checkUriCallCount = 0;
+      let doneCallCount = 0;
+      const checkSpy = vi.spyOn(uriCheck, 'checkUri').mockImplementation(function (
+        site: NormalizedSite,
+        callback: (err?: Error | null) => void,
+      ) {
         checkUriCallCount++;
         callback(new Error('Unit Test Error'));
       });
-      var doneSpy = vi.spyOn(uriCheck, 'done').mockImplementation(function() {
+      const doneSpy = vi.spyOn(uriCheck, 'done').mockImplementation(function () {
         doneCallCount++;
       });
 
-      var exceptionText = '';
+      let exceptionText = '';
       try {
         manager.iterateURLs(3, sites);
       } catch (e: unknown) {
@@ -169,14 +191,15 @@ describe('lib/manager/', function() {
 
   describe('expandExpectedTextInput()', function () {
     it('should do nothing if there is no expectedText property', function () {
-      var sites: SiteConfig[] = [
+      const sites: SiteConfig[] = [
         {
-          name: 'TestSite',
           expectedStatus: 200,
-          requestUrl: 'test1.com'
-        }];
+          name: 'TestSite',
+          requestUrl: 'test1.com',
+        },
+      ];
 
-      var results = manager.expandExpectedTextInput(sites);
+      const results = manager.expandExpectedTextInput(sites);
 
       expect(results).toBeDefined();
       expect(_.isArray(results)).toBe(true);
@@ -186,15 +209,16 @@ describe('lib/manager/', function() {
     });
 
     it('should expand expectedText property if it is a single string', function () {
-      var sites: SiteConfig[] = [
+      const sites: SiteConfig[] = [
         {
-          name: 'TestSite',
           expectedStatus: 200,
+          expectedText: 'some search string',
+          name: 'TestSite',
           requestUrl: 'test1.com',
-          expectedText: 'some search string'
-        }];
+        },
+      ];
 
-      var results = manager.expandExpectedTextInput(sites);
+      const results = manager.expandExpectedTextInput(sites);
 
       expect(results).toBeDefined();
       expect(_.isArray(results)).toBe(true);
@@ -206,15 +230,20 @@ describe('lib/manager/', function() {
     });
 
     it('should expand expectedText property if it is an array of strings and/or objects', function () {
-      var sites: SiteConfig[] = [
+      const sites: SiteConfig[] = [
         {
-          name: 'TestSite',
           expectedStatus: 200,
+          expectedText: [
+            'some search string',
+            { text: '2nd string' },
+            { caseSensitive: true, text: '3rd string' },
+          ],
+          name: 'TestSite',
           requestUrl: 'test1.com',
-          expectedText: ['some search string', { text: '2nd string'}, {text: '3rd string', caseSensitive: true}]
-        }];
+        },
+      ];
 
-      var results = manager.expandExpectedTextInput(sites);
+      const results = manager.expandExpectedTextInput(sites);
 
       expect(results).toBeDefined();
       expect(_.isArray(results)).toBe(true);
@@ -232,14 +261,16 @@ describe('lib/manager/', function() {
     });
 
     it('should throw an Error if the expectedText object does not have a text property', function () {
-      var sites: SiteConfig[] = [{
-        name: 'TestSite',
-        expectedStatus: 200,
-        requestUrl: 'test1.com',
-        expectedText: { random: '2nd string'}
-      }];
+      const sites: SiteConfig[] = [
+        {
+          expectedStatus: 200,
+          expectedText: { random: '2nd string' },
+          name: 'TestSite',
+          requestUrl: 'test1.com',
+        },
+      ];
 
-      var error: Error | undefined;
+      let error: Error | undefined;
       try {
         manager.expandExpectedTextInput(sites);
       } catch (e: unknown) {
@@ -251,14 +282,16 @@ describe('lib/manager/', function() {
     });
 
     it('should throw an Error if the expectedText object has an unrecognized type', function () {
-      var sites: SiteConfig[] = [{
-        name: 'TestSite',
-        expectedStatus: 200,
-        requestUrl: 'test1.com',
-        expectedText: true
-      }];
+      const sites: SiteConfig[] = [
+        {
+          expectedStatus: 200,
+          expectedText: true,
+          name: 'TestSite',
+          requestUrl: 'test1.com',
+        },
+      ];
 
-      var error: Error | undefined;
+      let error: Error | undefined;
       try {
         manager.expandExpectedTextInput(sites);
       } catch (e: unknown) {
@@ -269,5 +302,4 @@ describe('lib/manager/', function() {
       expect(error?.message).toBe('Unknown/Unexpected type for text property.');
     });
   });
-
 });

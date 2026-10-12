@@ -1,17 +1,24 @@
 'use strict';
 
-import _ from 'lodash';
 import async from 'async';
+import _ from 'lodash';
+import type {
+  ExpectedTextObject,
+  NormalizedSite,
+  OutAdapter,
+  RunData,
+  Settings,
+  SiteConfig,
+} from './types.js';
 import uriCheck from './uriCheck.js';
-import type { ExpectedTextObject, NormalizedSite, OutAdapter, RunData, Settings, SiteConfig } from './types.js';
 
 interface ExpectedTextError extends Error {
   expectedText?: unknown;
   type?: string;
 }
 
-var iterateURLs = function(concurrentRequests: number, sites: NormalizedSite[]): void {
-  async.eachLimit(sites, concurrentRequests, uriCheck.checkUri, function(err) {
+const iterateURLs = function (concurrentRequests: number, sites: NormalizedSite[]): void {
+  async.eachLimit(sites, concurrentRequests, uriCheck.checkUri, function (err) {
     if (err) {
       throw err;
     }
@@ -23,14 +30,14 @@ var iterateURLs = function(concurrentRequests: number, sites: NormalizedSite[]):
 // the requestUrl on any of its elements is an array
 // it will duplicate that element and split out the
 // elements of the requestUrl array
-var expandRequestUrlInput = function(sites: SiteConfig[]): SiteConfig[] {
-  var result = _.map(sites, function(site) {
+const expandRequestUrlInput = function (sites: SiteConfig[]): SiteConfig[] {
+  const result = _.map(sites, function (site) {
     if (_.isArray(site.requestUrl)) {
-      var urls = site.requestUrl;
-      var baseSite = _.cloneDeep(site);
+      const urls = site.requestUrl;
+      const baseSite = _.cloneDeep(site);
       delete (baseSite as Partial<SiteConfig>).requestUrl;
-      return _.map(urls, function(url) {
-        var newItem = _.cloneDeep(baseSite);
+      return _.map(urls, function (url) {
+        const newItem = _.cloneDeep(baseSite);
         newItem.requestUrl = url;
         return newItem;
       });
@@ -46,9 +53,9 @@ var expandRequestUrlInput = function(sites: SiteConfig[]): SiteConfig[] {
 // iterate through each site object and expand the
 // expectedText property out into an arry of objects
 // if it is not already an array of objects.
-var expandExpectedTextInput = function(sites: SiteConfig[]): NormalizedSite[] {
-  var err: ExpectedTextError;
-  return _.map(sites, function(site): NormalizedSite {
+const expandExpectedTextInput = function (sites: SiteConfig[]): NormalizedSite[] {
+  let err: ExpectedTextError;
+  return _.map(sites, function (site): NormalizedSite {
     if (site.expectedText) {
       // We expect site.expectdText to be one of the
       // following:
@@ -58,51 +65,54 @@ var expandExpectedTextInput = function(sites: SiteConfig[]): NormalizedSite[] {
       //
       // First step, if it's not an array then we need to get it into a 1 element array
       // for the rest of the function.
-      var expectedTextArray = !_.isArray(site.expectedText)
+      const expectedTextArray = !_.isArray(site.expectedText)
         ? [site.expectedText]
         : site.expectedText;
 
       // Now we know that it's an array of 1 or more "somethings." We'll iterate through
       // that and make each of them objects and throw errors for anything we can't handle
       // or recognize
-      var normalizedExpectedText = _.map(expectedTextArray, function(expectedText): ExpectedTextObject {
-        if (_.isObject(expectedText)) {
-          // We have an expectation that if this is already an object that it has at a minimum
-          // the 'text' property
-          var obj = expectedText as Record<string, unknown>;
-          if (!('text' in obj) || !obj.text) {
-            err = new Error('text property is missing from expectedText object.');
+      const normalizedExpectedText = _.map(
+        expectedTextArray,
+        function (expectedText): ExpectedTextObject {
+          if (_.isObject(expectedText)) {
+            // We have an expectation that if this is already an object that it has at a minimum
+            // the 'text' property
+            const obj = expectedText as Record<string, unknown>;
+            if (!('text' in obj) || !obj.text) {
+              err = new Error('text property is missing from expectedText object.');
+              err.expectedText = expectedText;
+              throw err;
+            }
+            return expectedText as unknown as ExpectedTextObject;
+          } else if (_.isString(expectedText)) {
+            return { text: expectedText };
+          } else {
+            err = new Error('Unknown/Unexpected type for text property.');
             err.expectedText = expectedText;
+            err.type = typeof expectedText;
             throw err;
           }
-          return expectedText as unknown as ExpectedTextObject;
-        } else if (_.isString(expectedText)) {
-          return { text: expectedText };
-        } else {
-          err = new Error('Unknown/Unexpected type for text property.');
-          err.expectedText = expectedText;
-          err.type = typeof expectedText;
-          throw err;
-        }
-      });
+        },
+      );
       return {
         ...site,
+        expectedText: normalizedExpectedText,
         requestUrl: site.requestUrl as string,
-        expectedText: normalizedExpectedText
       };
     }
     return site as NormalizedSite;
   });
 };
 
-var start = function(
+const start = function (
   runData: RunData | Partial<RunData>,
   settings: Settings | Partial<Settings>,
   outAdapter?: OutAdapter,
-  verbose?: boolean
+  verbose?: boolean,
 ): void {
-  var inputSites = (runData && runData.sites) ? runData.sites : [];
-  var sites = manager.expandExpectedTextInput(manager.expandRequestUrlInput(inputSites));
+  const inputSites = runData && runData.sites ? runData.sites : [];
+  let sites = manager.expandExpectedTextInput(manager.expandRequestUrlInput(inputSites));
   if (settings.allSites) {
     settings.allSites.verbose = verbose;
   }
@@ -110,11 +120,11 @@ var start = function(
   // At this point sites array has now been "normalized".
   // Now take the allSites data and apply that to each element of the sites
   // array that doesn't have that data
-  sites = _.map(sites, function(item) {
+  sites = _.map(sites, function (item) {
     return _.assign(_.clone(settings.allSites), item);
   });
 
-  var concurrentRequests = settings.concurrentRequests;
+  let concurrentRequests = settings.concurrentRequests;
   if (!concurrentRequests || isNaN(concurrentRequests) || concurrentRequests < 1) {
     concurrentRequests = 3;
   }
@@ -122,18 +132,13 @@ var start = function(
   manager.iterateURLs(concurrentRequests, sites);
 };
 
-var manager = {
-  iterateURLs: iterateURLs,
-  expandRequestUrlInput: expandRequestUrlInput,
+const manager = {
   expandExpectedTextInput: expandExpectedTextInput,
-  run: start
+  expandRequestUrlInput: expandRequestUrlInput,
+  iterateURLs: iterateURLs,
+  run: start,
 };
 
-export {
-  iterateURLs,
-  expandRequestUrlInput,
-  expandExpectedTextInput,
-  start as run
-};
+export { iterateURLs, expandRequestUrlInput, expandExpectedTextInput, start as run };
 
 export default manager;

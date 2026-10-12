@@ -21,6 +21,8 @@
   },
   "description": "Utility to check the HTTP status of URL endpoints",
   "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@stylistic/eslint-plugin": "5.10.0",
     "@types/async": "3.2.26",
     "@types/bunyan": "1.8.11",
     "@types/debug": "4.1.13",
@@ -33,10 +35,16 @@
     "@vitest/coverage-v8": "5.0.4",
     "bunyan": "1.8.15",
     "eslint": "10.11.0",
-    "eslint-config-guyellis": "0.0.6",
+    "eslint-config-prettier": "10.1.8",
+    "eslint-plugin-import-x": "4.17.1",
+    "eslint-plugin-perfectionist": "5.12.1",
+    "eslint-plugin-prettier": "5.5.6",
+    "globals": "17.13.0",
+    "lint-staged": "17.6.0",
     "npm-update-outdated": "0.1.6",
-    "pre-commit": "2.0.0",
+    "prettier": "3.9.10",
     "typescript": "6.0.3",
+    "typescript-eslint": "8.71.2",
     "vite": "8.3.4",
     "vitest": "5.0.4"
   },
@@ -54,10 +62,11 @@
   "exports": "./dist/index.js",
   "type": "module",
   "name": "http-status-check",
-  "pre-commit": [
-    "lint",
-    "test"
-  ],
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "eslint --fix"
+    ]
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/guyellis/http-status-check.git"
@@ -65,8 +74,8 @@
   "scripts": {
     "build": "vite build",
     "coverage": "vitest run --coverage",
-    "lint": "node_modules/.bin/eslint --ext .js .",
-    "lintfix": "node_modules/.bin/eslint --ext .js . --fix",
+    "lint": "eslint . --max-warnings 0",
+    "lintfix": "eslint . --fix",
     "post-commit-stash-pop": "git stash pop",
     "pre-commit-stash-save": "git stash --keep-index",
     "pre-commit-update": "node_modules/.bin/npm-update-outdated",

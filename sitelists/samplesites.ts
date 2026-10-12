@@ -9,39 +9,37 @@ export default {
   // The sites key is an array of URIs objects that will be checked.
   sites: [
     {
-      // The name is any name you want. It's used for reporting so make
-      // it meaningful to you.
-      name: 'LinkSilk',
       // The expectedStatus is the HTTP status that you expect this URI
       // to return. A normal successful HTTP status from a healthy server
       // is 200. You can find a list of HTTP status codes here:
       // http://en.wikipedia.org/wiki/List_of_HTTP_status_codes
       expectedStatus: 200,
+      // The name is any name you want. It's used for reporting so make
+      // it meaningful to you.
+      name: 'LinkSilk',
       // The requestUrl is the URI that you want checked.
-      requestUrl: 'https://linksilk.com'
+      requestUrl: 'https://linksilk.com',
     },
     {
-      name: 'LinkSilk WWW',
+      // The excludedHeaders array is a list of HTTP headers that you don't
+      // expect the server to return. For example, for security you might have
+      // disabled the 'X-Powered-By' header. If any of these headers are found
+      // in the response headers then the check will fail.
+      // NOTE: Not implemented yet, for future development.
+      excludedHeaders: ['X-Powered-By'],
       expectedStatus: 301,
+      name: 'LinkSilk WWW',
       requestUrl: 'https://www.linksilk.com',
       // The responseHeaders is a collection of HTTP headers you expect the
       // server to return. This example expects an HTTP status of 301 which
       // is a redirect. Accompanying the redirect you need a location header
       // which tells the requester where to redirect to.
       responseHeaders: {
-        location: 'https://linksilk.com/'
+        location: 'https://linksilk.com/',
       },
-      // The excludedHeaders array is a list of HTTP headers that you don't
-      // expect the server to return. For example, for security you might have
-      // disabled the 'X-Powered-By' header. If any of these headers are found
-      // in the response headers then the check will fail.
-      // NOTE: Not implemented yet, for future development.
-      excludedHeaders: ['X-Powered-By']
     },
     {
-      name: 'LinkSilk Redirect To 200',
       expectedStatus: 200,
-      requestUrl: 'https://www.linksilk.com',
       // By setting followRedirect to true we are telling HTTP Status Check
       // to follow any 300 to 399 status until it gives us a non-300 series
       // status and then check that against the expectedStatus.
@@ -53,24 +51,24 @@ export default {
       // bit.ly addresses are still good you run them through HTTP Status Check
       // with the followRedirect set to true which makes sure the final status
       // is what you expect, usually a 200.
-      followRedirect: true
+      followRedirect: true,
+      name: 'LinkSilk Redirect To 200',
+      requestUrl: 'https://www.linksilk.com',
     },
     {
-      name: 'Google',
-      expectedStatus: 301,
-      requestUrl: 'http://google.com',
-      responseHeaders: {
-        location: 'http://www.google.com/'
-      },
       // The disabled setting defaults to false. Use it if you want to temporarily
       // disable the checking of a URL and don't want to remove the information
       // from this file.
-      disabled: true
+      disabled: true,
+      expectedStatus: 301,
+      name: 'Google',
+      requestUrl: 'http://google.com',
+      responseHeaders: {
+        location: 'http://www.google.com/',
+      },
     },
     {
-      name: 'HTTP Status Check on Guy\'s Blog',
       expectedStatus: 200,
-      requestUrl: 'https://www.guyellisrocks.com/2014/06/http-status-check.html',
       // The expectedText property can be a string, an object or an array.
       // If it's a string then it denotes the case-insensitive text that is expected
       //   in the body of the response.
@@ -79,12 +77,14 @@ export default {
       //   to false.
       // If it's an array then it should be a collection of the strings and/or objects
       //   described above.
-      expectedText: 'a list of URLs'
+      expectedText: 'a list of URLs',
+      name: "HTTP Status Check on Guy's Blog",
+      requestUrl: 'https://www.guyellisrocks.com/2014/06/http-status-check.html',
     },
     {
-      name: 'Missing URL example',
       expectedStatus: 404,
-      requestUrl: 'https://www.guyellisrocks.com/2014/06/will-this-get-written.html'
-    }
-  ]
+      name: 'Missing URL example',
+      requestUrl: 'https://www.guyellisrocks.com/2014/06/will-this-get-written.html',
+    },
+  ],
 };

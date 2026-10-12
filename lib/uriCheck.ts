@@ -1,21 +1,21 @@
 'use strict';
 
+import createDebug from 'debug';
 import _ from 'lodash';
 import request from 'request';
-import createDebug from 'debug';
 import S from 'string';
 import 'sugar';
 import type { ExpectedTextObject, NormalizedSite, OutAdapter } from './types.js';
 
-var debug = createDebug('http-status-check:uriCheck');
-var outAdapter: OutAdapter | undefined;
+const debug = createDebug('http-status-check:uriCheck');
+let outAdapter: OutAdapter | undefined;
 
-var init = function(output?: OutAdapter): void {
+const init = function (output?: OutAdapter): void {
   outAdapter = output;
 };
 
 function startsWith(testString: string, protocols: string[]): boolean {
-  for (var i = 0, n = protocols.length; i < n; i++) {
+  for (let i = 0, n = protocols.length; i < n; i++) {
     if (S(testString.toLowerCase()).startsWith(protocols[i].toLowerCase())) {
       return true;
     }
@@ -28,21 +28,24 @@ function startsWith(testString: string, protocols: string[]): boolean {
 function checkHeaders(
   site: NormalizedSite,
   response: { headers: Record<string, string | string[] | undefined> },
-  accumulatedFails: string[]
+  accumulatedFails: string[],
 ): void {
   if (!site.responseHeaders) {
     return;
   }
 
-  for (var header in site.responseHeaders) {
+  for (const header in site.responseHeaders) {
     if (Object.prototype.hasOwnProperty.call(site.responseHeaders, header)) {
-      var actualHeaderValue = response.headers[header];
-      var expectedHeaderValue = site.responseHeaders[header];
+      const actualHeaderValue = response.headers[header];
+      const expectedHeaderValue = site.responseHeaders[header];
       if (actualHeaderValue !== expectedHeaderValue) {
         accumulatedFails.push(
-          'Expected header \'' + header + '\' to be ' +
-            expectedHeaderValue + ' but instead it was ' +
-            actualHeaderValue
+          "Expected header '" +
+            header +
+            "' to be " +
+            expectedHeaderValue +
+            ' but instead it was ' +
+            actualHeaderValue,
         );
       }
     }
@@ -54,20 +57,18 @@ function checkHeaders(
 function checkExcludedHeaders(
   site: NormalizedSite,
   response: { headers: Record<string, string | string[] | undefined> },
-  accumulatedFails: string[]
+  accumulatedFails: string[],
 ): void {
   if (!site.excludedHeaders) {
     return;
   }
 
-  _.each(site.excludedHeaders, function(header) {
+  _.each(site.excludedHeaders, function (header) {
     header = header.toLowerCase();
     if (response.headers[header]) {
-      var headerValue = response.headers[header];
+      const headerValue = response.headers[header];
       accumulatedFails.push(
-        'Expected header \'' + header +
-        '\' to NOT be present but it is set to: ' +
-        headerValue
+        "Expected header '" + header + "' to NOT be present but it is set to: " + headerValue,
       );
     }
   });
@@ -78,7 +79,7 @@ function checkExcludedHeaders(
 function checkBody(
   site: NormalizedSite,
   body: string | undefined,
-  accumulatedFails: string[]
+  accumulatedFails: string[],
 ): void {
   if (!site.expectedText) {
     return;
@@ -89,13 +90,12 @@ function checkBody(
     return;
   }
 
-  var lowerCaseBody: string | undefined;
-  _.forEach(site.expectedText, function(textObj: ExpectedTextObject) {
+  let lowerCaseBody: string | undefined;
+  _.forEach(site.expectedText, function (textObj: ExpectedTextObject) {
     if (textObj.caseSensitive) {
       if (body.indexOf(textObj.text) === -1) {
         accumulatedFails.push(
-          'Expected (case sensitive) text in response body not found: ' +
-          textObj.text
+          'Expected (case sensitive) text in response body not found: ' + textObj.text,
         );
       }
     } else {
@@ -105,26 +105,26 @@ function checkBody(
       if (lowerCaseBody.indexOf(textObj.text.toLowerCase()) === -1) {
         accumulatedFails.push(
           'Expected (case insensitive) text in response body not found: ' +
-          textObj.text.toLowerCase()
+            textObj.text.toLowerCase(),
         );
       }
     }
   });
 }
 
-var checkUri = function(site: NormalizedSite, callback: (err?: Error | null) => void): void {
+const checkUri = function (site: NormalizedSite, callback: (err?: Error | null) => void): void {
   if (site.disabled) {
     outAdapter?.writeResult?.('disabled', site);
     return callback(null);
   }
 
-  var options: {
+  const options: {
     followRedirect: boolean;
     uri: string;
     headers?: Record<string, string>;
   } = {
     followRedirect: !!site.followRedirect,
-    uri: site.requestUrl
+    uri: site.requestUrl,
   };
   // Check that uri has a protocol
   if (!startsWith(options.uri, ['http://', 'https://'])) {
@@ -135,7 +135,7 @@ var checkUri = function(site: NormalizedSite, callback: (err?: Error | null) => 
     options.headers = site.requestHeaders;
   }
 
-  request.get(options, function(error, response, body) {
+  request.get(options, function (error, response, body) {
     if (error) {
       debug('error in request GET:');
       debug(error);
@@ -145,7 +145,8 @@ var checkUri = function(site: NormalizedSite, callback: (err?: Error | null) => 
     }
 
     if (response.statusCode !== site.expectedStatus) {
-      var err = 'Expected HTTP status of ' + site.expectedStatus + ' and got ' + response.statusCode + '.';
+      let err =
+        'Expected HTTP status of ' + site.expectedStatus + ' and got ' + response.statusCode + '.';
       if (response.statusCode >= 300 && response.statusCode < 400) {
         // Some type of redirect. Let's add the location to the error result to help the user
         // determine what the problem is.
@@ -158,7 +159,7 @@ var checkUri = function(site: NormalizedSite, callback: (err?: Error | null) => 
       return callback(null);
     }
 
-    var accumulatedFails: string[] = [];
+    const accumulatedFails: string[] = [];
 
     // If responseHeaders is not empty then evaluate that they all have the
     // expected values.
@@ -183,28 +184,22 @@ var checkUri = function(site: NormalizedSite, callback: (err?: Error | null) => 
   });
 };
 
-var done = function(): void {
+const done = function (): void {
   outAdapter?.done?.();
 };
 
-var getOutAdapter = function(): OutAdapter | undefined {
+const getOutAdapter = function (): OutAdapter | undefined {
   return outAdapter;
 };
 
-var uriCheck = {
-  done: done,
+const uriCheck = {
   checkUri: checkUri,
+  done: done,
+  getOutAdapter: getOutAdapter,
   init: init,
   startsWith: startsWith,
-  getOutAdapter: getOutAdapter
 };
 
-export {
-  done,
-  checkUri,
-  init,
-  startsWith,
-  getOutAdapter
-};
+export { done, checkUri, init, startsWith, getOutAdapter };
 
 export default uriCheck;

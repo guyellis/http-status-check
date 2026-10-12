@@ -4,8 +4,8 @@
 export default {
   sites: [
     {
-      name: '101 Sites',
       expectedStatus: 200,
+      name: '101 Sites',
       requestUrl: [
         // Apart from the first site listed (linksilk.com), the other 100 sites were the top 100
         // sites by traffic listed by alexa.com on 21 September 2014
@@ -106,43 +106,43 @@ export default {
         'https://www.google.com.hk',
         'https://vimeo.com',
         'https://www.tudou.com',
-        'http://www.blogspot.in'
-      ]
+        'http://www.blogspot.in',
+      ],
     },
     {
+      expectedStatus: 404,
       name: 't.co',
-      expectedStatus: 404,
-      requestUrl: 'http://t.co'
+      requestUrl: 'http://t.co',
     },
     {
-      name: 'craigslist.org',
       expectedStatus: 301,
-      requestUrl: 'http://www.craigslist.org'
+      name: 'craigslist.org',
+      requestUrl: 'http://www.craigslist.org',
     },
     {
-      name: 'blogspot.com',
       expectedStatus: 302,
-      requestUrl: 'http://www.blogspot.com'
+      name: 'blogspot.com',
+      requestUrl: 'http://www.blogspot.com',
     },
     {
-      name: 'googleusercontent.com',
       expectedStatus: 404,
+      name: 'googleusercontent.com',
       requestUrl: 'https://www.googleusercontent.com',
     },
     {
+      expectedStatus: 302,
       name: 'blogger.com',
-      expectedStatus: 302,
-      requestUrl: 'https://www.blogger.com'
+      requestUrl: 'https://www.blogger.com',
     },
     {
-      name: 'dailymail.co.uk',
       expectedStatus: 301,
-      requestUrl: 'http://www.dailymail.co.uk'
+      name: 'dailymail.co.uk',
+      requestUrl: 'http://www.dailymail.co.uk',
     },
     {
-      name: 'netflix.com',
       expectedStatus: 302,
-      requestUrl: 'https://www.netflix.com'
-    }
-  ]
+      name: 'netflix.com',
+      requestUrl: 'https://www.netflix.com',
+    },
+  ],
 };

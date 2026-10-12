@@ -1,6 +1,6 @@
+import { builtinModules } from 'module';
 import { dirname, resolve } from 'path';
 import { fileURLToPath } from 'url';
-import { builtinModules } from 'module';
 import { defineConfig } from 'vite';
 import * as packageJson from './package.json' with { type: 'json' };
 

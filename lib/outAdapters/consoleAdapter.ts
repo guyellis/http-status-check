@@ -3,15 +3,15 @@
 import _ from 'lodash';
 import type { NormalizedSite } from '../types.js';
 
-var successHits = 0;
-var failHits = 0;
-var disableHits = 0;
+let successHits = 0;
+let failHits = 0;
+let disableHits = 0;
 
-var organizeErrors = function(errors: unknown): string[] {
-  var errorList: unknown;
+const organizeErrors = function (errors: unknown): string[] {
+  let errorList: unknown;
   if (!Array.isArray(errors)) {
     if (_.isObject(errors)) {
-      errorList = _.map(errors as Record<string, unknown>, function(value, key) {
+      errorList = _.map(errors as Record<string, unknown>, function (value, key) {
         return key + ': ' + value;
       });
     } else {
@@ -20,14 +20,19 @@ var organizeErrors = function(errors: unknown): string[] {
   } else {
     errorList = errors;
   }
-  return _.flatten(errorList as unknown[]).map(function(item) {
+  return _.flatten(errorList as unknown[]).map(function (item) {
     return String(item);
   });
 };
 
-var writeResult = function(
+const writeResult = function (
   result: string,
-  uri: Partial<NormalizedSite> & { verbose?: boolean; name?: string; requestUrl?: string; errors?: unknown }
+  uri: Partial<NormalizedSite> & {
+    verbose?: boolean;
+    name?: string;
+    requestUrl?: string;
+    errors?: unknown;
+  },
 ): void {
   switch (result) {
     case 'success':
@@ -39,8 +44,8 @@ var writeResult = function(
     case 'fail':
       console.log('X ' + uri.name + ' (' + uri.requestUrl + ') failed. Here are the problems:');
       if (uri.errors) {
-        var formattedErrors = organizeErrors(uri.errors);
-        _.forEach(formattedErrors, function(error) {
+        const formattedErrors = organizeErrors(uri.errors);
+        _.forEach(formattedErrors, function (error) {
           console.log('  - ' + error);
         });
       }
@@ -57,39 +62,39 @@ var writeResult = function(
   }
 };
 
-var done = function(): void {
+const done = function (): void {
   console.log('A total of ' + (successHits + failHits + disableHits) + ' URIs were tested.');
   console.log('Failure count: ', failHits);
   console.log('Success count: ', successHits);
   console.log('Disable count: ', disableHits);
 };
 
-var getSuccessHits = function(): number {
+const getSuccessHits = function (): number {
   return successHits;
 };
 
-var getFailHits = function(): number {
+const getFailHits = function (): number {
   return failHits;
 };
 
-var getDisableHits = function(): number {
+const getDisableHits = function (): number {
   return disableHits;
 };
 
-var resetHits = function(): void {
+const resetHits = function (): void {
   successHits = 0;
   failHits = 0;
   disableHits = 0;
 };
 
-var consoleAdapter = {
-  writeResult: writeResult,
+const consoleAdapter = {
   done: done,
-  organizeErrors: organizeErrors,
-  getSuccessHits: getSuccessHits,
-  getFailHits: getFailHits,
   getDisableHits: getDisableHits,
-  resetHits: resetHits
+  getFailHits: getFailHits,
+  getSuccessHits: getSuccessHits,
+  organizeErrors: organizeErrors,
+  resetHits: resetHits,
+  writeResult: writeResult,
 };
 
 export {
@@ -99,7 +104,7 @@ export {
   getSuccessHits,
   getFailHits,
   getDisableHits,
-  resetHits
+  resetHits,
 };
 
 export default consoleAdapter;
