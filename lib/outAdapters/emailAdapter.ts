@@ -1,6 +1,5 @@
 'use strict';
 
-import bunyan from 'bunyan';
 import createDebug from 'debug';
 import _ from 'lodash';
 import nodemailer from 'nodemailer';
@@ -8,14 +7,6 @@ import type { NormalizedSite } from '../types.js';
 import emailData from './emailSampleData.js';
 
 const debug = createDebug('http-status-check:emailAdapter');
-const log = bunyan.createLogger({
-  name: 'http-status-check',
-  streams: [
-    {
-      path: './httpstatuscheck.log',
-    },
-  ],
-});
 
 let successHits = 0;
 let failHits = 0;
@@ -120,10 +111,10 @@ const done = function (): void {
     sendEmail();
   }
 
-  log.info('A total of ' + (successHits + failHits + disableHits) + ' URIs were tested.');
-  log.info('Failure count: ', failHits);
-  log.info('Success count: ', successHits);
-  log.info('Disable count: ', disableHits);
+  debug('A total of ' + (successHits + failHits + disableHits) + ' URIs were tested.');
+  debug('Failure count: ', failHits);
+  debug('Success count: ', successHits);
+  debug('Disable count: ', disableHits);
 };
 
 const getSuccessHits = function (): number {
