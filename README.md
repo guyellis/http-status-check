@@ -1,30 +1,73 @@
 # HTTP Status Check
 
-[![Greenkeeper badge](https://badges.greenkeeper.io/guyellis/http-status-check.svg)](https://greenkeeper.io/)
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/guyellis/http-status-check?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[![Build Status](https://travis-ci.org/guyellis/http-status-check.svg?branch=master)](https://travis-ci.org/guyellis/http-status-check)
-[![Code Climate](https://codeclimate.com/github/guyellis/http-status-check/badges/gpa.svg)](https://codeclimate.com/github/guyellis/http-status-check)
-[![Dependency Status](https://david-dm.org/guyellis/http-status-check.png)](https://david-dm.org/guyellis/http-status-check)
-
 Checks your sites' HTTP statuses
+
+## Requirements
+
+* Node.js >= 24 (see `.nvmrc`)
 
 ## Install
 
-```
+```bash
 npm install http-status-check
+```
+
+Or for development / running from source:
+
+```bash
+git clone https://github.com/guyellis/http-status-check.git
+cd http-status-check
+npm install
+```
+
+## Build
+
+Build TypeScript source to `dist/` using Vite:
+
+```bash
+npm run build
 ```
 
 ## Run
 
-```
-node index.js
+To execute checks:
+
+```bash
+npm start
 ```
 
-To show only failures in the output:
+or directly:
 
+```bash
+node dist/index.js
 ```
-node index.js --only-output-failures
+
+By default, only failures and summary counts are output.
+
+To show all tested sites including successful ones, pass the `--verbose` flag:
+
+```bash
+npm start -- --verbose
+```
+
+or directly:
+
+```bash
+node dist/index.js --verbose
+```
+
+## Testing
+
+Run typecheck, tests, and build via Vitest and Vite:
+
+```bash
+npm test
+```
+
+To run test coverage:
+
+```bash
+npm run coverage
 ```
 
 ## Questions?
@@ -43,25 +86,35 @@ The objectives of the http-status-check project are as follows:
 
 ## Getting Started
 
-Running `node index.js` should give you an indication of how it works. It uses the `samplesites.js` file for the names of the sites to test.
+Running `npm start` should give you an indication of how it works. By default, it uses the `sitelists/samplesites.ts` file for the names of the sites to test.
  
-Copy `samplesites.js` to `checksites.js`. If `checksites.js` is found then it takes precedence over `samplesites.js`.
+Copy `sitelists/samplesites.ts` to `sitelists/checksites.ts` (or `sitelists/checksites.js`). If `checksites.ts` is found then it takes precedence over `samplesites.ts`.
 
-Now edit `checksites.js` and replace the sites with your own sites that you want to run checks on.
+```bash
+cp sitelists/samplesites.ts sitelists/checksites.ts
+```
 
-## checksites.js config file
+Now edit `sitelists/checksites.ts` and replace the sites with your own sites that you want to run checks on.
 
-The `samplesites.js` file is heavily commented and a good starting point.
+You can also specify a custom configuration file path using the `HTTP_STATUS_CHECK_FILE` environment variable:
+
+```bash
+HTTP_STATUS_CHECK_FILE=/path/to/my-sites.ts npm start
+```
+
+## checksites.ts config file
+
+The `sitelists/samplesites.ts` file is heavily commented and a good starting point.
 
 * `sites` - an array of sites that will be checked
   * `name` - any name that you want to give this site. This will be logged to the console with the status.
   * `expectedStatus` - the status that you expected this site to return, e.g. 200 or 301
-  * `requestUrl` - URL or array of URLs to of the site(s) to check
+  * `requestUrl` - URL or array of URLs of the site(s) to check
   * `responseHeaders` - an object with a collection of response headers expected back from the site. Each of these is compared to the actual response headers received. 
   * `requestHeaders` - an object with a collection of request headers to send with the request. 
-  * `disabled` - defaults to false. Set to true if you don't want this site to be checked. Useful if you don't want to delete the details from the checksites.js config file but also don't want it run. Will appear in reports as "not run." 
+  * `disabled` - defaults to false. Set to true if you don't want this site to be checked. Useful if you don't want to delete the details from the checksites.ts config file but also don't want it run. Will appear in reports as "not run." 
   * `excludedHeaders` - An array of headers that you expect not to be returned by the server. (For example, for security you may not want the X-Powered-By header to be returned.) If any of these headers are present then the check will be considered a failure and reported as such.
-  * `followRedirect` - If a URL returns redirect status (300 to 399) then continue to follow any redirects and don't check until an non-300 series status is returned. See samplesites.js for use case and further details.
+  * `followRedirect` - If a URL returns redirect status (300 to 399) then continue to follow any redirects and don't check until a non-300 series status is returned. See `sitelists/samplesites.ts` for use case and further details.
   * `expectedText` - A string or an array of strings or an array of objects. If an array of objects then each object should have a string 'text' property and an optional boolean caseSensitive property 
     * `text` - The text to find on the page
     * `caseSensitive` - true/false to indicate if the comparison should be case sensitive. Defaults to false if missing and if expectedText is a string or array of strings.
@@ -77,7 +130,7 @@ Add requests for enhancements and bugs to: [HTTP Status Check Issues](https://gi
 You are encouraged to fork this repository, edit the code, and submit a pull request to have your changes included.
  Even if you have never done this before and it seems scary. Especially if you have never done this before. One of the
  objectives of this project is to provide a safe and encouraging project where new comers can learn about the mechanics
- of open source, GitHub source control and coding in JavaScript.
+ of open source, GitHub source control and coding in JavaScript and TypeScript.
  
 If you are completely new then the best place to start is to start by seeing if you can add a unit test to the project.
 A test will improve the quality and health of the project and not break anything that anyone is using. You can also
@@ -89,4 +142,3 @@ Once you feel comfortable then try and improve existing code. The unit tests sho
 You can try and find inefficiencies or better ways to do something. For example, replace a loop with a lodash method.
 
 Have a look at the code coverage and see if you can find some code that hasn't been covered by a test and fill that gap.
-

@@ -1,6 +1,6 @@
 'use strict';
 
-// See samplesites.js for annotation of what each property does
+// See samplesites.ts for annotation of what each property does
 export default {
   sites: [
     {
