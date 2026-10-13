@@ -5,7 +5,7 @@ import manager from '../lib/manager.js';
 
 describe('index/', function () {
   describe('main()', function () {
-    it('should call getRunData() and manager.run()', async function () {
+    test('should call getRunData() and manager.run()', async function () {
       const getRunDataSpy = vi.spyOn(inAdapter, 'getRunData').mockResolvedValue({ sites: [] });
       const runSpy = vi.spyOn(manager, 'run').mockImplementation(function () {});
       const index = await import('../index.js');

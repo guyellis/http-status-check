@@ -7,7 +7,7 @@ import uriCheck from '../../lib/uriCheck.js';
 
 describe('lib/manager/', function () {
   describe('run()', function () {
-    it('uses 3 as the default concurrentRequests if not supplied', function () {
+    test('uses 3 as the default concurrentRequests if not supplied', function () {
       let initCalled = false;
       const initSpy = vi.spyOn(uriCheck, 'init').mockImplementation(function () {
         initCalled = true;
@@ -36,7 +36,7 @@ describe('lib/manager/', function () {
       iterateSpy.mockRestore();
     });
 
-    it('uses the number of concurrentRequests supplied', function () {
+    test('uses the number of concurrentRequests supplied', function () {
       let initCalled = false;
       const initSpy = vi.spyOn(uriCheck, 'init').mockImplementation(function () {
         initCalled = true;
@@ -65,7 +65,7 @@ describe('lib/manager/', function () {
       iterateSpy.mockRestore();
     });
 
-    it('should use 3 as the number of concurrentRequests if a number less than 1 is supplied', function () {
+    test('should use 3 as the number of concurrentRequests if a number less than 1 is supplied', function () {
       let initCalled = false;
       const initSpy = vi.spyOn(uriCheck, 'init').mockImplementation(function () {
         initCalled = true;
@@ -96,7 +96,7 @@ describe('lib/manager/', function () {
   });
 
   describe('expandRequestUrlInput()', function () {
-    it('expands arrays of requestUrls if they are an array', function () {
+    test('expands arrays of requestUrls if they are an array', function () {
       const sites: SiteConfig[] = [
         {
           expectedStatus: 200,
@@ -109,7 +109,7 @@ describe('lib/manager/', function () {
       expect(Array.isArray(results)).toBe(true);
     });
 
-    it('does nothing if requestUrls is not an array', function () {
+    test('does nothing if requestUrls is not an array', function () {
       const sites: SiteConfig[] = [
         {
           expectedStatus: 200,
@@ -124,7 +124,7 @@ describe('lib/manager/', function () {
   });
 
   describe('iterateURLs()', function () {
-    it('calls uriCheck.done() when finished', function () {
+    test('calls uriCheck.done() when finished', function () {
       const sites: NormalizedSite[] = [
         {
           expectedStatus: 200,
@@ -153,7 +153,7 @@ describe('lib/manager/', function () {
       doneSpy.mockRestore();
     });
 
-    it('throws an error if checkUri calls back with error', function () {
+    test('throws an error if checkUri calls back with error', function () {
       const sites: NormalizedSite[] = [
         {
           expectedStatus: 200,
@@ -190,7 +190,7 @@ describe('lib/manager/', function () {
   });
 
   describe('expandExpectedTextInput()', function () {
-    it('should do nothing if there is no expectedText property', function () {
+    test('should do nothing if there is no expectedText property', function () {
       const sites: SiteConfig[] = [
         {
           expectedStatus: 200,
@@ -208,7 +208,7 @@ describe('lib/manager/', function () {
       expect(results[0]?.name).toBe('TestSite');
     });
 
-    it('should expand expectedText property if it is a single string', function () {
+    test('should expand expectedText property if it is a single string', function () {
       const sites: SiteConfig[] = [
         {
           expectedStatus: 200,
@@ -229,7 +229,7 @@ describe('lib/manager/', function () {
       expect(results[0]?.expectedText?.[0]?.text).toBe('some search string');
     });
 
-    it('should expand expectedText property if it is an array of strings and/or objects', function () {
+    test('should expand expectedText property if it is an array of strings and/or objects', function () {
       const sites: SiteConfig[] = [
         {
           expectedStatus: 200,
@@ -260,7 +260,7 @@ describe('lib/manager/', function () {
       expect(results[0]?.expectedText?.[2]?.caseSensitive).toBe(true);
     });
 
-    it('should throw an Error if the expectedText object does not have a text property', function () {
+    test('should throw an Error if the expectedText object does not have a text property', function () {
       const sites: SiteConfig[] = [
         {
           expectedStatus: 200,
@@ -281,7 +281,7 @@ describe('lib/manager/', function () {
       expect(error?.message).toBe('text property is missing from expectedText object.');
     });
 
-    it('should throw an Error if the expectedText object has an unrecognized type', function () {
+    test('should throw an Error if the expectedText object has an unrecognized type', function () {
       const sites: SiteConfig[] = [
         {
           expectedStatus: 200,

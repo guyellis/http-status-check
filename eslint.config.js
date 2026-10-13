@@ -1,5 +1,6 @@
 import pluginJs from '@eslint/js';
 import stylistic from '@stylistic/eslint-plugin';
+import vitest from '@vitest/eslint-plugin';
 import prettierConfig from 'eslint-config-prettier';
 import importX from 'eslint-plugin-import-x';
 import perfectionist from 'eslint-plugin-perfectionist';
@@ -65,6 +66,12 @@ export default [
       globals: {
         ...globals.vitest,
       },
+    },
+    plugins: {
+      vitest,
+    },
+    rules: {
+      'vitest/consistent-test-it': ['error', { fn: 'test', withinDescribe: 'test' }],
     },
   },
   {

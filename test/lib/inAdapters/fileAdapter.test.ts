@@ -13,7 +13,7 @@ describe('inAdapters/fileAdapter/', function () {
   });
 
   describe('getRunData()', function () {
-    it('should return samplesites.ts data if exists', async function () {
+    test('should return samplesites.ts data if exists', async function () {
       let checksitesChecked = false;
       let samplesitesChecked = false;
       const existsSpy = vi.spyOn(fs, 'existsSync').mockImplementation(function (filePath) {
@@ -44,7 +44,7 @@ describe('inAdapters/fileAdapter/', function () {
       existsSpy.mockRestore();
     });
 
-    it('should throw an exception if checksites.ts and samplesites.ts do not exist', async function () {
+    test('should throw an exception if checksites.ts and samplesites.ts do not exist', async function () {
       const previousHttpStatusCheckFileValue = process.env.HTTP_STATUS_CHECK_FILE;
       if (previousHttpStatusCheckFileValue) {
         delete process.env.HTTP_STATUS_CHECK_FILE;
@@ -79,7 +79,7 @@ describe('inAdapters/fileAdapter/', function () {
       }
     });
 
-    it('should return custom file data if HTTP_STATUS_CHECK_FILE exists', async function () {
+    test('should return custom file data if HTTP_STATUS_CHECK_FILE exists', async function () {
       const samplePath = __dirname + '/../../../sitelists/samplesites.ts';
       process.env.HTTP_STATUS_CHECK_FILE = samplePath;
 

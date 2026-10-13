@@ -16,7 +16,7 @@ function checkUriPromise(site: NormalizedSite | SiteConfig): Promise<void> {
 
 describe('lib/uriCheck/', function () {
   describe('init()', function () {
-    it('sets the outAdapter', function () {
+    test('sets the outAdapter', function () {
       uriCheck.init({ test: true });
       const outAdapter = uriCheck.getOutAdapter() as { test?: boolean } | undefined;
       expect(outAdapter?.test).toBe(true);
@@ -27,13 +27,13 @@ describe('lib/uriCheck/', function () {
     const testString = 'this is a string';
     const startsWith = uriCheck.startsWith;
 
-    it('should return true if the string starts with one of the array items', function () {
+    test('should return true if the string starts with one of the array items', function () {
       const protocols = ['this', 'is'];
       const result = startsWith(testString, protocols);
       expect(result).toBe(true);
     });
 
-    it('should return false if the string does not start with one of the array items', function () {
+    test('should return false if the string does not start with one of the array items', function () {
       const protocols = ['that', 'is'];
       const result = startsWith(testString, protocols);
       expect(result).toBe(false);
@@ -41,7 +41,7 @@ describe('lib/uriCheck/', function () {
   });
 
   describe('checkUri()', function () {
-    it('should terminate early if the site is disabled', async function () {
+    test('should terminate early if the site is disabled', async function () {
       const site: SiteConfig = {
         disabled: true,
         verbose: true,
@@ -62,7 +62,7 @@ describe('lib/uriCheck/', function () {
       fetchSpy.mockRestore();
     });
 
-    it('should call writeResult with fail if fetch() returns an error', async function () {
+    test('should call writeResult with fail if fetch() returns an error', async function () {
       const site: SiteConfig = {
         expectedStatus: 200,
         name: 'Unit Test',
@@ -93,7 +93,7 @@ describe('lib/uriCheck/', function () {
       fetchSpy.mockRestore();
     });
 
-    it('should call writeResult with fail if the status lib is not what is expected', async function () {
+    test('should call writeResult with fail if the status lib is not what is expected', async function () {
       const site: SiteConfig = {
         expectedStatus: 200,
         name: 'Unit Test',
@@ -129,7 +129,7 @@ describe('lib/uriCheck/', function () {
       fetchSpy.mockRestore();
     });
 
-    it('should call writeResult with fail if the response headers do not match', async function () {
+    test('should call writeResult with fail if the response headers do not match', async function () {
       const site: SiteConfig = {
         expectedStatus: 301,
         name: 'Unit Test',
@@ -165,7 +165,7 @@ describe('lib/uriCheck/', function () {
       fetchSpy.mockRestore();
     });
 
-    it('should call writeResult with fail if an excludedHeaders header is present', async function () {
+    test('should call writeResult with fail if an excludedHeaders header is present', async function () {
       const site: SiteConfig = {
         excludedHeaders: ['X-Powered-By'],
         expectedStatus: 200,
@@ -199,7 +199,7 @@ describe('lib/uriCheck/', function () {
       fetchSpy.mockRestore();
     });
 
-    it('should call writeResult with fail if expected case insensitive text is missing', async function () {
+    test('should call writeResult with fail if expected case insensitive text is missing', async function () {
       const site: SiteConfig = {
         expectedStatus: 200,
         expectedText: [{ text: 'some random text' }],
@@ -230,7 +230,7 @@ describe('lib/uriCheck/', function () {
       fetchSpy.mockRestore();
     });
 
-    it('should call writeResult with fail if expected case-sensitive text is missing', async function () {
+    test('should call writeResult with fail if expected case-sensitive text is missing', async function () {
       const site: SiteConfig = {
         expectedStatus: 200,
         expectedText: [{ caseSensitive: true, text: 'Random Text' }],
@@ -261,7 +261,7 @@ describe('lib/uriCheck/', function () {
       fetchSpy.mockRestore();
     });
 
-    it('should call writeResult with fail if there is expected text and the response body is missing', async function () {
+    test('should call writeResult with fail if there is expected text and the response body is missing', async function () {
       const site: SiteConfig = {
         expectedStatus: 200,
         expectedText: [{ caseSensitive: true, text: 'Random Text' }],
@@ -292,7 +292,7 @@ describe('lib/uriCheck/', function () {
       fetchSpy.mockRestore();
     });
 
-    it('should call writeResult with success if the response headers and statuses match', async function () {
+    test('should call writeResult with success if the response headers and statuses match', async function () {
       const site: SiteConfig = {
         expectedStatus: 301,
         name: 'Unit Test',
@@ -329,7 +329,7 @@ describe('lib/uriCheck/', function () {
       fetchSpy.mockRestore();
     });
 
-    it('should call writeResult with success if the statuses match', async function () {
+    test('should call writeResult with success if the statuses match', async function () {
       const site: SiteConfig = {
         expectedStatus: 301,
         name: 'Unit Test',
@@ -360,7 +360,7 @@ describe('lib/uriCheck/', function () {
       fetchSpy.mockRestore();
     });
 
-    it('should set redirect to follow in fetch options when site.followRedirect is true', async function () {
+    test('should set redirect to follow in fetch options when site.followRedirect is true', async function () {
       const site: SiteConfig = {
         expectedStatus: 200,
         followRedirect: true,
@@ -388,7 +388,7 @@ describe('lib/uriCheck/', function () {
       fetchSpy.mockRestore();
     });
 
-    it('should set redirect to manual in fetch options when site.followRedirect is not provided', async function () {
+    test('should set redirect to manual in fetch options when site.followRedirect is not provided', async function () {
       const site: SiteConfig = {
         expectedStatus: 200,
         name: 'Unit Test',
@@ -415,7 +415,7 @@ describe('lib/uriCheck/', function () {
       fetchSpy.mockRestore();
     });
 
-    it('should prepend http:// to uri when missing protocol and pass requestHeaders', async function () {
+    test('should prepend http:// to uri when missing protocol and pass requestHeaders', async function () {
       const site: SiteConfig = {
         expectedStatus: 200,
         name: 'Unit Test',
@@ -448,7 +448,7 @@ describe('lib/uriCheck/', function () {
       fetchSpy.mockRestore();
     });
 
-    it('should not prepend protocol if already https://', async function () {
+    test('should not prepend protocol if already https://', async function () {
       const site: SiteConfig = {
         expectedStatus: 200,
         name: 'Unit Test',
@@ -475,7 +475,7 @@ describe('lib/uriCheck/', function () {
   });
 
   describe('done()', function () {
-    it('should call the outAdapters done method', function () {
+    test('should call the outAdapters done method', function () {
       let doneCallCount = 0;
       const outAdapter: OutAdapter = {
         done: function () {

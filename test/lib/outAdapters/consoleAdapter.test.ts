@@ -4,7 +4,7 @@ import outAdapter from '../../../lib/outAdapters/consoleAdapter.js';
 
 describe('outAdapters/consoleAdapter/', function () {
   describe('organizeErrors()', function () {
-    it('should put object properties into an array', function () {
+    test('should put object properties into an array', function () {
       const organizeErrors = outAdapter.organizeErrors;
       const errors = {
         one: 'one',
@@ -18,7 +18,7 @@ describe('outAdapters/consoleAdapter/', function () {
   });
 
   describe('organizeErrors()', function () {
-    it('should put string into an array', function () {
+    test('should put string into an array', function () {
       const organizeErrors = outAdapter.organizeErrors;
       const errors = 'one';
       const result = organizeErrors(errors);
@@ -30,7 +30,7 @@ describe('outAdapters/consoleAdapter/', function () {
   });
 
   describe('writeResult()', function () {
-    it('should increment success counter when successful', function () {
+    test('should increment success counter when successful', function () {
       outAdapter.resetHits();
       const logSpy = vi.spyOn(console, 'log').mockImplementation(function () {});
       outAdapter.writeResult('success', {
@@ -46,7 +46,7 @@ describe('outAdapters/consoleAdapter/', function () {
   });
 
   describe('writeResult()', function () {
-    it('should increment fail counter when unsuccessful', function () {
+    test('should increment fail counter when unsuccessful', function () {
       outAdapter.resetHits();
       const logSpy = vi.spyOn(console, 'log').mockImplementation(function () {});
       outAdapter.writeResult('fail', {
@@ -66,7 +66,7 @@ describe('outAdapters/consoleAdapter/', function () {
   });
 
   describe('writeResult()', function () {
-    it('should increment disabled counter when url is disabled', function () {
+    test('should increment disabled counter when url is disabled', function () {
       outAdapter.resetHits();
       const logSpy = vi.spyOn(console, 'log').mockImplementation(function () {});
       outAdapter.writeResult('disabled', {
@@ -82,7 +82,7 @@ describe('outAdapters/consoleAdapter/', function () {
   });
 
   describe('writeResult()', function () {
-    it('should throw an exception if an unrecognized result type is passed', function () {
+    test('should throw an exception if an unrecognized result type is passed', function () {
       let exceptionThrown = false;
       try {
         outAdapter.writeResult('unknown', { errors: 'some error' });
@@ -94,7 +94,7 @@ describe('outAdapters/consoleAdapter/', function () {
   });
 
   describe('done()', function () {
-    it('should call console.log()', function () {
+    test('should call console.log()', function () {
       outAdapter.resetHits();
       const logSpy = vi.spyOn(console, 'log').mockImplementation(function () {});
 
