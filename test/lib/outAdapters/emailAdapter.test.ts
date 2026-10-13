@@ -4,7 +4,7 @@ import outAdapter from '../../../lib/outAdapters/emailAdapter.js';
 
 describe('outAdapters/emailAdapter/', function () {
   describe('organizeErrors()', function () {
-    it('should put object properties into an array', function () {
+    test('should put object properties into an array', function () {
       const organizeErrors = outAdapter.organizeErrors;
       const errors = {
         one: 'one',
@@ -18,7 +18,7 @@ describe('outAdapters/emailAdapter/', function () {
   });
 
   describe('organizeErrors()', function () {
-    it('should put string into an array', function () {
+    test('should put string into an array', function () {
       const organizeErrors = outAdapter.organizeErrors;
       const errors = 'one';
       const result = organizeErrors(errors);
@@ -30,7 +30,7 @@ describe('outAdapters/emailAdapter/', function () {
   });
 
   describe('writeResult()', function () {
-    it('should increment success counter when successful', function () {
+    test('should increment success counter when successful', function () {
       outAdapter.resetHits();
       outAdapter.writeResult('success', { verbose: true });
       const successHits = outAdapter.getSuccessHits();
@@ -39,7 +39,7 @@ describe('outAdapters/emailAdapter/', function () {
   });
 
   describe('writeResult()', function () {
-    it('should increment fail counter when unsuccessful', function () {
+    test('should increment fail counter when unsuccessful', function () {
       outAdapter.resetHits();
       outAdapter.writeResult('fail', { errors: 'some error' });
       const failHits = outAdapter.getFailHits();
@@ -48,7 +48,7 @@ describe('outAdapters/emailAdapter/', function () {
   });
 
   describe('writeResult()', function () {
-    it('should increment disabled counter when url is disabled', function () {
+    test('should increment disabled counter when url is disabled', function () {
       outAdapter.resetHits();
       outAdapter.writeResult('disabled', { verbose: true });
       const disableHits = outAdapter.getDisableHits();
@@ -57,7 +57,7 @@ describe('outAdapters/emailAdapter/', function () {
   });
 
   describe('writeResult()', function () {
-    it('should throw an exception if an unrecognized result type is passed', function () {
+    test('should throw an exception if an unrecognized result type is passed', function () {
       let exceptionThrown = false;
       try {
         outAdapter.writeResult('unknown', { errors: 'some error' });
