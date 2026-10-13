@@ -472,6 +472,164 @@ describe('lib/uriCheck/', function () {
       expect(capturedUri).toBe('https://www.unittest.com');
       fetchSpy.mockRestore();
     });
+
+    test('should call writeResult with fail if the status does not match and is not a redirect', async function () {
+      const site: SiteConfig = {
+        expectedStatus: 200,
+        name: 'Unit Test',
+        requestUrl: 'www.unittest.com',
+      };
+
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response('', {
+          status: 404,
+        }),
+      );
+      let writeResultResult = '';
+      const outAdapter: OutAdapter = {
+        writeResult: function (result: string, resSite: NormalizedSite | Record<string, unknown>) {
+          writeResultResult = result;
+          expect((resSite as NormalizedSite).errors).toEqual([
+            'Expected HTTP status of 200 and got 404.',
+          ]);
+        },
+      };
+      uriCheck.init(outAdapter);
+
+      await checkUriPromise(site);
+
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      expect(writeResultResult).toBe('fail');
+      fetchSpy.mockRestore();
+    });
+
+    test('should call writeResult with fail if redirect status has no location header', async function () {
+      const site: SiteConfig = {
+        expectedStatus: 200,
+        name: 'Unit Test',
+        requestUrl: 'www.unittest.com',
+      };
+
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response('', {
+          status: 301,
+        }),
+      );
+      let writeResultResult = '';
+      const outAdapter: OutAdapter = {
+        writeResult: function (result: string, resSite: NormalizedSite | Record<string, unknown>) {
+          writeResultResult = result;
+          expect((resSite as NormalizedSite).errors).toEqual([
+            'Expected HTTP status of 200 and got 301.',
+          ]);
+        },
+      };
+      uriCheck.init(outAdapter);
+
+      await checkUriPromise(site);
+
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      expect(writeResultResult).toBe('fail');
+      fetchSpy.mockRestore();
+    });
+
+    test('should call writeResult with success if excludedHeaders are not present in response', async function () {
+      const site: SiteConfig = {
+        excludedHeaders: ['X-Powered-By'],
+        expectedStatus: 200,
+        name: 'Unit Test',
+        requestUrl: 'www.unittest.com',
+      };
+
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response('', {
+          headers: {
+            'content-type': 'text/html',
+          },
+          status: 200,
+        }),
+      );
+      let writeResultResult = '';
+      const outAdapter: OutAdapter = {
+        writeResult: function (result: string) {
+          writeResultResult = result;
+        },
+      };
+      uriCheck.init(outAdapter);
+
+      await checkUriPromise(site);
+
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      expect(writeResultResult).toBe('success');
+      fetchSpy.mockRestore();
+    });
+
+    test('should call writeResult with success when multiple expected texts (case-sensitive and case-insensitive) are found', async function () {
+      const site: SiteConfig = {
+        expectedStatus: 200,
+        expectedText: [
+          { caseSensitive: true, text: 'Hello World' },
+          { caseSensitive: false, text: 'FOO' },
+          { caseSensitive: false, text: 'BAR' },
+        ],
+        name: 'Unit Test',
+        requestUrl: 'www.unittest.com',
+      };
+
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response('Hello World foo bar baz', {
+          status: 200,
+        }),
+      );
+      let writeResultResult = '';
+      const outAdapter: OutAdapter = {
+        writeResult: function (result: string) {
+          writeResultResult = result;
+        },
+      };
+      uriCheck.init(outAdapter);
+
+      await checkUriPromise(site);
+
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      expect(writeResultResult).toBe('success');
+      fetchSpy.mockRestore();
+    });
+
+    test('should ignore inherited responseHeaders and match mixed-case expected headers via lowercase lookup', async function () {
+      const protoHeaders = { inheritedHeader: 'should-be-ignored' };
+      const responseHeaders = Object.create(protoHeaders);
+      responseHeaders['Content-Type'] = 'application/json';
+
+      const site: SiteConfig = {
+        expectedStatus: 200,
+        name: 'Unit Test',
+        requestUrl: 'www.unittest.com',
+        responseHeaders: responseHeaders,
+      };
+
+      const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
+        new Response('{}', {
+          headers: {
+            'content-type': 'application/json',
+          },
+          status: 200,
+        }),
+      );
+      let writeResultResult = '';
+      const outAdapter: OutAdapter = {
+        writeResult: function (result: string) {
+          writeResultResult = result;
+        },
+      };
+      uriCheck.init(outAdapter);
+
+      await checkUriPromise(site);
+
+      expect(fetchSpy).toHaveBeenCalledTimes(1);
+      expect(writeResultResult).toBe('success');
+      fetchSpy.mockRestore();
+    });
   });
 
   describe('done()', function () {

@@ -2,7 +2,7 @@
 
 import _ from 'lodash';
 import manager from '../../lib/manager.js';
-import type { NormalizedSite, SiteConfig } from '../../lib/types.js';
+import type { NormalizedSite, Settings, SiteConfig } from '../../lib/types.js';
 import uriCheck from '../../lib/uriCheck.js';
 
 describe('lib/manager/', function () {
@@ -91,6 +91,42 @@ describe('lib/manager/', function () {
 
       initSpy.mockRestore();
       expandSpy.mockRestore();
+      iterateSpy.mockRestore();
+    });
+
+    test('propagates verbose flag to allSites and merges allSites defaults into each site', function () {
+      let initCalled = false;
+      const initSpy = vi.spyOn(uriCheck, 'init').mockImplementation(function () {
+        initCalled = true;
+      });
+      let passedSites: NormalizedSite[] = [];
+      const iterateSpy = vi.spyOn(manager, 'iterateURLs').mockImplementation(function (
+        _concurrent: number,
+        sites: NormalizedSite[],
+      ) {
+        passedSites = sites;
+      });
+
+      const runData = {
+        sites: [{ name: 'Site1', requestUrl: 'http://example.com' }],
+      };
+      const settings: Settings = {
+        allSites: {
+          requestHeaders: { 'User-Agent': 'TestAgent' },
+        },
+        concurrentRequests: 5,
+      };
+
+      manager.run(runData, settings, undefined, true);
+
+      expect(initCalled).toBe(true);
+      expect(settings.allSites?.verbose).toBe(true);
+      expect(passedSites.length).toBe(1);
+      expect(passedSites[0].verbose).toBe(true);
+      expect(passedSites[0].requestHeaders).toEqual({ 'User-Agent': 'TestAgent' });
+      expect(passedSites[0].name).toBe('Site1');
+
+      initSpy.mockRestore();
       iterateSpy.mockRestore();
     });
   });

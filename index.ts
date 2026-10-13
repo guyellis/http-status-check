@@ -5,11 +5,9 @@ import manager from './lib/manager.js';
 import outAdapter from './lib/outAdapters/consoleAdapter.js';
 import settings from './package.json' with { type: 'json' };
 
-const inAdapterPath = settings.inAdapter.type.endsWith('.js')
-  ? settings.inAdapter.type
-  : settings.inAdapter.type + '.js';
+const inAdapterPath = settings.inAdapter.type + '.js';
 const inAdapterModule = await import(inAdapterPath);
-const inAdapter = inAdapterModule.default || inAdapterModule;
+const inAdapter = inAdapterModule.default;
 
 const main = async function (verbosity?: boolean): Promise<void> {
   const sites = await inAdapter.getRunData();
