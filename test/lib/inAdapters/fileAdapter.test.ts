@@ -92,5 +92,71 @@ describe('inAdapters/fileAdapter/', function () {
       existsSpy.mockRestore();
       delete process.env.HTTP_STATUS_CHECK_FILE;
     });
+
+    test('should return mod when loaded file has no default export', async function () {
+      const fixturePath = __dirname + '/../../fixtures/namedExportSites.ts';
+      process.env.HTTP_STATUS_CHECK_FILE = fixturePath;
+
+      const existsSpy = vi.spyOn(fs, 'existsSync').mockReturnValue(true);
+
+      const runData = await inAdapter.getRunData();
+      expect(runData).toBeDefined();
+      expect(runData.sites).toBeDefined();
+      expect(runData.sites?.[0]?.name).toBe('Named Export Site');
+
+      existsSpy.mockRestore();
+      delete process.env.HTTP_STATUS_CHECK_FILE;
+    });
+  });
+
+  describe('findFile()', function () {
+    test('should return standardJs when it exists', function () {
+      const existsSpy = vi.spyOn(fs, 'existsSync').mockImplementation(function (filePath) {
+        return typeof filePath === 'string' && filePath.endsWith('/../../sitelists/checksites.js');
+      });
+      const file = inAdapter.findFile();
+      expect(file).toMatch(/\/sitelists\/checksites\.js$/);
+      existsSpy.mockRestore();
+    });
+
+    test('should return rootStandardJs when it exists', function () {
+      const existsSpy = vi.spyOn(fs, 'existsSync').mockImplementation(function (filePath) {
+        return (
+          typeof filePath === 'string' && filePath.endsWith('/../../../sitelists/checksites.js')
+        );
+      });
+      const file = inAdapter.findFile();
+      expect(file).toMatch(/\/sitelists\/checksites\.js$/);
+      existsSpy.mockRestore();
+    });
+
+    test('should return standardTs when it exists', function () {
+      const existsSpy = vi.spyOn(fs, 'existsSync').mockImplementation(function (filePath) {
+        return typeof filePath === 'string' && filePath.endsWith('/../../sitelists/checksites.ts');
+      });
+      const file = inAdapter.findFile();
+      expect(file).toMatch(/\/sitelists\/checksites\.ts$/);
+      existsSpy.mockRestore();
+    });
+
+    test('should return rootStandardTs when it exists', function () {
+      const existsSpy = vi.spyOn(fs, 'existsSync').mockImplementation(function (filePath) {
+        return (
+          typeof filePath === 'string' && filePath.endsWith('/../../../sitelists/checksites.ts')
+        );
+      });
+      const file = inAdapter.findFile();
+      expect(file).toMatch(/\/sitelists\/checksites\.ts$/);
+      existsSpy.mockRestore();
+    });
+
+    test('should return sampleJs when it exists and sampleTs does not', function () {
+      const existsSpy = vi.spyOn(fs, 'existsSync').mockImplementation(function (filePath) {
+        return typeof filePath === 'string' && filePath.endsWith('/../../sitelists/samplesites.js');
+      });
+      const file = inAdapter.findFile();
+      expect(file).toMatch(/\/sitelists\/samplesites\.js$/);
+      existsSpy.mockRestore();
+    });
   });
 });

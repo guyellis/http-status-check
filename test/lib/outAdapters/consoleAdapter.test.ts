@@ -27,6 +27,15 @@ describe('outAdapters/consoleAdapter/', function () {
       expect(result.length).toBe(1);
       expect(result[0]).toBe('one');
     });
+
+    test('should return array of strings when errors is already an array', function () {
+      const organizeErrors = outAdapter.organizeErrors;
+      const errors = ['error one', 'error two'];
+      const result = organizeErrors(errors);
+      expect(result).toBeDefined();
+      expect(Array.isArray(result)).toBe(true);
+      expect(result).toEqual(['error one', 'error two']);
+    });
   });
 
   describe('writeResult()', function () {
@@ -41,6 +50,20 @@ describe('outAdapters/consoleAdapter/', function () {
       const successHits = outAdapter.getSuccessHits();
       expect(successHits).toBe(1);
       expect(logSpy).toHaveBeenCalledWith('_ test-site (https://example.com) working as expected.');
+      logSpy.mockRestore();
+    });
+
+    test('should increment success counter and not log when verbose is false', function () {
+      outAdapter.resetHits();
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(function () {});
+      outAdapter.writeResult('success', {
+        name: 'test-site',
+        requestUrl: 'https://example.com',
+        verbose: false,
+      });
+      const successHits = outAdapter.getSuccessHits();
+      expect(successHits).toBe(1);
+      expect(logSpy).not.toHaveBeenCalled();
       logSpy.mockRestore();
     });
   });
@@ -63,6 +86,22 @@ describe('outAdapters/consoleAdapter/', function () {
       expect(logSpy).toHaveBeenNthCalledWith(2, '  - some error');
       logSpy.mockRestore();
     });
+
+    test('should increment fail counter and not log error details when errors is undefined', function () {
+      outAdapter.resetHits();
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(function () {});
+      outAdapter.writeResult('fail', {
+        name: 'test-site',
+        requestUrl: 'https://example.com',
+      });
+      const failHits = outAdapter.getFailHits();
+      expect(failHits).toBe(1);
+      expect(logSpy).toHaveBeenCalledTimes(1);
+      expect(logSpy).toHaveBeenCalledWith(
+        'X test-site (https://example.com) failed. Here are the problems:',
+      );
+      logSpy.mockRestore();
+    });
   });
 
   describe('writeResult()', function () {
@@ -77,6 +116,20 @@ describe('outAdapters/consoleAdapter/', function () {
       const disableHits = outAdapter.getDisableHits();
       expect(disableHits).toBe(1);
       expect(logSpy).toHaveBeenCalledWith('_ test-site (https://example.com) testing disabled.');
+      logSpy.mockRestore();
+    });
+
+    test('should increment disabled counter and not log when verbose is false', function () {
+      outAdapter.resetHits();
+      const logSpy = vi.spyOn(console, 'log').mockImplementation(function () {});
+      outAdapter.writeResult('disabled', {
+        name: 'test-site',
+        requestUrl: 'https://example.com',
+        verbose: false,
+      });
+      const disableHits = outAdapter.getDisableHits();
+      expect(disableHits).toBe(1);
+      expect(logSpy).not.toHaveBeenCalled();
       logSpy.mockRestore();
     });
   });
