@@ -17,7 +17,6 @@ export default defineConfig({
     environment: 'node',
     exclude: [...configDefaults.exclude, 'test/setup.ts'],
     globals: true,
-    include: ['test/**/*.{js,ts}', '**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     setupFiles: ['./test/setup.ts'],
   },
 });
