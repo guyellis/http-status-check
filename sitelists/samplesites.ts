@@ -1,8 +1,8 @@
 'use strict';
 
-// Copy samplesites.js to checksites.js.
-// If checksites.js is found then it takes precedence over samplesites.js
-// .gitignore is set to NOT commit checksites.js so you can keep your
+// Copy samplesites.ts to checksites.ts.
+// If checksites.ts is found then it takes precedence over samplesites.ts
+// .gitignore is set to NOT commit checksites.ts so you can keep your
 // personal/client site list in here.
 
 export default {
