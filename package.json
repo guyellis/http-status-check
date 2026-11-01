@@ -23,7 +23,7 @@
     "@types/async": "3.2.26",
     "@types/debug": "4.1.13",
     "@types/lodash": "4.17.26",
-    "@types/node": "26.6.5",
+    "@types/node": "26.6.6",
     "@types/nodemailer": "8.0.2",
     "@vitest/coverage-v8": "5.0.4",
     "@vitest/eslint-plugin": "1.6.27",
